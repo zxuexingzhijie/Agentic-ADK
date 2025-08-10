@@ -97,9 +97,43 @@ public class Application {
 }
 ```
 
-### 基本用法示例
+### 基本用法流程与示例
 
-以下是一些基于测试用例的使用示例：
+使用流程：
+#### 1. 创建画布
+```java
+FlowCanvas flowCanvas = new FlowCanvas();
+```
+#### 2. 创建Flow节点，并设置节点唯一标识Id及参数
+```java
+LlmRequest llmRequest = new LlmRequest();
+llmRequest.setModel("dashscope");
+llmRequest.setModelName("qwen-plus");
+llmRequest.setMessages(List.of(new LlmRequest.Message("user", "你好，请介绍一下你自己。20字以内")));
+
+LlmFlowNode llmNode = new LlmFlowNode(llmRequest);
+llmNode.setId("llmNode1");
+```
+
+#### 3. 设置节点的后继节点构成Flow
+- 通过`node.next(successorNode)`设置一个一般串联后继节点
+- 通过`node.nextOnCondition(conditionContainer).nextOnElse(flowNode)`设置一个分支后继节点，其中：
+  - `conditionaContaier`通过实现`BaseCondition`接口中的`eval`方法设置条件判断逻辑，并通过`setFlowNode`方法设置条件命中时将要执行的节点；
+  - `nextOnCondition`可以接收一个或多个条件块；
+  - `nextOnElse`中设置当一组条件均不命中时将执行的节点；若不设置else默认节点，则xml生成引擎将连至结束节点。
+
+#### 4. 设置Flow全局Request并通过Runner运行
+```java
+Request request = new Request().setInvokeMode(InvokeMode.SYNC);
+Flowable<Result> flowable = new Runner().run(flowCanvas, request);
+```
+
+#### 5. 获取流程运行结果并处理
+```java
+flowable.blockingIterable().forEach(event -> System.out.println(String.format("run result: %s", event)));
+```
+
+以下是一些使用示例：
 
 #### 1. 创建简单的 LLM 调用流程
 
