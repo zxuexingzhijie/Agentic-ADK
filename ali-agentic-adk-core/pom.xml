@@ -12,7 +12,7 @@
 
     <groupId>com.alibaba</groupId>
     <artifactId>ali-agentic-adk-core</artifactId>
-    <version>1.2.6-202508111516</version>
+    <version>${ali-agentic-adk.version}</version>
     <name>ali-agentic-adk</name>
     <description>ali-langengine-core</description>
     <url>https://github.com/AIDC-AI/Agentic-ADK</url>
