@@ -2,6 +2,7 @@ package com.alibaba.agentic.computer.use.service;
 
 import com.alibaba.agentic.computer.use.configuration.AdkBrowserUseProperties;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
