@@ -11,6 +11,14 @@
     </parent>
 
     <artifactId>ali-langengine-core</artifactId>
+    <name>ali-langengine-core</name>
+    <description>ali-langengine-core</description>
+    <url>https://github.com/AIDC-AI/Agentic-ADK</url>
+    <scm>
+        <connection>git://github.com/AIDC-AI/Agentic-ADK.git</connection>
+        <developerConnection>git://github.com/AIDC-AI/Agentic-ADK.git</developerConnection>
+        <url>https://github.com/AIDC-AI/Agentic-ADK</url>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -104,6 +112,32 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <detectJavaApiLink>false</detectJavaApiLink>
+                    <doclint>none</doclint>
+                    <quiet>true</quiet>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate-aggregate-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
                 <executions>

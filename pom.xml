@@ -33,17 +33,6 @@
 		</developer>
 	</developers>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
-
 	<properties>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
@@ -63,45 +52,47 @@
 	</properties>
 
 	<modules>
-		<module>ali-langengine-core</module>
-		<module>ali-langengine-demo</module>
+<!--		<module>ali-langengine-core</module>-->
+<!--		<module>ali-langengine-demo</module>-->
 
-		<module>ali-langengine-infrastructure/ali-langengine-docloader</module>
-		<module>ali-langengine-infrastructure/ali-langengine-tool</module>
+<!--		<module>ali-langengine-infrastructure/ali-langengine-docloader</module>-->
+<!--		<module>ali-langengine-infrastructure/ali-langengine-tool</module>-->
+
 <!--		<module>ali-langengine-infrastructure/ali-langengine-mcp</module>-->
-		<module>ali-langengine-infrastructure/ali-langengine-deepsearch</module>
-		<module>ali-langengine-infrastructure/ali-langengine-gpt</module>
-		<module>ali-langengine-infrastructure/ali-langengine-mcp-jdk8</module>
 
-		<module>ali-langengine-community/ali-langengine-openai</module>
-		<module>ali-langengine-community/ali-langengine-azure</module>
-		<module>ali-langengine-community/ali-langengine-dashscope</module>
-		<module>ali-langengine-community/ali-langengine-gemini</module>
-		<module>ali-langengine-community/ali-langengine-vertexai</module>
-		<module>ali-langengine-community/ali-langengine-moonshot</module>
-		<module>ali-langengine-community/ali-langengine-minimax</module>
-		<module>ali-langengine-community/ali-langengine-duckdb</module>
-		<module>ali-langengine-community/ali-langengine-redis</module>
-		<module>ali-langengine-community/ali-langengine-hologres</module>
-		<module>ali-langengine-community/ali-langengine-adbpg</module>
-		<module>ali-langengine-community/ali-langengine-polardb</module>
-		<module>ali-langengine-community/ali-langengine-pinecone</module>
-		<module>ali-langengine-community/ali-langengine-milvus</module>
-		<module>ali-langengine-community/ali-langengine-chroma</module>
-		<module>ali-langengine-community/ali-langengine-djl</module>
-		<module>ali-langengine-community/ali-langengine-huggingface</module>
-		<module>ali-langengine-community/ali-langengine-sqlite</module>
-		<module>ali-langengine-community/ali-langengine-xingchen</module>
-		<module>ali-langengine-community/ali-langengine-xinghuo</module>
-		<module>ali-langengine-community/ali-langengine-msearch</module>
-		<module>ali-langengine-community/ali-langengine-autogen</module>
-		<module>ali-langengine-community/ali-langengine-metagpt</module>
-		<module>ali-langengine-community/ali-langengine-claude</module>
-		<module>ali-langengine-community/ali-langengine-lindorm</module>
-		<module>ali-langengine-community/ali-langengine-deepseek</module>
-		<module>ali-langengine-community/ali-langengine-openmanus</module>
-		<module>ali-langengine-community/ali-langengine-tablestore</module>
-		<module>ali-langengine-community/ali-langengine-jsonrepair</module>
+<!--		<module>ali-langengine-infrastructure/ali-langengine-deepsearch</module>-->
+<!--		<module>ali-langengine-infrastructure/ali-langengine-gpt</module>-->
+<!--		<module>ali-langengine-infrastructure/ali-langengine-mcp-jdk8</module>-->
+
+<!--		<module>ali-langengine-community/ali-langengine-openai</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-azure</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-dashscope</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-gemini</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-vertexai</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-moonshot</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-minimax</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-duckdb</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-redis</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-hologres</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-adbpg</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-polardb</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-pinecone</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-milvus</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-chroma</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-djl</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-huggingface</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-sqlite</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-xingchen</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-xinghuo</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-msearch</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-autogen</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-metagpt</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-claude</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-lindorm</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-deepseek</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-openmanus</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-tablestore</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-jsonrepair</module>-->
 
 		<module>ali-agentic-adk-core</module>
 
@@ -369,16 +360,36 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
-				<extensions>true</extensions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
 				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					<source>17</source>
+					<target>17</target>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.8.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<publishingServerId>central</publishingServerId>
+				</configuration>
+			</plugin>
+
+<!--			<plugin>-->
+<!--				<groupId>org.sonatype.plugins</groupId>-->
+<!--				<artifactId>nexus-staging-maven-plugin</artifactId>-->
+<!--				<version>1.6.7</version>-->
+<!--				<extensions>true</extensions>-->
+<!--				<configuration>-->
+<!--					<serverId>ossrh</serverId>-->
+<!--					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>-->
+<!--					<autoReleaseAfterClose>true</autoReleaseAfterClose>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -512,9 +523,9 @@
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>${maven-javadoc-plugin.version}</version>
 						<configuration>
-							<excludePackageNames>
-								com.alibaba.langengine.*
-							</excludePackageNames>
+<!--							<excludePackageNames>-->
+<!--								com.alibaba.langengine.*-->
+<!--							</excludePackageNames>-->
 							<detectJavaApiLink>false</detectJavaApiLink>
 							<doclint>none</doclint>
 							<quiet>true</quiet>
