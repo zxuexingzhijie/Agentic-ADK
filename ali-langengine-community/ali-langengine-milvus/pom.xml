@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.alibaba</groupId>
         <artifactId>ali-langengine</artifactId>
-        <version>1.2.6-SNAPSHOT</version>
+        <version>1.2.6-202508111516</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>ali-langengine-core</artifactId>
-            <version>1.2.6-SNAPSHOT</version>
+            <version>1.2.6-202508111516</version>
         </dependency>
 
         <!-- milvus start -->
