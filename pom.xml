@@ -49,11 +49,13 @@
 		<root.basedir>${project.basedir}</root.basedir>
 		<maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
 		<flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
+		<ali-agentic-adk.version>0.0.2</ali-agentic-adk.version>
 	</properties>
 
 	<modules>
 		<module>ali-langengine-core</module>
-<!--		<module>ali-langengine-demo</module>-->
+		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use</module>
+		<!--		<module>ali-langengine-demo</module>-->
 
 <!--		<module>ali-langengine-infrastructure/ali-langengine-docloader</module>-->
 <!--		<module>ali-langengine-infrastructure/ali-langengine-tool</module>-->
@@ -94,7 +96,7 @@
 <!--		<module>ali-langengine-community/ali-langengine-tablestore</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-jsonrepair</module>-->
 
-<!--		<module>ali-agentic-adk-core</module>-->
+		<module>ali-agentic-adk-core</module>
 
 <!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
