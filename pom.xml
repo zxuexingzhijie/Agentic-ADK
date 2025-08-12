@@ -97,8 +97,7 @@
 <!--		<module>ali-langengine-community/ali-langengine-jsonrepair</module>-->
 
 		<module>ali-agentic-adk-core</module>
-
-<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
+		<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
 	</modules>
 	<dependencyManagement>
