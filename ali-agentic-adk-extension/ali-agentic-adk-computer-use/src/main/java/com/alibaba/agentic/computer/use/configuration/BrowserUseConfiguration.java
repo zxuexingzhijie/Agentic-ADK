@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Slf4j
-@ConditionalOnProperty(name = "ali.adk.browser.use.properties.enableWuying", havingValue = "true")
+@ConditionalOnProperty(name = "ali.adk.browser.use.properties.enable", havingValue = "true")
 @Configuration
 public class BrowserUseConfiguration {
 

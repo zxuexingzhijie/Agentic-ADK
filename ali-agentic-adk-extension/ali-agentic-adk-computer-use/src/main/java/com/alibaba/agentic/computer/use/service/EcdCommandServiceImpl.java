@@ -23,7 +23,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-@ConditionalOnProperty(name = "ali.adk.browser.use.properties.enableWuying", havingValue = "true")
+@ConditionalOnProperty(name = "ali.adk.browser.use.properties.enable", havingValue = "true")
 public class EcdCommandServiceImpl implements EcdCommandService{
 
     @Autowired
