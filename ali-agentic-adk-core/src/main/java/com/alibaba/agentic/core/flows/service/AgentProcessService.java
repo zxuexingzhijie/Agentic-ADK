@@ -22,7 +22,7 @@ public interface AgentProcessService {
 
 
     /**
-     * 将一个flow花布转换为一个bpmnxml并部署到内存，返回定义的flow信息
+     * 将一个flow画布转换为一个bpmn xml并部署到内存，返回定义的flow信息
      *
      * @param flowCanvas {@link FlowCanvas}
      * @return {@link FlowDefinition}

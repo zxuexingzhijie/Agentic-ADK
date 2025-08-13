@@ -49,7 +49,7 @@ public class MinimaxAudioToolTest {
         String apiKey = System.getenv("MINIMAX_API_KEY");
         MinimaxAudioTool minimaxAudioTool = new MinimaxAudioTool(groupId, apiKey);
         minimaxAudioTool.setStream(true);
-        minimaxAudioTool.setFileName("strem.mp3");
+        minimaxAudioTool.setFileName("stream.mp3");
         minimaxAudioTool.setConsumer(new Consumer<MinimaxAudioStreamResult>() {
             @Override
             public void accept(MinimaxAudioStreamResult bytes) {

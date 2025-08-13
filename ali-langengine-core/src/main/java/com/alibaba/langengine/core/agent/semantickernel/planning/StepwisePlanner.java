@@ -61,9 +61,9 @@ public class StepwisePlanner extends BasePlanner {
 //                "10. 一起去舞蹈课 (Take a dance class together).\n" +
 //                "\n" +
 //                "Hope you have a great celebration!";
-//        Matcher funishMatcher = S_FINAL_REGEX.matcher(text);
-//        if(funishMatcher.find()) {
-//            String finishAnswer = funishMatcher.group(1).trim();
+//        Matcher finishMatcher = S_FINAL_REGEX.matcher(text);
+//        if(finishMatcher.find()) {
+//            String finishAnswer = finishMatcher.group(1).trim();
 //            System.out.println("finishAnswer:" + finishAnswer);
 //        }
 //    }

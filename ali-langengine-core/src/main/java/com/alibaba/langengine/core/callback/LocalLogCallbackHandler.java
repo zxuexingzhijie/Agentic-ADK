@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.langengine.core.callback.model.CallBackTraceDTO;
+import com.alibaba.langengine.core.callback.model.CallbackTraceDTO;
 import com.alibaba.langengine.core.chain.Chain;
 import com.alibaba.langengine.core.indexes.BaseRetriever;
 import com.alibaba.langengine.core.languagemodel.BaseLanguageModel;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * 4、在代码中回调管理器加上这个类即可
  */
 @Slf4j
-public class LocalLogCallBackHandler extends BaseCallbackHandler {
+public class LocalLogCallbackHandler extends BaseCallbackHandler {
 
     private static final Logger TRACE_LOG = LoggerFactory.getLogger("llm_trace_log");
 
@@ -53,7 +53,7 @@ public class LocalLogCallBackHandler extends BaseCallbackHandler {
 
     private void logBiz(String stage, ExecutionContext executionContext) {
         try {
-            CallBackTraceDTO traceDTO = new CallBackTraceDTO();
+            CallbackTraceDTO traceDTO = new CallbackTraceDTO();
             traceDTO.setTraceId(getTraceId());
             traceDTO.setStage(stage);
             copyObj(executionContext, traceDTO);
@@ -82,7 +82,7 @@ public class LocalLogCallBackHandler extends BaseCallbackHandler {
      * @param executionContext
      * @param traceDTO
      */
-    private void copyObj(ExecutionContext executionContext, CallBackTraceDTO traceDTO) {
+    private void copyObj(ExecutionContext executionContext, CallbackTraceDTO traceDTO) {
         traceDTO.setChainInstanceId(executionContext.getChainInstanceId());
         traceDTO.setEagleEyeCtx(executionContext.getEagleEyeCtx());
         traceDTO.setThrowable(executionContext.getThrowable());

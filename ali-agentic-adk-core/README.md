@@ -118,7 +118,7 @@ llmNode.setId("llmNode1");
 #### 3. 设置节点的后继节点构成Flow
 - 通过`node.next(successorNode)`设置一个一般串联后继节点
 - 通过`node.nextOnCondition(conditionContainer).nextOnElse(flowNode)`设置一个分支后继节点，其中：
-  - `conditionaContaier`通过实现`BaseCondition`接口中的`eval`方法设置条件判断逻辑，并通过`setFlowNode`方法设置条件命中时将要执行的节点；
+  - `conditionContainer`通过实现`BaseCondition`接口中的`eval`方法设置条件判断逻辑，并通过`setFlowNode`方法设置条件命中时将要执行的节点；
   - `nextOnCondition`可以接收一个或多个条件块；
   - `nextOnElse`中设置当一组条件均不命中时将执行的节点；若不设置else默认节点，则xml生成引擎将连至结束节点。
 
