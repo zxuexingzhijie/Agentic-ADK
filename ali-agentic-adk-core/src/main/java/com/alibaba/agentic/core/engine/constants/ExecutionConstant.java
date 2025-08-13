@@ -16,21 +16,39 @@
 package com.alibaba.agentic.core.engine.constants;
 
 /**
- * DESCRIPTION
+ * 执行过程常量定义。
+ * <p>
+ * 定义流程执行过程中使用的键名常量，用于上下文数据传递与结果存储。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/22 16:19
  */
 public class ExecutionConstant {
 
+    /**
+     * 原始请求键名。
+     */
     public static final String ORIGIN_REQUEST = "origin_request";
 
+    /**
+     * 系统上下文键名。
+     */
     public static final String SYSTEM_CONTEXT = "system_context";
 
+    /**
+     * 是否回调标识键名。
+     */
     public static final String IS_CALLBACK = "is_callback";
 
+    /**
+     * 调用结果键名。
+     */
     public static final String INVOKE_RESULT = "invoke_result";
 
+    /**
+     * 回调结果键名。
+     */
     public static final String CALLBACK_RESULT = "callback_result";
 
 }

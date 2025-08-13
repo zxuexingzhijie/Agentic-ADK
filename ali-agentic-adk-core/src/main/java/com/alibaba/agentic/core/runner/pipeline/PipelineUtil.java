@@ -23,7 +23,11 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 /**
- * DESCRIPTION
+ * 管道工具类。
+ * <p>
+ * 提供静态方法访问管道执行能力，简化外部调用。
+ * 通过 Spring 容器初始化时注入具体的管道实现。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/10 17:10
@@ -31,15 +35,30 @@ import javax.annotation.PostConstruct;
 @Component
 public class PipelineUtil {
 
+    /**
+     * 静态管道实例，在容器初始化后设置。
+     */
     private static AbstractPipeline pipeline;
 
+    /**
+     * 通过依赖注入获取的管道实现。
+     */
     @Autowired
     private AbstractPipeline abstractPipeline;
 
+    /**
+     * 执行管道处理的静态入口。
+     *
+     * @param request 管道请求
+     * @return 执行结果流
+     */
     public static Flowable<Result> doPipe(PipelineRequest request) {
         return PipelineUtil.pipeline.doPipes(request);
     }
 
+    /**
+     * 初始化方法，设置静态管道实例。
+     */
     @PostConstruct
     public void init() {
         PipelineUtil.pipeline = abstractPipeline;

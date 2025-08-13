@@ -30,8 +30,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DESCRIPTION
- * agent执行样例参考，后续使用smart engine实现
+ * 代理执行管道。
+ * <p>
+ * 作为流程执行的核心管道，负责启动流程定义并返回执行结果流。
+ * 当前实现基于 FlowProcessService，后续计划迁移至 Smart Engine。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/10 17:07
@@ -43,6 +46,12 @@ public class AgentExecutePipe implements PipeInterface {
     @Autowired
     private FlowProcessService flowProcessService;
 
+    /**
+     * 执行管道处理。
+     *
+     * @param pipelineRequest 管道请求，包含流程定义与执行上下文
+     * @return 执行结果流
+     */
     @Override
     public Flowable<Result> doPipe(PipelineRequest pipelineRequest) {
         FlowDefinition definition = pipelineRequest.getFlowDefinition();
@@ -51,7 +60,15 @@ public class AgentExecutePipe implements PipeInterface {
         return (Flowable<Result>) response.get(ExecutionConstant.INVOKE_RESULT);
     }
 
-
+    /**
+     * 判断是否忽略该管道。
+     * <p>
+     * 当前实现始终返回 false，即所有请求都会被该管道处理。
+     * </p>
+     *
+     * @param pipelineRequest 管道请求
+     * @return false - 不忽略任何请求
+     */
     @Override
     public boolean ignore(PipelineRequest pipelineRequest) {
         return false;

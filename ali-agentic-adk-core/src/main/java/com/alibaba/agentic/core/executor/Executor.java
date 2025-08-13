@@ -18,14 +18,25 @@ package com.alibaba.agentic.core.executor;
 import io.reactivex.rxjava3.core.Flowable;
 
 /**
- * DESCRIPTION
- * 所有具体调用的基础类
+ * 执行器抽象，定义具体能力单元的统一调用入口。
+ * <p>
+ * 框架内所有具体调用均实现该接口，通过 {@link #invoke(SystemContext, Request)}
+ * 以响应式流（Flowable）的形式返回执行结果。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/4 17:21
  */
 public interface Executor {
 
+    /**
+     * 执行能力单元。
+     *
+     * @param systemContext 系统上下文，包含调用模式、上下文中间结果等
+     * @param request       调用请求，包含参数与交互模式
+     * @return 结果流
+     * @throws Throwable 允许实现抛出异常，由上层统一封装为 {@link Result#fail(Throwable)}
+     */
     Flowable<Result> invoke(SystemContext systemContext, Request request) throws Throwable;
 
 }

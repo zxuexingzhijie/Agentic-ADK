@@ -16,23 +16,44 @@
 package com.alibaba.agentic.core.engine.constants;
 
 /**
- * DESCRIPTION
+ * 节点类型常量定义。
+ * <p>
+ * 定义框架支持的所有流程节点类型，用于节点创建和类型判断。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/30 14:48
  */
 public class NodeType {
 
+    /**
+     * 工具节点类型。
+     */
     public static final String TOOL = "tool";
 
+    /**
+     * 引用节点类型。
+     */
     public static final String REFERENCE = "reference";
 
+    /**
+     * 并行节点类型。
+     */
     public static final String PARALLEL = "parallel";
 
+    /**
+     * 循环节点类型。
+     */
     public static final String LOOP = "loop";
 
+    /**
+     * 大语言模型节点类型。
+     */
     public static final String LLM = "llmNode";
 
+    /**
+     * 空操作节点类型。
+     */
     public static final String NOP = "nop";
 
 }

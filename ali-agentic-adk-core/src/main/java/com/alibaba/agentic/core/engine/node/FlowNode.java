@@ -39,27 +39,60 @@ import org.dom4j.QName;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * 流程节点抽象基类。
+ * <p>
+ * 定义流程中节点的基本结构与行为，支持线性连接、条件分支等流程控制。
+ * 每个节点可配置后续节点（next）或条件分支（conditionalContainerList），
+ * 但两者不能同时存在。
+ * </p>
+ *
+ * @author 框架团队
+ */
 @Data
 @Accessors(chain = true)
 public abstract class FlowNode {
 
-    // 节点id
+    /**
+     * 节点唯一标识。
+     */
     private String id;
-    // 节点名称
+
+    /**
+     * 节点名称。
+     */
     private String name;
 
-    // 注意，next、conditionalContainerList字段仅允许至多一者非空
-    // 不存在分支条件情况下的唯一后续节点，类型继承FlowNode
+    /**
+     * 线性后续节点。
+     * <p>
+     * 注意：next 与 conditionalContainerList 字段仅允许至多一者非空。
+     * 用于不存在分支条件情况下的唯一后续节点。
+     * </p>
+     */
     private FlowNode next;
 
-    // 选择条件下的所有分支node
+    /**
+     * 条件分支容器列表。
+     * <p>
+     * 包含所有分支条件与对应的后续节点，用于实现条件路由。
+     * </p>
+     */
     private List<ConditionalContainer> conditionalContainerList;
-    // 如果conditionalContainerList中的条件均不命中，则走如下缺省逻辑作为保证流程正常运行的兜底；
-    // 只有在conditionalContainerList非空时，elseNext才有效
-    // 如果使用conditionalContainerList，该字段默认连接一个空操作节点并连向结束节点
+
+    /**
+     * 分支条件的兜底后续节点。
+     * <p>
+     * 当 conditionalContainerList 中的条件均不命中时，走该兜底逻辑
+     * 以保证流程正常运行。只有在 conditionalContainerList 非空时，
+     * elseNext 才有效。默认连接一个空操作节点并连向结束节点。
+     * </p>
+     */
     private FlowNode elseNext;
 
-    // 在一个FlowNode实例内单例
+    /**
+     * 网关实例，在一个 FlowNode 实例内单例。
+     */
     private Gateway gateway;
 
     // 节点类型

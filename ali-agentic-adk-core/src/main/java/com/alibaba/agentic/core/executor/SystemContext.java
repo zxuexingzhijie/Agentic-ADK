@@ -23,7 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DESCRIPTION
+ * 系统上下文，贯穿整个执行生命周期的状态容器。
+ * <p>
+ * 包含当前执行器、调用模式、流处理器以及节点间的中间结果传递。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/28 09:52
@@ -32,15 +35,29 @@ import java.util.Map;
 @Accessors(chain = true)
 public class SystemContext {
 
+    /**
+     * 当前执行器实例。
+     */
     private Executor executor;
 
+    /**
+     * 调用模式（同步、异步、双工）。
+     */
     private InvokeMode invokeMode;
 
+    /**
+     * 流处理器，用于双工模式下的事件流处理。
+     */
     private FlowableProcessor<String> processor;
 
+    /**
+     * 原始请求参数。
+     */
     private Map<String, Object> requestParameter;
 
-    // activityId -> result
+    /**
+     * 节点间中间结果存储，键为节点ID，值为该节点的输出结果。
+     */
     private Map<String, Map<String, Object>> interOutput = new HashMap<>();
 
 }

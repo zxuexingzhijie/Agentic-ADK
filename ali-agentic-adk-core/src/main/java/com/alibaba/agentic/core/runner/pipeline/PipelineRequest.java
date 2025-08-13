@@ -24,7 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * DESCRIPTION
+ * 管道请求模型。
+ * <p>
+ * 封装管道执行所需的上下文信息，包括流程定义、请求参数以及可选的管道代码列表。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/10 17:25
@@ -34,12 +37,19 @@ import java.util.Map;
 @ToString
 public class PipelineRequest {
 
-    //执行的pipeline的code list
+    /**
+     * 执行的管道代码列表，用于指定特定管道的执行顺序。
+     */
     private List<String> pipeCodeList;
 
+    /**
+     * 流程定义，包含完整的流程结构与配置。
+     */
     private FlowDefinition flowDefinition;
 
-    // originRequest -> request
+    /**
+     * 请求上下文，包含原始请求与系统上下文等信息。
+     */
     private Map<String, Object> request;
 
 }
