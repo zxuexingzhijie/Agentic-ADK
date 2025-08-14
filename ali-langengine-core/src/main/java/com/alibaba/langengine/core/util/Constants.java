@@ -16,7 +16,13 @@
 package com.alibaba.langengine.core.util;
 
 /**
- * 常量
+ * 系统常量定义类
+ * 
+ * 核心功能：
+ * - 定义配置文件名称常量
+ * - 管理应用环境配置
+ * - 提供回调和错误处理常量
+ * - 统一系统级别的常量管理
  *
  * @author xiaoxuan.lp
  */

@@ -28,7 +28,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * A unit of work that can be invoked, batched, streamed, transformed and composed.
+ * Runnable基础抽象类，可执行工作单元的基类
+ * 
+ * 核心功能：
+ * - 提供统一的调用、批处理、流式处理接口
+ * - 支持异步执行和组合变换
+ * - 实现链式调用和管道操作
+ * - 提供重试、回退等高级功能
  *
  * @author xiaoxuan.lp
  */

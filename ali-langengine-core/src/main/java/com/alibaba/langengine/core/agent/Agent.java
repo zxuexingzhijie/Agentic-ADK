@@ -23,7 +23,12 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * 负责调用语言模型并决定动作的类
+ * Agent基础抽象类，负责调用语言模型并决定下一步动作
+ * 
+ * 主要功能：
+ * - 管理Agent的思考过程和中间步骤
+ * - 构建完整的输入参数供LLM处理
+ * - 解析LLM输出并决定下一步动作
  *
  * @author xiaoxuan.lp
  */
@@ -65,10 +70,11 @@ public abstract class Agent extends BaseSingleActionAgent {
     }
 
     /**
-     * 构建让代理继续其思考过程的暂存器
+     * 构建Agent的思考暂存器，记录中间步骤和观察结果
+     * 用于让Agent基于历史动作和结果进行下一步推理
      *
-     * @param intermediateSteps
-     * @return
+     * @param intermediateSteps 中间执行步骤列表
+     * @return 格式化的思考过程字符串
      */
     public String constructScratchpad(List<AgentAction> intermediateSteps) {
         String thoughts = "";
@@ -92,11 +98,12 @@ public abstract class Agent extends BaseSingleActionAgent {
     }
 
     /**
-     * 从中间步骤为 LLMChain 创建完整的输入
+     * 为LLMChain创建完整的输入参数
+     * 包含用户输入、思考暂存器和停止条件
      *
-     * @param intermediateSteps
-     * @param inputs
-     * @return
+     * @param intermediateSteps 中间执行步骤
+     * @param inputs 用户输入参数
+     * @return 完整的LLM输入参数映射
      */
     public Map<String, Object> getFullInputs(List<AgentAction> intermediateSteps, Map<String, Object> inputs) {
         String thoughts = constructScratchpad(intermediateSteps);

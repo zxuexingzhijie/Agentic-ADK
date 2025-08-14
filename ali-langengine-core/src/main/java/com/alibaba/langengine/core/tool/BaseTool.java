@@ -39,7 +39,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * LangEngine工具必须实现的接口
+ * Tool基础抽象类，所有工具组件的基类
+ * 
+ * 核心功能：
+ * - 定义工具的名称、描述和参数结构
+ * - 提供工具执行的统一接口
+ * - 支持函数定义和参数验证
+ * - 集成回调管理和执行上下文
  *
  * @author xiaoxuan.lp
  */

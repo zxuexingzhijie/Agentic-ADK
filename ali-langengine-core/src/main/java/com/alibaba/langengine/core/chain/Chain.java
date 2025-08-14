@@ -40,7 +40,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
 
 /**
- * 所有链都应该实现的基类
+ * Chain基础抽象类，所有链式处理组件的基类
+ * 
+ * 核心功能：
+ * - 提供统一的链式处理接口
+ * - 管理语言模型和内存组件
+ * - 支持回调管理和执行上下文
+ * - 提供同步和异步执行方法
  *
  * @author xiaoxuan.lp
  */

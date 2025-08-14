@@ -24,7 +24,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 嵌入模型基类
+ * Embeddings基础抽象类，文本向量化嵌入模型的基类
+ * 
+ * 核心功能：
+ * - 将文本转换为向量表示
+ * - 支持文档和查询文本的嵌入
+ * - 提供批量文本处理能力
+ * - 定义统一的嵌入模型接口
  *
  * @author xiaoxuan.lp
  */
