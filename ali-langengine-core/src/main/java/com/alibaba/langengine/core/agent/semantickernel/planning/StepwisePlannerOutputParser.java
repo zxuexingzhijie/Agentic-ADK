@@ -52,9 +52,9 @@ public class StepwisePlannerOutputParser extends AgentOutputParser<AgentNextStep
         if(text.indexOf("[THOUGHT]") >= 0) {
             text = text.substring(text.indexOf("[THOUGHT]"));
         }
-        Matcher funishMatcher = S_FINAL_REGEX.matcher(text);
-        if(funishMatcher.find()) {
-            String finishAnswer = funishMatcher.group(1).trim();
+        Matcher finishMatcher = S_FINAL_REGEX.matcher(text);
+        if(finishMatcher.find()) {
+            String finishAnswer = finishMatcher.group(1).trim();
             return getAgentFinish(finishAnswer);
         }
 

@@ -231,7 +231,7 @@ public class XingchenRawLLM extends BaseLLM<ChatCompletionRequest> {
 
         try {
 
-            // 对于聊天模型，还需要加一些历史内容再里面
+            // 对于聊天模型，还需要加一些历史内容在里面
             // 取用户的原始输入
             List<Map<String, String>> messageList = extractStructuredContent(prompt);
             List<Message> messages = processHistoryMessages(prompt,messageList);

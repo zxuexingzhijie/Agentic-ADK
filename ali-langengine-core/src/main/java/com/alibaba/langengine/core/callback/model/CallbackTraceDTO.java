@@ -33,7 +33,7 @@ import lombok.Data;
  * 功能说明：
  */
 @Data
-public class CallBackTraceDTO {
+public class CallbackTraceDTO {
 
     /**
      * 当前的交互发送在那一次的会话中

@@ -49,11 +49,11 @@ public class MinimaxAudioToolTest {
         String apiKey = System.getenv("MINIMAX_API_KEY");
         MinimaxAudioTool minimaxAudioTool = new MinimaxAudioTool(groupId, apiKey);
         minimaxAudioTool.setStream(true);
-        minimaxAudioTool.setFileName("strem.mp3");
+        minimaxAudioTool.setFileName("stream.mp3");
         minimaxAudioTool.setConsumer(new Consumer<MinimaxAudioStreamResult>() {
             @Override
             public void accept(MinimaxAudioStreamResult bytes) {
-                // 音频的字符串，可以直接写入文件，或者输出到忘了中
+                // 音频的字符串，可以直接写入文件，或者输出到终端中
                 System.out.println(bytes.getData().getAudio());
             }
         });

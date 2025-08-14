@@ -54,7 +54,7 @@ public class BizExecutionContext extends ExecutionContext {
     private Map<String, Object> utBizParams;
 
     /**
-     * 当前的业务位于那一次的会话
+     * 当前的业务位于哪一次的会话
      * 主要由于LLM作为ChatBox的场景比较多，大部分的生成是发生在某一次会话中；
      * 通过会话Id，把生成的结果和会话关联起来
      */

@@ -61,7 +61,7 @@ public class AiRedisTemplate {
         try (Jedis jedis = jedisPool.getResource()) {
             return jedis.setnx(key, value);
         } catch (Exception ex) {
-            log.error("redis setMx method occur exception", ex);
+            log.error("redis setnx method occur exception", ex);
             throw ex;
         }
     }

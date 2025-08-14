@@ -80,7 +80,7 @@ public class DocstoreExplorer {
 
     private String getSummary() {
         if(document == null) {
-            throw new RuntimeException("annot get paragraphs without a document");
+            throw new RuntimeException("Cannot get paragraphs without a document");
         }
         String[] paragraphs = getParagraphs();
         return paragraphs[0];
