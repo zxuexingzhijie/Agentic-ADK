@@ -91,13 +91,14 @@
 <!--		<module>ali-langengine-community/ali-langengine-metagpt</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-claude</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-lindorm</module>-->
-		<module>ali-langengine-community/ali-langengine-deepseek</module>
+<!--		<module>ali-langengine-community/ali-langengine-deepseek</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-openmanus</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-tablestore</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-jsonrepair</module>-->
-		<module>ali-langengine-community/ali-langegine-tavily</module>
+		<module>ali-langengine-community/ali-langengine-tavily</module>
 
 		<module>ali-agentic-adk-core</module>
+
 
 		<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-tair</module>-->

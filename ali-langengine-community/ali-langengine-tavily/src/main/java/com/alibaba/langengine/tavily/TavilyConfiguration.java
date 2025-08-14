@@ -19,11 +19,8 @@ import com.alibaba.langengine.core.util.WorkPropertiesUtils;
 import static com.alibaba.langengine.tavily.sdk.TavilyConstant.BASE_URL;
 
 public class TavilyConfiguration {
-    /**
-     * Tavily API key for authentication
-     */
     public static String TAVILY_API_KEY = WorkPropertiesUtils.get("tavily_api_key");
-    
+
     /**
      * Tavily API base URL, defaults to the constant BASE_URL if not configured
      */
