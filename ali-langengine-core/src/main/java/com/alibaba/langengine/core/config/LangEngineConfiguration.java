@@ -22,7 +22,13 @@ import com.alibaba.langengine.core.util.NullAwareBeanUtilsBean;
 import com.alibaba.langengine.core.util.WorkPropertiesUtils;
 
 /**
- * LangeEngine configuration
+ * LangEngine全局配置类
+ * 
+ * 核心功能：
+ * - 管理全局配置参数和缓存
+ * - 提供统一的回调管理器
+ * - 配置Bean工具和属性管理
+ * - 定义系统级常量和默认值
  *
  * @author xiaoxuan.lp
  */

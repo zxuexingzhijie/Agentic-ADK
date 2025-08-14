@@ -38,7 +38,13 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * LLM包装器应接受提示并返回一个字符串
+ * LLM基础抽象类，所有大语言模型的基类
+ * 
+ * 核心功能：
+ * - 接受提示输入并返回文本生成结果
+ * - 支持流式和批量文本生成
+ * - 提供函数调用和工具使用能力
+ * - 管理模型参数和生成配置
  *
  * @author xiaoxuan.lp
  */

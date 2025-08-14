@@ -26,7 +26,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 向量存储的基类
+ * VectorStore基础抽象类，向量数据库存储的基类
+ * 
+ * 核心功能：
+ * - 存储和管理文档向量
+ * - 提供相似性搜索和检索
+ * - 支持文档的添加、删除和更新
+ * - 集成检索器进行查询优化
  *
  * @author xiaoxuan.lp
  */

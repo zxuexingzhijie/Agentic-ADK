@@ -36,7 +36,13 @@ import java.util.stream.Collectors;
 import static com.alibaba.langengine.core.util.Constants.CALLBACK_ERROR_KEY;
 
 /**
- * 使用工具的代理执行器
+ * Agent执行器，负责管理Agent的执行流程和工具调用
+ * 
+ * 核心功能：
+ * - 控制Agent的执行循环和最大迭代次数
+ * - 管理工具集合和工具调用
+ * - 处理Agent的中间步骤和最终结果
+ * - 支持早停策略和执行时间限制
  *
  * @author xiaoxuan.lp
  */

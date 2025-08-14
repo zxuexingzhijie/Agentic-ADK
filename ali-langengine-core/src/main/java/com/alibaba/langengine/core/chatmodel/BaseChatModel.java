@@ -43,7 +43,13 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * ChatModel模型基类
+ * ChatModel基础抽象类，专门处理对话式交互的模型基类
+ * 
+ * 核心功能：
+ * - 处理结构化的消息对话
+ * - 支持多轮对话上下文管理
+ * - 提供聊天完成和流式响应
+ * - 集成函数调用和工具使用
  *
  * @author xiaoxuan.lp
  */

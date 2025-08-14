@@ -24,7 +24,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
- * jackson辅助工具
+ * Jackson JSON序列化工具类
+ * 
+ * 核心功能：
+ * - 提供Jackson ObjectMapper的管理和配置
+ * - 支持不同服务的Mapper注册和获取
+ * - 定义JSON序列化的通用配置
+ * - 管理类型信息属性名称常量
  *
  * @author xiaoxuan.lp
  */

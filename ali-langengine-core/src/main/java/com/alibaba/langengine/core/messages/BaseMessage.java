@@ -24,7 +24,13 @@ import lombok.Data;
 import java.util.Map;
 
 /**
- * 消息基类
+ * Message基础抽象类，所有消息类型的基类
+ * 
+ * 核心功能：
+ * - 封装消息内容和元数据
+ * - 支持思维链推理内容
+ * - 提供消息类型标识
+ * - 管理token计数和额外属性
  *
  * @author xiaoxuan.lp
  */

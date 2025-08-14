@@ -23,9 +23,16 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 
 /**
+ * Map集合工具类
+ * 
+ * 核心功能：
+ * - 提供Map的过滤和转换操作
+ * - 支持类型安全的Map转换
+ * - 实现参数提取和验证
+ * - 提供Map合并和处理方法
+ *
  * @author aihe.ah
  * @time 2023/10/1
- * 功能说明：
  */
 public class MapUtils {
 

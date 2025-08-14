@@ -32,7 +32,13 @@ import java.util.stream.Collectors;
 import static com.alibaba.langengine.core.util.Constants.CALLBACK_ERROR_KEY;
 
 /**
- * 接以针对 LLM 运行查询
+ * LLM链，将提示模板和语言模型组合进行查询处理
+ * 
+ * 核心功能：
+ * - 结合提示模板和LLM进行文本生成
+ * - 支持批量和流式处理
+ * - 提供预测和格式化输出
+ * - 管理输入输出键值映射
  *
  * @author xiaoxuan.lp
  */

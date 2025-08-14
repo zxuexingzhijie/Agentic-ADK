@@ -25,7 +25,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 链中内存的基本接口
+ * Memory基础抽象类，管理对话历史和上下文信息
+ * 
+ * 核心功能：
+ * - 存储和检索对话历史记录
+ * - 管理不同角色的消息前缀
+ * - 提供内存变量的键值管理
+ * - 支持选择性忽略特定角色消息
  *
  * @author xiaoxuan.lp
  */
