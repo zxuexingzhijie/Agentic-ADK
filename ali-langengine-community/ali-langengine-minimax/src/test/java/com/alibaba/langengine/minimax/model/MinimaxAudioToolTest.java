@@ -53,7 +53,7 @@ public class MinimaxAudioToolTest {
         minimaxAudioTool.setConsumer(new Consumer<MinimaxAudioStreamResult>() {
             @Override
             public void accept(MinimaxAudioStreamResult bytes) {
-                // 音频的字符串，可以直接写入文件，或者输出到忘了中
+                // 音频的字符串，可以直接写入文件，或者输出到终端中
                 System.out.println(bytes.getData().getAudio());
             }
         });
