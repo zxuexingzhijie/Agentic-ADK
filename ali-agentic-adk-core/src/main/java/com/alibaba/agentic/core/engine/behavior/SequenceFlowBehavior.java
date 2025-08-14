@@ -33,10 +33,26 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
+/**
+ * 序列流行为实现。
+ * <p>
+ * 实现序列流的条件匹配逻辑，决定流程是否应该沿着特定的序列流继续执行。
+ * 支持条件分支判断，对于默认分支（else分支）会在其他条件都不匹配时作为兜底选择。
+ * </p>
+ *
+ * @author 框架团队
+ */
 @Slf4j
 @ExtensionBinding(group = ExtensionConstant.ACTIVITY_BEHAVIOR, bindKey = TransitionBehavior.class, priority = 1)
 public class SequenceFlowBehavior extends AbstractTransitionBehavior<SequenceFlow> {
 
+    /**
+     * 判断序列流是否匹配当前执行上下文。
+     *
+     * @param executionContext 执行上下文
+     * @param transition       转换（序列流）
+     * @return true - 匹配，false - 不匹配
+     */
     @Override
     public boolean match(ExecutionContext executionContext, Transition transition) {
         log.info("smart engine execute fancy sequence flow match: {}", executionContext.getRequest());

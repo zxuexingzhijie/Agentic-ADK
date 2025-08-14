@@ -20,7 +20,11 @@ import com.alibaba.agentic.core.executor.Result;
 import java.util.function.Consumer;
 
 /**
- * DESCRIPTION
+ * 异步结果消费器。
+ * <p>
+ * 继承 {@link Consumer}，专门用于处理异步执行产生的 {@link Result}。
+ * 框架在异步任务完成后，会调用该接口的实现来处理结果。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/28 16:21

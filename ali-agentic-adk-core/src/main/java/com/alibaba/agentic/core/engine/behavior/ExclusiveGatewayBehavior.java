@@ -31,6 +31,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
+/**
+ * 排他网关行为实现。
+ * <p>
+ * 实现排他网关的执行逻辑，根据执行结果选择唯一的后续分支。
+ * 当执行出现错误时，会选择默认分支；正常情况下，从多个出边中选择匹配条件的唯一分支。
+ * </p>
+ *
+ * @author 框架团队
+ */
 @Slf4j
 @ExtensionBinding(group = ExtensionConstant.ACTIVITY_BEHAVIOR, bindKey = ExclusiveGateway.class, priority = 1)
 public class ExclusiveGatewayBehavior extends AbstractActivityBehavior<ExclusiveGateway> {

@@ -19,7 +19,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * DESCRIPTION
+ * 属性常量定义。
+ * <p>
+ * 定义框架使用的配置属性常量，包括API密钥、默认值以及符号标识等。
+ * 通过Spring的@Value注解从配置文件中注入相关属性值。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/8/5 18:00
@@ -27,14 +31,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class PropertyConstant {
 
+    /**
+     * DashScope API密钥，从配置文件中注入。
+     */
     public static String dashscopeApiKey;
 
+    /**
+     * 默认值常量。
+     */
     public static final String DEFAULT = "default";
 
+    /**
+     * 符号键名常量。
+     */
     public static final String SYMBOL_KEY = "symbol";
 
+    /**
+     * 条件默认流符号值常量。
+     */
     public static final String SYMBOL_VALUE_CONDITION_DEFAULT_FLOW = "conditionDefaultFlow";
 
+    /**
+     * 设置DashScope API密钥。
+     *
+     * @param dashscopeApiKey 从配置文件注入的API密钥
+     */
     @Value(value = "${ali.agentic.adk.flownode.dashscope.apiKey:**}")
     public void setDashscopeApiKey(String dashscopeApiKey) {
         PropertyConstant.dashscopeApiKey = dashscopeApiKey;

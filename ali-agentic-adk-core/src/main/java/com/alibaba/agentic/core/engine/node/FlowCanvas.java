@@ -38,20 +38,42 @@ import org.dom4j.io.XMLWriter;
 import java.io.StringWriter;
 import java.util.*;
 
+/**
+ * 流程画布。
+ * <p>
+ * 流程定义的核心容器，包含流程的根节点、配置信息以及部署能力。
+ * 负责将流程节点结构转换为 BPMN XML 格式，并部署到执行引擎中。
+ * </p>
+ *
+ * @author 框架团队
+ */
 @Slf4j
 @Data
 public class FlowCanvas {
 
     private static final String SMART_NAMESPACE_PREFIX = "smart";
 
-    // 执行的头节点
+    /**
+     * 流程的根节点（起始执行节点）。
+     */
     private FlowNode root;
-    // 执行的session 信息存储的方式
-    // 整个流程中共享的全局变量
+
+    /**
+     * 流程配置信息。
+     * <p>
+     * 包含整个流程中共享的全局变量与会话信息存储方式。
+     * </p>
+     */
     private FlowConfig flowConfig;
 
+    /**
+     * 流程定义标识。
+     */
     private String processDefinitionId;
 
+    /**
+     * 流程版本号。
+     */
     private String version;
 
     // 部署最终生成的bpmn xml内容

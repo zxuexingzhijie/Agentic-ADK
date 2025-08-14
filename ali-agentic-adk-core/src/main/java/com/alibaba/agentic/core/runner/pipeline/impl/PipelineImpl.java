@@ -24,7 +24,11 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
- * DESCRIPTION
+ * 管道实现类。
+ * <p>
+ * 继承 {@link AbstractPipeline}，负责收集所有 {@link PipeInterface} 实现并组装成管道链。
+ * 在 Spring 容器初始化后，自动注入所有管道实现并添加到执行链中。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/10 20:37
@@ -32,9 +36,18 @@ import java.util.List;
 @Component
 public class PipelineImpl extends AbstractPipeline {
 
+    /**
+     * 所有管道接口实现的列表，由 Spring 自动注入。
+     */
     @Autowired
     private List<PipeInterface> agentExecutePipeList;
 
+    /**
+     * 初始化方法，在 Bean 创建后自动执行。
+     * <p>
+     * 将所有注入的管道实现添加到父类的管道链中。
+     * </p>
+     */
     @PostConstruct
     public void init() {
         addPipe(agentExecutePipeList);

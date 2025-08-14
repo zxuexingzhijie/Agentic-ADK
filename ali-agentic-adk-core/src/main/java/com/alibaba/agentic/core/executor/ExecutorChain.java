@@ -19,7 +19,12 @@ import io.reactivex.rxjava3.core.Flowable;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * DESCRIPTION
+ * 执行链，将执行器与 before/after 回调以链式方式编排执行。
+ * <p>
+ * 同步调用：beforeCallbacks -> execute -> afterCallbacks。
+ * 其他调用：beforeCallbacks -> execute。
+ * 异步回调：afterCallbacks -> receive。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/8 11:20
@@ -61,6 +66,9 @@ public class ExecutorChain implements CallbackChain {
         }
     }
 
+    /**
+     * 返回当前链路的结果流。
+     */
     public Flowable<Result> getResult() {
         return result;
     }

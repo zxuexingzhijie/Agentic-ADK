@@ -39,7 +39,11 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
- * DESCRIPTION
+ * 负责根据流程画布或流程定义启动执行，并协调同步/双工（BIDI）调用与异步回调的衔接。
+ * <p>
+ * - 当为同步调用时，直接按流程定义执行并返回结果流。
+ * - 当为双工（BIDI）调用时，订阅外部事件流，将每次事件转化为一次流程请求并汇聚结果。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/10 14:30
@@ -63,11 +67,11 @@ public class Runner {
     }
 
     /**
-     * 通过canvas运行
+     * 通过流程画布运行。
      *
-     * @param canvas
-     * @param request
-     * @return
+     * @param canvas  流程画布定义
+     * @param request 执行请求，包含调用模式与参数
+     * @return 结果流，按执行进度推送 {@link Result}
      */
     public Flowable<Result> run(FlowCanvas canvas, Request request) {
         AssertUtils.assertNotNull(request.getInvokeMode());
@@ -91,10 +95,14 @@ public class Runner {
     }
 
     /**
-     * 异步任务回调
+     * 异步任务回调入口。
+     * <p>
+     * 框架在外部异步任务完成后，通过该方法将结果注入到对应流程实例与节点，
+     * 继续驱动流程向后执行。
+     * </p>
      *
-     * @param taskInstance
-     * @param result
+     * @param taskInstance 对应的任务实例（包含流程实例与节点信息）
+     * @param result       外部任务返回的结果
      */
     public void signal(TaskInstance taskInstance, Result result) {
         flowProcessService.signal(taskInstance.getProcessInstance(),
@@ -105,6 +113,13 @@ public class Runner {
     }
 
 
+    /**
+     * 按流程定义运行。
+     *
+     * @param flowDefinition 流程定义
+     * @param request        执行请求
+     * @return 结果流
+     */
     private Flowable<Result> run(FlowDefinition flowDefinition, Request request) {
         return PipelineUtil.doPipe(PipelineRequest.builder()
                 .flowDefinition(flowDefinition)

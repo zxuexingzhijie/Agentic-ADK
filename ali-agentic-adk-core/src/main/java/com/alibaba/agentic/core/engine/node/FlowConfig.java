@@ -19,12 +19,26 @@ import lombok.Data;
 
 import java.util.Map;
 
+/**
+ * 流程配置。
+ * <p>
+ * 包含流程执行过程中的全局配置与用户输入，
+ * 在整个流程生命周期内共享。
+ * </p>
+ *
+ * @author 框架团队
+ */
 @Data
 public class FlowConfig {
 
-    //配置的全局变量
+    /**
+     * 全局配置变量，在整个流程中共享。
+     */
     private Map<String, Object> globalConfig;
-    //用户的文本输入
+
+    /**
+     * 用户的文本输入查询。
+     */
     private String query;
 
 }

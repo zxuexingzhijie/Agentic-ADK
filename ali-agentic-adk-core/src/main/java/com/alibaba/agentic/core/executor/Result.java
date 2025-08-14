@@ -25,7 +25,11 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import java.util.Map;
 
 /**
- * DESCRIPTION
+ * 执行结果。
+ * <p>
+ * 统一封装执行是否成功、错误码与错误信息，以及可选的数据负载。
+ * 提供便捷的成功/失败工厂方法。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/4 17:52
@@ -35,9 +39,21 @@ import java.util.Map;
 @Accessors(chain = true)
 public class Result {
 
+    /**
+     * 结果数据负载。
+     */
     Map<String, Object> data;
+    /**
+     * 是否成功。
+     */
     private boolean success;
+    /**
+     * 错误码或状态码。
+     */
     private String code;
+    /**
+     * 错误信息或异常堆栈。
+     */
     private String errorMsg;
 
     public Result(boolean success, String code, String errorMsg, Map<String, Object> data) {
@@ -47,11 +63,23 @@ public class Result {
         this.data = data;
     }
 
+    /**
+     * 构造成功结果。
+     *
+     * @param data 数据负载
+     * @return 成功结果
+     */
     public static Result success(Map<String, Object> data) {
         return new Result(true, "200", null, data);
     }
 
 
+    /**
+     * 将异常封装为失败结果。
+     *
+     * @param throwable 异常
+     * @return 失败结果
+     */
     public static Result fail(Throwable throwable) {
         if (throwable instanceof BaseException exception) {
             return new Result(false, exception.getErrorEnum().getCode(), exception.getMessage(), null);

@@ -25,7 +25,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * DESCRIPTION
+ * 委托执行器，负责组织回调链并触发具体执行。
+ * <p>
+ * 依据调用模式（同步/异步/双工），决定是否在执行后触发 after 回调链；
+ * 同时提供异步结果回流的统一入口。
+ * </p>
  *
  * @author baliang.smy
  * @date 2025/7/8 14:54
@@ -39,10 +43,11 @@ public class DelegationExecutor {
     private final static List<Callback> afterCallbacks = new ArrayList<>();
 
     /**
-     * 调用主入口
+     * 调用主入口。
      *
-     * @param request
-     * @return
+     * @param systemContext 系统上下文
+     * @param request       执行请求
+     * @return 结果流
      */
     public static Flowable<Result> invoke(SystemContext systemContext, Request request) {
         boolean needAfterCallback = InvokeMode.SYNC.equals(systemContext.getInvokeMode());
@@ -53,12 +58,15 @@ public class DelegationExecutor {
     }
 
     /**
-     * 异步结果处理主入口
+     * 异步结果处理主入口。
+     * <p>
+     * 框架在收到外部系统的回调后，使用该方法进入 after 回调链，便于继续驱动流程。
+     * </p>
      *
-     * @param systemContext
-     * @param request
-     * @param result
-     * @return
+     * @param systemContext 系统上下文
+     * @param request       原始请求
+     * @param result        外部回调结果
+     * @return 同步返回入参 result，便于调用方链式使用
      */
     public static Result receive(SystemContext systemContext, Request request, Result result) {
         ExecutorChain executorChain = new ExecutorChain(systemContext, null, afterCallbacks.toArray(new Callback[0]));
@@ -66,6 +74,11 @@ public class DelegationExecutor {
         return result;
     }
 
+    /**
+     * 通过依赖注入收集回调，并按类型分别加入 before/after 链。
+     *
+     * @param callbacks 可选的回调列表
+     */
     @Resource
     public void setCallbacks(Optional<List<Callback>> callbacks) {
         callbacks.ifPresent(list -> {
