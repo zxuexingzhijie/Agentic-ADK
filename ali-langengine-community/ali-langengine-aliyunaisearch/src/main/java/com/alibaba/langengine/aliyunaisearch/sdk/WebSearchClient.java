@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import static com.alibaba.langengine.aliyunaisearch.AliyunAiSearchConfiguration.*;
+
 /**
  * Aliyun Web Search Client (Jackson serialization implementation, core business logic)
  */
@@ -35,6 +37,28 @@ public class WebSearchClient {
      */
     public WebSearchClient(ClientConfig clientConfig) {
         this.clientConfig = Objects.requireNonNull(clientConfig, "Client configuration (ClientConfig) cannot be null");
+        // Initialize OkHttpClient (set timeouts consistent with configuration)
+        this.okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(clientConfig.getConnectTimeoutSeconds(), TimeUnit.SECONDS)
+                .readTimeout(clientConfig.getReadTimeoutSeconds(), TimeUnit.SECONDS)
+                .build();
+        // Build request URL (remove trailing "/" from host to avoid URL format errors)
+        this.requestUrl = String.format("%s/v3/openapi/workspaces/%s/web-search/%s",
+                clientConfig.getHost().trim().replaceAll("/$", ""),
+                clientConfig.getWorkspaceName(),
+                clientConfig.getServiceId());
+        LOGGER.info("WebSearchClient initialized, request URL: {}", requestUrl);
+    }
+
+
+    public WebSearchClient() {
+        this.clientConfig = new ClientConfig.Builder()
+                .apiKey(ALIYUN_AI_SEARCH_API_KEY)
+                .serviceId(ALIYUN_AI_SEARCH_API_SERVICE_ID)
+                .connectTimeoutSeconds(Integer.valueOf(ALIYUN_AI_SEARCH_API_TIME_OUT))
+                .readTimeoutSeconds(Integer.valueOf(ALIYUN_AI_SEARCH_API_READ_TIME_OUT))
+                .workspaceName(ALIYUN_AI_SEARCH_API_WORKSPACE)
+                .build();
         // Initialize OkHttpClient (set timeouts consistent with configuration)
         this.okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(clientConfig.getConnectTimeoutSeconds(), TimeUnit.SECONDS)
