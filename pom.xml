@@ -98,6 +98,7 @@
 		<module>ali-langengine-community/ali-langengine-tavily</module>
 
 		<module>ali-agentic-adk-core</module>
+		<module>ali-langengine-community/ali-langengine-aliyunaisearch</module>
 
 
 		<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
