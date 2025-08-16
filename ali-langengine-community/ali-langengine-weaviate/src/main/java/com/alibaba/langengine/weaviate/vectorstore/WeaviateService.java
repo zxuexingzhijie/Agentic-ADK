@@ -15,10 +15,7 @@
  */
 package com.alibaba.langengine.weaviate.vectorstore;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.langengine.core.embeddings.Embeddings;
 import com.alibaba.langengine.core.indexes.Document;
-import com.google.common.collect.Lists;
 import io.weaviate.client.Config;
 import io.weaviate.client.WeaviateClient;
 import io.weaviate.client.base.Result;
@@ -36,8 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
 
 /**
  * @author: xmhu2001
