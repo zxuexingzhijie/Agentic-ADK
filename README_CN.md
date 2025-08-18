@@ -1,6 +1,5 @@
-
-# About
-Agentic ADK is an Agent application development framework launched by Alibaba International AI Business, based on Google-ADK and Ali-LangEngine.
+# 关于
+Agentic ADK 是阿里国际AI Business推出基于 Google-ADK 以及 Ali-LangEngine 的Agent应用开发框架。
 
 <h4 align="center">
 
@@ -13,13 +12,13 @@ Agentic ADK is an Agent application development framework launched by Alibaba In
 </div>
 </h4>
 
-**[Agentic ADK](https://github.com/AIDC-AI/Agentic-ADK)**
+**[English Version](./README.md)**
 
 Agentic ADK 是阿里国际AI Business推出基于 [Google-ADK](https://google.github.io/adk-docs/) 以及 Ali-LangEngine 的Agent应用开发框架，用于开发、构建、评估和部署功能强大、灵活且可控的复杂 AI Agent。ADK 旨在使Agent开发更简单友好，使开发者能够更轻松地构建、部署和编排从简单任务到复杂协作的各类Agent应用。
 
 [![观看视频](https://img.alicdn.com/imgextra/i2/6000000004611/O1CN01ECWZaj1jvtLCiWNhG_!!6000000004611-0-tbvideo.jpg)](https://cloud.video.taobao.com/vod/DJzgj7IzixIwu186f2Uxmv4GnRtNqhn-U9fTTNmr3zo.mp4)
 
-**功能介绍**
+## 功能介绍
 * 以Google ADK接口为基础，强化流式交互、可视化调试工具等核心执行链路，让开发者可以高效开发Agent应用。
 * 与**阿里国际多模态大语言模型 Ovis无缝对接**，实现视觉与文本信息的深度对齐与融合。该模型兼具高性能和轻量化的特点，并具备以下优势，实现高效多模态Agent的开发与部署：
   * **卓越的逻辑推理**：结合指令微调与偏好学习，模型的思维链（Chain-of-Thought, CoT）推理能力得到显著增强，能够更好地理解和执行复杂指令。
@@ -33,221 +32,135 @@ Agentic ADK 是阿里国际AI Business推出基于 [Google-ADK](https://google.g
 
 ![架构图](https://zos-oss-ol.oss-cn-hangzhou.aliyuncs.com/data/be03cd4383682bd6e8095ebf8472a0d1.png)
 
+## 框架设计
 
-**[Alibaba langengine](https://github.com/AIDC-AI/ali-langengine)**
+### 面向Google ADK接口设计
 
-阿里巴巴langengine是一个基于Java的AI应用开发框架。它赋予LLM两大核心能力：
+Agentic ADK 继承了 google-adk 的优秀设计，支持以下关键特性：
 
-1. 数据感知，将语言模型与其他数据源相连接；
+#### LLM
+**丰富的大模型选择**。原生兼容支持包括 OpenAI、百炼/千问、OpenRouter、Claude 等厂商或模型的使用。
 
-2. 代理能力，允许语言模型与工程系统化能力互动；
+| 组件抽象          | 描述                                                                                         |
+|---------------|--------------------------------------------------------------------------------------------|
+| LangEngine    | 该组件支持 LangEngine 生态下的所有兼容三方 `模型/WorkSpace` 接入 Agent 系统，包括 OpenAI、百炼/千问、Idealab、OpenRouter等 |
+| DashScopeLlm  | 支持 阿里云百炼上的OpenAPI的接口打通  |
 
-alibaba-langengine的主要应用场景包括个人助手、基于文档的问答、聊天机器人、查询表格数据、代码分析、低代码应用生成等。
+#### Agent
+**高度抽象 Agent 定义与灵活的 Agent 编排**。框架内置有 LLM/串/并/循环等多种 Agent 定义；支持单 Agent、多 Agent（MAS）架构设计，方便扩展您的 agent 设计模式与架构。
 
-**相关代码**
+| 组件抽象                                                                                           | 描述                                                                                                                                                                                                                                                         |
+|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [LlmAgent](https://google.github.io/adk-docs/agents/llm-agents/)                               | ADK中的一个核心组件，充当应用程序的“思考”部分。它利用大型语言模型（LLM）的强大能力来进行推理、理解自然语言、做出决策、生成响应以及与工具进行交互。                                                                                                                                                                              |
+| [SequentialAgent](https://google.github.io/adk-docs/agents/workflow-agents/sequential-agents/) | 一种 WorkflowAgent，它按照列表中指定的顺序依次执行其子Agent。                                                                                                                                                                                                                   |
+| [LoopAgent](https://google.github.io/adk-docs/agents/workflow-agents/loop-agents/)| 一种 WorkflowAgent，它以循环方式（即迭代方式）执行其子Agent。它会重复运行一组代理，直到达到指定的迭代次数或满足终止条件为止。                                                                                                                                                                                   |
+| [ParallelAgent](https://google.github.io/adk-docs/agents/workflow-agents/parallel-agents/)| 一种 WorkflowAgent，它可以并发地执行其子 Agent，子任务可以独立执行的情况下显著加快了整个工作流的速度。                                                                                                                                                                                              |
+|其他高阶概念| [CustomAgents](https://google.github.io/adk-docs/agents/custom-agents/)：可以通过继承google.adk.agents.BaseAgent实现自定义的 Agent 处理流程。<br/>[Multi-Agent Systems](https://google.github.io/adk-docs/agents/multi-agents/)： 将多个不同的 Agent 实例组合成一个多代理系统（MAS），支持构建更复杂的应用程序 |
 
-alibaba-langengine-core：最核心的AI应用框架引擎模块。
 
-alibaba-langengine-infrastructure：AI应用框架基础设施模块。
+#### Tool
+**丰富的工具组装**。轻松接入包括 Function/MCP以及任意三方工具的接入。
 
-alibaba-langengine-community：社区开源共建模块。
+| 组件抽象                                                                                           | 描述                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+|------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Function Tool](https://google.github.io/adk-docs/tools/function-tools/)                          | [FunctionTool](https://google.github.io/adk-docs/tools/function-tools/#1-function-tool)：函数即工具，可以将任一方法转换成 Tool 提供给 Agent 调用。<br/> [LongRunningFunctionTool](https://google.github.io/adk-docs/tools/function-tools/#2-long-running-function-tool)：专为需要大量处理时间但又不阻塞Agent 执行的任务而设计。<br/> [AgentTool](https://google.github.io/adk-docs/tools/function-tools/#3-agent-as-a-tool)：通过将其他 Agent 编排为工具，来充分利用它们在系统中的能力。这种工具允许当前 Agent 调用另一个 Agent 来执行特定任务，有效地进行责任委托。 |
+|DashScopeTool|通过阿里云百炼的工具应用打通|
+|MCPTool|ADK内置的MCP工具|
+|GoogleSearchTool|ADK内置的谷歌搜索工具|
+|GUITaskExecuteTool|ADK内置的GUI任务执行工具|
 
-alibaba-langengine-demo：相关示例模块。
+#### Callback
+**灵活的 Callback 机制（Callback）**。提供了在 Agent 执行过程中多种时机的钩子，方便您在 LLM/Tool/Agent 调用前后进行自定义逻辑处理。
 
-**maven**
+参考：https://google.github.io/adk-docs/callbacks
 
-https://s01.oss.sonatype.org/#nexus-search;quick~ali-langengine
+最佳实践：https://google.github.io/adk-docs/callbacks/design-patterns-and-best-practices/
 
-**JDK版本要求**
+#### Debug & Eval
+**开箱即用的调试、评测能力**。提供白屏化 Debug 页面，无论是本地还是远程，都可以快速进行 agent 调试。
 
-JDK 8+
+### 集成高性能动态工作流引擎
 
-**相关配置**
+构建于在阿里巴巴SmartEngine工作流引擎之上，利用 RxJava3 实现响应式编程模式，采用基于节点的流程系统来定义智能体行为，支持同步、异步和双向通信模式，为构建复杂的AI应用提供了灵活的基础。
 
-alibaba-langengine-openai
-```properties
-openai_server_url=https://api.openai.com/
-openai_api_key=******
-openai_api_timeout=100
-# 兼容
-OPENAI_API_KEY=******
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                          用户应用层                                 │
+├─────────────────────────────────────────────────────────────────────┤
+│                       Runner (执行入口)                             │
+├─────────────────────────────────────────────────────────────────────┤
+│                    Pipeline 管道处理层                              │
+│  ┌─────────────┐  ┌────────────────┐  ┌─────────────────────────┐  │
+│  │ Agent执行   │  │  ...           │  │  自定义处理管道          │  │
+│  │   Pipe      │  │                │  │                         │  │
+│  └─────────────┘  └────────────────┘  └─────────────────────────┘  │
+├─────────────────────────────────────────────────────────────────────┤
+│                    Flow 流程引擎层                                  │
+│  ┌─────────────┐  ┌────────────────┐  ┌─────────────────────────┐  │
+│  │ FlowCanvas  │  │   FlowNode     │  │  DelegationExecutor     │  │
+│  │ (流程容器)   │  │  (流程节点)     │  │  (委托执行器)            │  │
+│  └─────────────┘  └────────────────┘  └─────────────────────────┘  │
+├─────────────────────────────────────────────────────────────────────┤
+│                    AI 能力抽象层                                    │
+│  ┌─────────────┐  ┌────────────────┐  ┌─────────────────────────┐  │
+│  │  LLM模型    │  │   工具集        │  │  条件判断                │  │
+│  │ BasicLlm    │  │  BaseTool      │  │  BaseCondition          │  │
+│  └─────────────┘  └────────────────┘  └─────────────────────────┘  │
+├─────────────────────────────────────────────────────────────────────┤
+│                    基础设施层                                       │
+│  ┌─────────────┐  ┌────────────────┐  ┌─────────────────────────┐  │
+│  │ SmartEngine │  │   RxJava3      │  │  Spring Framework       │  │
+│  │ 工作流引擎   │  │ 响应式编程框架  │  │  依赖注入框架            │  │
+│  └─────────────┘  └────────────────┘  └─────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-alibaba-langengine-dashscope
-```properties
-# dashscope api
-dashscope_server_url=https://dashscope.aliyuncs.com/
-dashscope_api_key=******
-dashscope_api_timeout=100
-# 兼容
-DASH_SCOPE_API=******
-```
+#### 核心组件介绍
 
-alibaba-langengine-tool
-```properties
-# bing api
-bing_server_url=https://api.bing.microsoft.com/
-bing_api_key=******
+##### 流程引擎组件
 
-# google api
-google_customsearch_server_url=https://customsearch.googleapis.com/
-google_api_key=******
-google_cse_id=******
+- **FlowCanvas**: 流程定义的主要容器，用于构建和部署工作流
+- **FlowNode**: 所有流程节点的基类，定义了节点的基本行为
+- **节点类型**:
+  - `LlmFlowNode`: 用于与大语言模型交互
+  - `ToolFlowNode`: 用于执行外部工具
+  - `ConditionalContainer`: 用于条件分支
+  - `ParallelFlowNode`: 用于并行执行
+  - `ReferenceFlowNode`: 用于引用其他流程
 
-# serpapi api
-serpapi_server_url=https://serpapi.com/
-serpapi_key=******
+##### 执行组件
 
-# tavily api
-tavily_api_key=******
-```
+- **Runner**: 流程执行的主入口点
+- **DelegationExecutor**: 处理委托任务的执行
+- **SystemContext**: 包含执行上下文和配置信息
+- **Request/Result**: 请求和响应的数据结构
 
-alibaba-langengine-adbpg
-```properties
-# adbpg db
-adbpg_datasource_endpoint=******
-adbpg_datasource_databasename=******
-adbpg_datasource_u=******
-adbpg_datasource_p=******
-```
+##### AI 能力组件
 
-alibaba-langengine-azure
-```properties
-# azure api
-azure_openai_server_url=******
-azure_deployment_name=******
-azure_openai_api_version=******
-azure_openai_api_timeout=100
-```
+- **BasicLlm 接口及实现** (如 `DashScopeLlm`): 定义和实现与大语言模型的交互
+- **LlmRequest/LlmResponse**: 大语言模型交互的数据结构
+- **BaseTool 接口及实现** (如 `DashScopeTools`): 定义和实现外部工具的调用
 
-alibaba-langengine-claude
-```properties
-# claude api
-anthropic_server_url=https://api.anthropic.com/
-anthropic_api_key=******
-anthropic_api_timeout=120
-```
+##### 管道系统
 
-alibaba-langengine-gemini
-```properties
-# gemini api
-gemini_api_key=******
-gemini_api_timeout=120
-```
+- **PipeInterface**: 管道组件的接口
+- **AgentExecutePipe**: 主要的执行管道实现
+- **PipelineUtil**: 管道执行的工具类
 
-alibaba-langengine-hologres
-```properties
-# hologres db
-hologres_datasource_endpoint=******
-hologres_datasource_databasename=knowledge_center
-hologres_datasource_u=******
-hologres_datasource_p=******
-```
+#### 执行模式
 
-alibaba-langengine-huggingface
-```properties
-# huggingface api
-huggingface_api_key=******
-```
+框架支持三种执行模式：
 
-alibaba-langengine-milvus
-```properties
-# milvus
-milvus_server_url=******
-```
+1. **SYNC (同步模式)**: 顺序执行，等待每个节点完成后再执行下一个
+2. **ASYNC (异步模式)**: 异步执行，可以并行处理多个任务
+3. **BIDI (双向模式)**: 支持双向通信，可以动态接收输入
 
-alibaba-langengine-minimax
-```properties
-#minimax api
-minimax_api_key=******
-minimax_group_id=******
-minimax_api_timeout=120
-```
+## 使用指南及案例
 
-alibaba-langengine-moonshot
-```properties
-# moonshot api
-moonshot_server_url=https://api.moonshot.cn
-moonshot_api_key=******
-moonshot_api_version=v1
-moonshot_server_timeout=120
-```
+[详细使用指南](./ali-agentic-adk-core/README_CN.md#使用指南)
 
-alibaba-langengine-msearch
-```properties
-#msearch api
-msearch_api_key=******
-msearch_api_timeout=120
-```
+[DeepSearchAgent代码示例](./ali-agentic-adk-extension/ali-agentic-example/src/test/java/com/alibaba/agentic/example/DeepSearchAgentTest.java)
 
-alibaba-langengine-opensearch
-```properties
-# opensearch vector
-opensearch_datasource_instance_id=ha-cn-*****
-opensearch_datasource_endpoint=ha-cn-*****
-opensearch_datasource_swift_server_root=http://*****
-opensearch_datasource_swift_topic=ha-cn-******
-```
+## License
 
-alibaba-langengine-pinecone
-```properties
-# pinecone vector
-pinecone_api_key=******
-pinecone_environment=us-west4-gcp-free
-pinecone_project_name=******
-```
-
-alibaba-langengine-polardb
-```properties
-# polardb postgres
-polardb_datasource_endpoint=******
-polardb_datasource_databasename=******
-polardb_datasource_u=******
-polardb_datasource_p=******
-```
-
-alibaba-langengine-redis
-```properties
-# redis
-redis_host=r-******.redis.rds.aliyuncs.com
-redis_port=6379
-redis_p=******
-redis_session_expire_second=60
-```
-
-alibaba-langengine-tair
-```properties
-# tair vector
-tair_host=r-******.redis.rds.aliyuncs.com
-tair_port=6379
-tair_p=******
-```
-
-alibaba-langengine-vertexai
-```properties
-# vertexai
-vertexai_server_url=https://us-central1-aiplatform.googleapis.com/
-vertexai_api_key=******
-vertexai_project_id=******
-vertexai_api_timeout=120
-```
-
-alibaba-langengine-xingchen
-```properties
-# xingchen
-xingchen_api_key=lm-******
-xingchen_api_timeout=120
-```
-
-alibaba-langengine-xinghuo
-```properties
-# xinghuo
-xinghuo_server_url=https://spark-api.xf-yun.com/v2.1/chat
-xinghuo_app_id=******
-xinghuo_api_key=******
-xinghuo_api_secret=******
-```
-
-**License**
-
-This project is licensed under Apache License Version 2 ([https://www.apache.org/licenses/LICENSE-2.0.txt](https://www.apache.org/licenses/LICENSE-2.0.txt), SPDX-License-identifier: Apache-2.0).
+本项目遵循 Apache License Version 2 ([https://www.apache.org/licenses/LICENSE-2.0.txt](https://www.apache.org/licenses/LICENSE-2.0.txt), SPDX-License-identifier: Apache-2.0).
