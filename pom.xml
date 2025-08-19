@@ -54,60 +54,60 @@
 
 	<modules>
 		<module>ali-langengine-core</module>
-<!--		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use</module>-->
-		<!--		<module>ali-langengine-demo</module>-->
+		<module>ali-langengine-demo</module>
+		<module>ali-agentic-adk-core</module>
+		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use</module>
+		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use-example</module>
+		<module>ali-agentic-adk-extension/ali-agentic-example</module>
 
-<!--		<module>ali-langengine-infrastructure/ali-langengine-docloader</module>-->
-<!--		<module>ali-langengine-infrastructure/ali-langengine-tool</module>-->
+		<module>ali-langengine-infrastructure/ali-langengine-docloader</module>
+		<module>ali-langengine-infrastructure/ali-langengine-tool</module>
 
-<!--&lt;!&ndash;		<module>ali-langengine-infrastructure/ali-langengine-mcp</module>&ndash;&gt;-->
+<!--		<module>ali-langengine-infrastructure/ali-langengine-mcp</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
 
-<!--		<module>ali-langengine-infrastructure/ali-langengine-deepsearch</module>-->
-<!--		<module>ali-langengine-infrastructure/ali-langengine-gpt</module>-->
-<!--		<module>ali-langengine-infrastructure/ali-langengine-mcp-jdk8</module>-->
+		<module>ali-langengine-infrastructure/ali-langengine-deepsearch</module>
+		<module>ali-langengine-infrastructure/ali-langengine-gpt</module>
+		<module>ali-langengine-infrastructure/ali-langengine-mcp-jdk8</module>
 
-<!--		<module>ali-langengine-community/ali-langengine-openai</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-azure</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-dashscope</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-gemini</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-vertexai</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-moonshot</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-minimax</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-duckdb</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-redis</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-hologres</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-adbpg</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-polardb</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-pinecone</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-milvus</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-chroma</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-djl</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-huggingface</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-sqlite</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-xingchen</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-xinghuo</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-msearch</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-autogen</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-metagpt</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-claude</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-lindorm</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-deepseek</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-openmanus</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-tablestore</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-jsonrepair</module>-->
+		<module>ali-langengine-community/ali-langengine-openai</module>
+		<module>ali-langengine-community/ali-langengine-azure</module>
+		<module>ali-langengine-community/ali-langengine-dashscope</module>
+		<module>ali-langengine-community/ali-langengine-gemini</module>
+		<module>ali-langengine-community/ali-langengine-vertexai</module>
+		<module>ali-langengine-community/ali-langengine-moonshot</module>
+		<module>ali-langengine-community/ali-langengine-minimax</module>
+		<module>ali-langengine-community/ali-langengine-duckdb</module>
+		<module>ali-langengine-community/ali-langengine-redis</module>
+		<module>ali-langengine-community/ali-langengine-hologres</module>
+		<module>ali-langengine-community/ali-langengine-adbpg</module>
+		<module>ali-langengine-community/ali-langengine-polardb</module>
+		<module>ali-langengine-community/ali-langengine-pinecone</module>
+		<module>ali-langengine-community/ali-langengine-milvus</module>
+		<module>ali-langengine-community/ali-langengine-chroma</module>
+		<module>ali-langengine-community/ali-langengine-djl</module>
+		<module>ali-langengine-community/ali-langengine-huggingface</module>
+		<module>ali-langengine-community/ali-langengine-sqlite</module>
+		<module>ali-langengine-community/ali-langengine-xingchen</module>
+		<module>ali-langengine-community/ali-langengine-xinghuo</module>
+		<module>ali-langengine-community/ali-langengine-msearch</module>
+		<module>ali-langengine-community/ali-langengine-autogen</module>
+		<module>ali-langengine-community/ali-langengine-metagpt</module>
+		<module>ali-langengine-community/ali-langengine-claude</module>
+		<module>ali-langengine-community/ali-langengine-lindorm</module>
+		<module>ali-langengine-community/ali-langengine-deepseek</module>
+		<module>ali-langengine-community/ali-langengine-openmanus</module>
+		<module>ali-langengine-community/ali-langengine-tablestore</module>
+		<module>ali-langengine-community/ali-langengine-jsonrepair</module>
 		<module>ali-langengine-community/ali-langengine-tavily</module>
 		<module>ali-langengine-community/ali-langengine-weaviate</module>
 		<module>ali-langengine-community/ali-langengine-pgvector</module>
-		<module>ali-agentic-adk-core</module>
 		<module>ali-langengine-community/ali-langengine-aliyunaisearch</module>
 		<module>ali-langengine-community/ali-langengine-sinanews</module>
 		<module>ali-langengine-community/ali-langengine-weather</module>
         <module>ali-langengine-community/ali-langengine-bravesearch</module>
         <module>ali-langengine-community/ali-langengine-baidusearch</module>
-
-
-        <!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
 	</modules>
 	<dependencyManagement>
 		<dependencies>
