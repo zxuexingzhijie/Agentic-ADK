@@ -95,17 +95,20 @@
 <!--		<module>ali-langengine-community/ali-langengine-openmanus</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-tablestore</module>-->
 <!--		<module>ali-langengine-community/ali-langengine-jsonrepair</module>-->
-		<module>ali-langengine-community/ali-langengine-tavily</module>
-		<module>ali-langengine-community/ali-langengine-weaviate</module>
+<!--		<module>ali-langengine-community/ali-langengine-tavily</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-weaviate</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-serp</module>-->
+
+<!--		<module>ali-langengine-community/ali-langengine-aliyunaisearch</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-sinanews</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-weather</module>-->
+<!--        <module>ali-langengine-community/ali-langengine-bravesearch</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-googletranslate</module>-->
+
 		<module>ali-agentic-adk-core</module>
-		<module>ali-langengine-community/ali-langengine-aliyunaisearch</module>
-		<module>ali-langengine-community/ali-langengine-sinanews</module>
-		<module>ali-langengine-community/ali-langengine-weather</module>
-        <module>ali-langengine-community/ali-langengine-bravesearch</module>
 
-
-        <!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
+		<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
+		<!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
 	</modules>
 	<dependencyManagement>
 		<dependencies>
