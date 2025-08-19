@@ -1,3 +1,1 @@
-#!/bin/bash
-
-mvn package -DskipTests
+mvn clean deploy -Dmaven.test.skip 

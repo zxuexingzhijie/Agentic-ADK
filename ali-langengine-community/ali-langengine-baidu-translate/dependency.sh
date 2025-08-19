@@ -1,2 +1,1 @@
-#!/bin/bash
-mvn clean dependency:tree > tree.txt
+mvn clean dependency:tree > tree.txt 
