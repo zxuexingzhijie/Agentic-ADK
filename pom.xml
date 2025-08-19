@@ -55,7 +55,7 @@
 	<modules>
 		<module>ali-langengine-core</module>
 		<module>ali-langengine-demo</module>
-    <module>ali-agentic-adk-core</module>
+		<module>ali-agentic-adk-core</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use-example</module>
 		<module>ali-agentic-adk-extension/ali-agentic-example</module>
