@@ -15,13 +15,14 @@
  */
 package com.alibaba.langengine.baidutranslate.tools;
 
-import com.alibaba.langengine.baidutranslate.BaiduTranslateConfiguration;
 import com.alibaba.langengine.baidutranslate.model.BaiduTranslateRequest;
 import com.alibaba.langengine.baidutranslate.model.BaiduTranslateResponse;
 import com.alibaba.langengine.core.tool.DefaultTool;
 import com.alibaba.langengine.core.tool.ToolExecuteResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import static com.alibaba.langengine.baidutranslate.BaiduTranslateConfiguration.*;
@@ -41,6 +41,7 @@ import static com.alibaba.langengine.baidutranslate.BaiduTranslateConfiguration.
  */
 @Slf4j
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class BaiduTranslateTool extends DefaultTool {
 
     private static final String DEFAULT_FROM = "auto";
@@ -48,20 +49,15 @@ public class BaiduTranslateTool extends DefaultTool {
     private static final String SIGN_TYPE = "v3";
     private static final String SOURCE = "baidu";
 
+    @Setter
     private String from = DEFAULT_FROM;
+    @Setter
     private String to = DEFAULT_TO;
     private String appId;
     private String secretKey;
     private Integer timeout;
     private OkHttpClient httpClient;
     private ObjectMapper objectMapper;
-
-    public BaiduTranslateTool() {
-        this.appId = BAIDU_TRANSLATE_APP_ID;
-        this.secretKey = BAIDU_TRANSLATE_SECRET_KEY;
-        this.timeout = Integer.parseInt(BAIDU_TRANSLATE_TIMEOUT);
-        init();
-    }
 
     public BaiduTranslateTool(String appId, String secretKey, Integer timeout) {
         this.appId = appId;
@@ -88,36 +84,24 @@ public class BaiduTranslateTool extends DefaultTool {
         log.info("百度翻译输入: {}", toolInput);
         
         if (StringUtils.isBlank(toolInput)) {
-            return ToolExecuteResult.builder()
-                    .success(false)
-                    .error("翻译文本不能为空")
-                    .build();
+            return new ToolExecuteResult("翻译文本不能为空");
         }
 
         try {
             BaiduTranslateResponse response = translate(toolInput);
             
             if (response.getErrorCode() != null) {
-                return ToolExecuteResult.builder()
-                        .success(false)
-                        .error("翻译失败: " + response.getErrorMsg())
-                        .build();
+                return new ToolExecuteResult("翻译失败: " + response.getErrorMsg());
             }
 
             String translatedText = response.getTransResult().get(0).getDst();
             log.info("百度翻译结果: {}", translatedText);
             
-            return ToolExecuteResult.builder()
-                    .success(true)
-                    .result(translatedText)
-                    .build();
-                    
+            return new ToolExecuteResult(translatedText);
+
         } catch (Exception e) {
             log.error("百度翻译异常", e);
-            return ToolExecuteResult.builder()
-                    .success(false)
-                    .error("翻译异常: " + e.getMessage())
-                    .build();
+            return new ToolExecuteResult("翻译异常: " + e.getMessage());
         }
     }
 
@@ -149,8 +133,12 @@ public class BaiduTranslateTool extends DefaultTool {
                 throw new IOException("HTTP请求失败: " + response.code());
             }
             
-            String responseBody = response.body().string();
-            return objectMapper.readValue(responseBody, BaiduTranslateResponse.class);
+            ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                throw new IOException("响应体为空");
+            }
+            String responseStr = responseBody.string();
+            return objectMapper.readValue(responseStr, BaiduTranslateResponse.class);
         }
     }
 
@@ -182,12 +170,4 @@ public class BaiduTranslateTool extends DefaultTool {
             throw new RuntimeException("MD5算法不可用", e);
         }
     }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
-    }
-} 
+}

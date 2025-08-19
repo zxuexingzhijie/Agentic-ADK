@@ -27,25 +27,24 @@ public class BaiduTranslateConfiguration {
     /**
      * 百度翻译API服务器URL
      */
-    public static String BAIDU_TRANSLATE_SERVER_URL = WorkPropertiesUtils.get("baidu_translate_server_url", "https://fanyi-api.baidu.com/api/trans/vip/translate");
+    public static final String BAIDU_TRANSLATE_SERVER_URL = WorkPropertiesUtils.get("baidu_translate_server_url", "https://fanyi-api.baidu.com/api/trans/vip/translate");
 
     /**
      * 百度翻译API应用ID
      */
-    public static String BAIDU_TRANSLATE_APP_ID = WorkPropertiesUtils.getFirstAvailable("baidu_translate_app_id", "BAIDU_TRANSLATE_APP_ID");
+    public static final String BAIDU_TRANSLATE_APP_ID = WorkPropertiesUtils.getFirstAvailable("baidu_translate_app_id", "BAIDU_TRANSLATE_APP_ID");
 
     /**
      * 百度翻译API密钥
      */
-    public static String BAIDU_TRANSLATE_SECRET_KEY = WorkPropertiesUtils.getFirstAvailable("baidu_translate_secret_key", "BAIDU_TRANSLATE_SECRET_KEY");
+    public static final String BAIDU_TRANSLATE_SECRET_KEY = WorkPropertiesUtils.getFirstAvailable("baidu_translate_secret_key", "BAIDU_TRANSLATE_SECRET_KEY");
 
     /**
      * 百度翻译API超时时间（秒）
      */
-    public static String BAIDU_TRANSLATE_TIMEOUT = WorkPropertiesUtils.get("baidu_translate_timeout", 30L);
+    public static final String BAIDU_TRANSLATE_TIMEOUT = WorkPropertiesUtils.get("baidu_translate_timeout", 30L);
 
-    /**
-     * 百度翻译API QPS限制
-     */
-    public static String BAIDU_TRANSLATE_QPS = WorkPropertiesUtils.get("baidu_translate_qps", 10L);
-} 
+    private BaiduTranslateConfiguration() {
+        // 工具类，不允许实例化
+    }
+}

@@ -50,10 +50,11 @@ public class BaiduTranslateToolTest {
 
         // 验证结果
         assertNotNull(result);
-        // 注意：由于API密钥无效，这里会失败，实际使用时需要有效密钥
-        if (result.isSuccess()) {
-            assertNotNull(result.getResult());
-            assertTrue(result.getResult().toString().contains("你好"));
+        assertNotNull(result.getOutput());
+        // 注意：由于API密钥无效，这里会返回错误信息
+        // 如果是成功的翻译结果，会包含中文翻译
+        if (!result.getOutput().contains("失败") && !result.getOutput().contains("异常")) {
+            assertTrue(result.getOutput().contains("你好"));
         }
     }
 
@@ -68,9 +69,10 @@ public class BaiduTranslateToolTest {
 
         // 验证结果
         assertNotNull(result);
-        if (result.isSuccess()) {
-            assertNotNull(result.getResult());
-            assertTrue(result.getResult().toString().contains("Hello"));
+        assertNotNull(result.getOutput());
+        // 如果是成功的翻译结果，会包含英文翻译
+        if (!result.getOutput().contains("失败") && !result.getOutput().contains("异常")) {
+            assertTrue(result.getOutput().contains("Hello"));
         }
     }
 
@@ -85,9 +87,7 @@ public class BaiduTranslateToolTest {
 
         // 验证结果
         assertNotNull(result);
-        if (result.isSuccess()) {
-            assertNotNull(result.getResult());
-        }
+        assertNotNull(result.getOutput());
     }
 
     @Test
@@ -97,9 +97,8 @@ public class BaiduTranslateToolTest {
 
         // 验证结果
         assertNotNull(result);
-        assertFalse(result.isSuccess());
-        assertNotNull(result.getError());
-        assertTrue(result.getError().contains("翻译文本不能为空"));
+        assertNotNull(result.getOutput());
+        assertTrue(result.getOutput().contains("翻译文本不能为空"));
     }
 
     @Test
@@ -109,9 +108,8 @@ public class BaiduTranslateToolTest {
 
         // 验证结果
         assertNotNull(result);
-        assertFalse(result.isSuccess());
-        assertNotNull(result.getError());
-        assertTrue(result.getError().contains("翻译文本不能为空"));
+        assertNotNull(result.getOutput());
+        assertTrue(result.getOutput().contains("翻译文本不能为空"));
     }
 
     @Test
@@ -126,6 +124,7 @@ public class BaiduTranslateToolTest {
 
         // 验证结果
         assertNotNull(result);
+        assertNotNull(result.getOutput());
         // 长文本可能会因为API限制而失败
     }
 
@@ -138,8 +137,6 @@ public class BaiduTranslateToolTest {
 
         // 验证结果
         assertNotNull(result);
-        if (result.isSuccess()) {
-            assertNotNull(result.getResult());
-        }
+        assertNotNull(result.getOutput());
     }
-} 
+}
