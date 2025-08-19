@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package com.alibaba.langengine.baidumap;
+package com.alibaba.langengine.amap;
 
-import com.alibaba.langengine.baidumap.sdk.BaiduMapClient;
-import com.alibaba.langengine.baidumap.sdk.PlaceSearchResponse;
+import com.alibaba.langengine.amap.sdk.AMapClient;
+import com.alibaba.langengine.amap.sdk.PlaceSearchResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
-@EnabledIfEnvironmentVariable(named = "BAIDU_MAP_API_KEY", matches = ".*")
-public class BaiduMapClientTest {
+@EnabledIfEnvironmentVariable(named = "AMAP_API_KEY", matches = ".*")
+public class AMapClientTest {
 
     private static final String API_KEY = System.getenv("BAIDU_MAP_API_KEY");
 
     @Test
     public void testPlaceSearch() {
-        BaiduMapClient baiduMapClient = new BaiduMapClient(API_KEY);
-        PlaceSearchResponse response = baiduMapClient.placeSearch("中街", "沈阳市沈河区");
+        AMapClient aMapClient = new AMapClient(API_KEY);
+        PlaceSearchResponse response = aMapClient.placeSearch("中街", "沈阳市沈河区");
         assert response != null;
     }
+
 }
