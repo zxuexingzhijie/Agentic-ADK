@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.alibaba.langengine.baidumap.sdk;
+package com.alibaba.langengine.tencentmap.sdk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -32,12 +32,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.alibaba.langengine.baidumap.BaiduMapConfiguration.BAIDU_MAP_API_KEY;
-import static com.alibaba.langengine.baidumap.BaiduMapConfiguration.BAIDU_MAP_API_URL;
-import static com.alibaba.langengine.baidumap.sdk.BaiduMapConstant.DEFAULT_TIMEOUT;
-import static com.alibaba.langengine.baidumap.sdk.BaiduMapConstant.PLACE_SEARCH_API_ENDPOINT;
+import static com.alibaba.langengine.tencentmap.TencentMapConfiguration.TENCENT_MAP_API_KEY;
+import static com.alibaba.langengine.tencentmap.TencentMapConfiguration.TENCENT_MAP_API_URL;
+import static com.alibaba.langengine.tencentmap.sdk.TencentMapConstant.DEFAULT_TIMEOUT;
+import static com.alibaba.langengine.tencentmap.sdk.TencentMapConstant.PLACE_SEARCH_API_ENDPOINT;
 
-public class BaiduMapClient {
+public class TencentMapClient {
 
     private final String apiKey;
 
@@ -52,22 +52,22 @@ public class BaiduMapClient {
         PLACE_SEARCH_REQUEST_GETTERS = Arrays.stream(PlaceSearchRequest.class.getDeclaredFields())
                 .filter(f -> !Modifier.isStatic(f.getModifiers()))
                 .collect(Collectors.toMap(f -> {
-                        if (f.getAnnotation(JsonProperty.class) == null) {
-                            return f.getName();
-                        }
-                        return f.getAnnotation(JsonProperty.class).value();
-                    }, f -> {
-                        String name = f.getName();
-                        String getterName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
-                        try {
-                            return PlaceSearchRequest.class.getMethod(getterName);
-                        } catch (NoSuchMethodException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }));
+                    if (f.getAnnotation(JsonProperty.class) == null) {
+                        return f.getName();
+                    }
+                    return f.getAnnotation(JsonProperty.class).value();
+                }, f -> {
+                    String name = f.getName();
+                    String getterName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                    try {
+                        return PlaceSearchRequest.class.getMethod(getterName);
+                    } catch (NoSuchMethodException e) {
+                        throw new RuntimeException(e);
+                    }
+                }));;
     }
 
-    public BaiduMapClient(String apiKey) {
+    public TencentMapClient(String apiKey) {
         this.apiKey = apiKey;
         this.httpClient = new OkHttpClient.Builder()
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
@@ -77,21 +77,21 @@ public class BaiduMapClient {
         this.objectMapper = new ObjectMapper();
     }
 
-    public BaiduMapClient() {
-        this(BAIDU_MAP_API_KEY);
+    public TencentMapClient() {
+        this(TENCENT_MAP_API_KEY);
     }
 
     /**
-     * Use Baidu Map API to Location Search. (Full Request)
-     * Doc: <a href="https://lbs.baidu.com/faq/api?title=webapi/guide/webservice-placeapiV3/interfaceDocumentV3">...</a>
+     * Use Tencent Map API to Location Search. (Full Request)
+     * Doc: <a href="https://lbs.qq.com/service/webService/webServiceGuide/search/webServiceSearch">...</a>
      * @param placeSearchRequest request
      * @return response
-     * @throws BaiduMapException exception
+     * @throws TencentMapException exception
      */
-    public PlaceSearchResponse placeSearch(PlaceSearchRequest placeSearchRequest) throws BaiduMapException {
+    public PlaceSearchResponse placeSearch(PlaceSearchRequest placeSearchRequest) throws TencentMapException {
         try {
             // Build the HTTP URL with query parameters
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(BAIDU_MAP_API_URL + PLACE_SEARCH_API_ENDPOINT).newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(TENCENT_MAP_API_URL + PLACE_SEARCH_API_ENDPOINT).newBuilder();
 
             // obtain field properties and apply them to set request headers.
             PLACE_SEARCH_REQUEST_GETTERS.forEach((key, value) -> {
@@ -104,7 +104,7 @@ public class BaiduMapClient {
                     throw new RuntimeException(e);
                 }
             });
-            urlBuilder.addQueryParameter("ak", apiKey);
+            urlBuilder.addQueryParameter("key", apiKey);
 
             // Create the HTTP request
             Request httpRequest = new Request.Builder()
@@ -116,33 +116,33 @@ public class BaiduMapClient {
             // Execute the request
             try (Response response = httpClient.newCall(httpRequest).execute()) {
                 if (!response.isSuccessful()) {
-                    throw new BaiduMapException("API request failed: " + response.code() + " " + response.message());
+                    throw new TencentMapException("API request failed: " + response.code() + " " + response.message());
                 }
                 ResponseBody body = response.body();
                 if (body == null) {
-                    throw new BaiduMapException("API Returns Empty Body");
+                    throw new TencentMapException("API Returns Empty Body");
                 }
                 return objectMapper.readValue(body.string(), new TypeReference<PlaceSearchResponse>() {});
             }
-        } catch (BaiduMapException e) {
+        } catch (TencentMapException e) {
             throw e;
         } catch (Exception e) {
-            throw new BaiduMapException(e.getMessage(), e);
+            throw new TencentMapException(e.getMessage(), e);
         }
     }
 
     /**
-     * Use Baidu Map API to Location Search. (Simple Request)
-     * Doc: <a href="https://lbs.baidu.com/faq/api?title=webapi/guide/webservice-placeapiV3/interfaceDocumentV3">...</a>
-     * @param query keywords
-     * @param region Retrieve administrative divisions and regions
+     * Use Tencent Map API to Location Search. (Simple Request)
+     * Doc: <a href="https://lbs.qq.com/service/webService/webServiceGuide/search/webServiceSearch">...</a>
+     * @param keyword keyword
+     * @param cityName city name
      * @return response
-     * @throws BaiduMapException exception
+     * @throws TencentMapException exception
      */
-    public PlaceSearchResponse placeSearch(String query, String region) throws BaiduMapException {
+    public PlaceSearchResponse placeSearch(String keyword, String cityName) throws TencentMapException {
         PlaceSearchRequest placeSearchRequest = new PlaceSearchRequest();
-        placeSearchRequest.setQuery(query);
-        placeSearchRequest.setRegion(region);
+        placeSearchRequest.setKeyword(keyword);
+        placeSearchRequest.setBoundary(String.format("region(%s)", cityName));
         return this.placeSearch(placeSearchRequest);
     }
 
