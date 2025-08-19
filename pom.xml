@@ -97,6 +97,7 @@
 <!--		<module>ali-langengine-community/ali-langengine-jsonrepair</module>-->
 		<module>ali-langengine-community/ali-langengine-tavily</module>
 		<module>ali-langengine-community/ali-langengine-weaviate</module>
+		<module>ali-langengine-community/ali-langengine-pgvector</module>
 		<module>ali-agentic-adk-core</module>
 		<module>ali-langengine-community/ali-langengine-aliyunaisearch</module>
 		<module>ali-langengine-community/ali-langengine-sinanews</module>
