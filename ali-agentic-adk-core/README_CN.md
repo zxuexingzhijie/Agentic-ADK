@@ -1,90 +1,86 @@
-# Ali-Agent ADK Core
+# 阿里智能体开发工具包核心 (Ali-Agent ADK Core)
 
-**[中文版说明](./README_CN.md)**
+**[English Version](./README.md)**
 
-## Introduction
+## 项目介绍
 
-Ali-Agent ADK Core is a Java-based agent framework built on top of Alibaba's Smart Engine workflow engine. This framework provides the foundation for creating AI agents capable of interacting with Large Language Models (LLMs) and external tools.
+阿里智能体开发工具包核心 (Ali-Agent ADK Core) 是一个基于 Java 的智能体框架，构建在阿里巴巴 Smart Engine 工作流引擎之上。该框架为创建具有与大语言模型 (LLM) 和外部工具交互能力的 AI 智能体提供了基础。
 
-The framework leverages RxJava3 to implement reactive programming patterns, uses a node-based flow system to define agent behavior, and supports synchronous, asynchronous, and bidirectional communication modes, providing a flexible foundation for building complex AI applications.
+该框架利用 RxJava3 实现响应式编程模式，采用基于节点的流程系统来定义智能体行为，支持同步、异步和双向通信模式，为构建复杂的 AI 应用提供了灵活的基础。
 
-## Architecture Overview
+## 项目架构概览
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          User Application Layer                     │
+│                          用户应用层                                 │
 ├─────────────────────────────────────────────────────────────────────┤
-│                       Runner (Execution Entry)                      │
+│                       Runner (执行入口)                             │
 ├─────────────────────────────────────────────────────────────────────┤
-│                    Pipeline Processing Layer                        │
+│                    Pipeline 管道处理层                              │
 │  ┌─────────────┐  ┌────────────────┐  ┌─────────────────────────┐  │
-│  │ Agent       │  │  ...           │  │  Custom Processing      │  │
-│  │ Execution   │  │                │  │  Pipeline               │  │
+│  │ Agent执行   │  │  ...           │  │  自定义处理管道          │  │
 │  │   Pipe      │  │                │  │                         │  │
 │  └─────────────┘  └────────────────┘  └─────────────────────────┘  │
 ├─────────────────────────────────────────────────────────────────────┤
-│                    Flow Engine Layer                                │
+│                    Flow 流程引擎层                                  │
 │  ┌─────────────┐  ┌────────────────┐  ┌─────────────────────────┐  │
-│  │ FlowCanvas  │  │                │  │                         │  │
-│  │ (Flow       │  │    FlowNode    │  │  DelegationExecutor     │  │
-│  │ Container)  │  │                │  │                         │  │
+│  │ FlowCanvas  │  │   FlowNode     │  │  DelegationExecutor     │  │
+│  │ (流程容器)   │  │  (流程节点)     │  │  (委托执行器)            │  │
 │  └─────────────┘  └────────────────┘  └─────────────────────────┘  │
 ├─────────────────────────────────────────────────────────────────────┤
-│                    AI Capability Abstraction Layer                  │
+│                    AI 能力抽象层                                    │
 │  ┌─────────────┐  ┌────────────────┐  ┌─────────────────────────┐  │
-│  │  BasicLlm   │  │    BaseTool    │  │        BaseCondition    │  │
-│  │ (LLM Model) │  │   (Tool Set)   │  │  (Conditional Judgment) │  │
+│  │  LLM模型    │  │   工具集        │  │  条件判断                │  │
+│  │ BasicLlm    │  │  BaseTool      │  │  BaseCondition          │  │
 │  └─────────────┘  └────────────────┘  └─────────────────────────┘  │
 ├─────────────────────────────────────────────────────────────────────┤
-│                    Infrastructure Layer                             │
+│                    基础设施层                                       │
 │  ┌─────────────┐  ┌────────────────┐  ┌─────────────────────────┐  │
 │  │ SmartEngine │  │   RxJava3      │  │  Spring Framework       │  │
-│  │ (Workflow   │  │ (Reactive      │  │  (Dependency Injection  │  │
-│  │ Engine)     │  │ Programming    │  │  Framework)             │  │
-│  │             │  │ Framework)     │  │                         │  │
+│  │ 工作流引擎   │  │ 响应式编程框架  │  │  依赖注入框架            │  │
 │  └─────────────┘  └────────────────┘  └─────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-## Core Component
+## 核心组件介绍
 
-### 1. Flow Engine Components
+### 1. 流程引擎组件
 
-- **FlowCanvas**: The main container for flow definition, used to build and deploy workflows
-- **FlowNode**: The base class for all flow nodes, defining the basic behavior of nodes
-- **Node Types**:
-  - `LlmFlowNode`: Used for interacting with large language models
-  - `ToolFlowNode`: Used for executing external tools
-  - `ConditionalContainer`: Used for conditional branching
-  - `ParallelFlowNode`: Used for parallel execution
-  - `ReferenceFlowNode`: Used for referencing other flows
+- **FlowCanvas**: 流程定义的主要容器，用于构建和部署工作流
+- **FlowNode**: 所有流程节点的基类，定义了节点的基本行为
+- **节点类型**:
+    - `LlmFlowNode`: 用于与大语言模型交互
+    - `ToolFlowNode`: 用于执行外部工具
+    - `ConditionalContainer`: 用于条件分支
+    - `ParallelFlowNode`: 用于并行执行
+    - `ReferenceFlowNode`: 用于引用其他流程
 
-### 2. Execution Components
+### 2. 执行组件
 
-- **Runner**: The main entry point for flow execution
-- **DelegationExecutor**: Handles the execution of delegated tasks
-- **SystemContext**: Contains execution context and configuration information
-- **Request/Result**: Data structures for requests and responses
+- **Runner**: 流程执行的主入口点
+- **DelegationExecutor**: 处理委托任务的执行
+- **SystemContext**: 包含执行上下文和配置信息
+- **Request/Result**: 请求和响应的数据结构
 
-### 3. AI Capability Components
+### 3. AI 能力组件
 
-- **BasicLlm Interface and Implementations** (e.g., `DashScopeLlm`): Defines and implements interactions with large language models
-- **LlmRequest/LlmResponse**: Data structures for large language model interactions
-- **BaseTool Interface and Implementations** (e.g., `DashScopeTools`): Defines and implements external tool calls
+- **BasicLlm 接口及实现** (如 `DashScopeLlm`): 定义和实现与大语言模型的交互
+- **LlmRequest/LlmResponse**: 大语言模型交互的数据结构
+- **BaseTool 接口及实现** (如 `DashScopeTools`): 定义和实现外部工具的调用
 
-### 4. Pipeline System
+### 4. 管道系统
 
-- **PipeInterface**: Interface for pipeline components
-- **AgentExecutePipe**: Main implementation of the execution pipeline
-- **PipelineUtil**: Utility class for pipeline execution
+- **PipeInterface**: 管道组件的接口
+- **AgentExecutePipe**: 主要的执行管道实现
+- **PipelineUtil**: 管道执行的工具类
 
-## Usage Guide
+## 使用指南
 
-### Quick Start
+### 快速开始
 
-To get started with Ali-Agent ADK Core, follow these steps:
+要开始使用 Ali-Agent ADK Core，请按照以下步骤操作：
 
-1. Add Maven dependency:
+1. 添加 Maven 依赖：
 ```xml
 <dependency>
     <groupId>com.alibaba</groupId>
@@ -93,7 +89,7 @@ To get started with Ali-Agent ADK Core, follow these steps:
 </dependency>
 ```
 
-2. Create a Spring Boot application and add component scanning:
+2. 创建 Spring Boot 应用并添加组件扫描：
 ```java
 @SpringBootApplication(scanBasePackages = {"com.alibaba.agentic.core"})
 public class Application {
@@ -103,74 +99,74 @@ public class Application {
 }
 ```
 
-### Simple Usage Examples
+### 基本用法示例
 
-Steps:
-#### 1. Create a canvas
+使用流程：
+#### 1. 创建画布
 ```java
 FlowCanvas flowCanvas = new FlowCanvas();
 ```
-#### 2. Create Flow nodes and set unique node IDs and parameters
+#### 2. 创建Flow节点，并设置节点唯一标识Id及参数
 ```java
 LlmRequest llmRequest = new LlmRequest();
 llmRequest.setModel("dashscope");
 llmRequest.setModelName("qwen-plus");
-llmRequest.setMessages(List.of(new LlmRequest.Message("user", "Hello, please introduce yourself in 20 characters or less.")));
+llmRequest.setMessages(List.of(new LlmRequest.Message("user", "你好，请介绍一下你自己。20字以内")));
 
 LlmFlowNode llmNode = new LlmFlowNode(llmRequest);
 llmNode.setId("llmNode1");
 ```
 
-#### 3. Set successor nodes to form a Flow
-- Use `node.next(successorNode)` to set a general serial successor node
-- Use `node.nextOnCondition(conditionContainer).nextOnElse(flowNode)` to set a branching successor node, where:
-  - `conditionContainer` sets the conditional logic by implementing the `eval` method in the `BaseCondition` interface, and sets the node to be executed when the condition is met through the `setFlowNode` method;
-  - `nextOnCondition` can receive one or more condition blocks;
-  - `nextOnElse` sets the node to be executed when none of a group of conditions are met; if no else default node is set, the XML generation engine will connect to the end node.
+#### 3. 设置节点的后继节点构成Flow
+- 通过`node.next(successorNode)`设置一个一般串联后继节点
+- 通过`node.nextOnCondition(conditionContainer).nextOnElse(flowNode)`设置一个分支后继节点，其中：
+    - `conditionContainer`通过实现`BaseCondition`接口中的`eval`方法设置条件判断逻辑，并通过`setFlowNode`方法设置条件命中时将要执行的节点；
+    - `nextOnCondition`可以接收一个或多个条件块；
+    - `nextOnElse`中设置当一组条件均不命中时将执行的节点；若不设置else默认节点，则xml生成引擎将连至结束节点。
 
-#### 4. Set the global Flow Request and run through Runner
+#### 4. 设置Flow全局Request并通过Runner运行
 ```java
 Request request = new Request().setInvokeMode(InvokeMode.SYNC);
 Flowable<Result> flowable = new Runner().run(flowCanvas, request);
 ```
 
-#### 5. Get flow execution results and process
+#### 5. 获取流程运行结果并处理
 ```java
 flowable.blockingIterable().forEach(event -> System.out.println(String.format("run result: %s", event)));
 ```
 
-Here are some usage examples based on test cases:
+以下是一些基于测试用例的使用示例：
 
-#### 1. Create a simple LLM call flow
+#### 1. 创建简单的 LLM 调用流程
 
 ```java
 @Test
 public void testLlmGraph() throws InterruptedException {
     FlowCanvas flowCanvas = new FlowCanvas();
 
-    // Create LLM request
+    // 创建 LLM 请求
     LlmRequest llmRequest = new LlmRequest();
     llmRequest.setModel("dashscope");
     llmRequest.setModelName("qwen-plus");
-    llmRequest.setMessages(List.of(new LlmRequest.Message("user", "Hello, please introduce yourself in 20 characters or less.")));
+    llmRequest.setMessages(List.of(new LlmRequest.Message("user", "你好，请介绍一下你自己。20字以内")));
 
-    // Create LLM node
+    // 创建 LLM 节点
     LlmFlowNode llmNode = new LlmFlowNode(llmRequest);
     llmNode.setId("llmNode1");
     
     flowCanvas.setRoot(llmNode);
 
-    // Execute flow
+    // 执行流程
     Request request = new Request().setInvokeMode(InvokeMode.SYNC);
     Flowable<Result> flowable = new Runner().run(flowCanvas, request);
 
-    // Process results
+    // 处理结果
     List<Result> results = new ArrayList<>();
     flowable.blockingIterable().forEach(results::add);
 }
 ```
 
-#### 2. Create a tool call flow
+#### 2. 创建工具调用流程
 
 ```java
 @Test
@@ -191,14 +187,14 @@ public void testToolGraph() {
     }).next(new ToolFlowNode("dash_scope_tool",
             List.of(new ToolParam().setName("appId").setValue("your-app-id"), 
                    new ToolParam().setName("apiKey").setValue("your-api-key"), 
-                   new ToolParam().setName("prompt").setValue("Generate a lesson plan for teaching time (hours, minutes, seconds) to 3rd grade math students, in 20 characters or less")))));
+                   new ToolParam().setName("prompt").setValue("给我生成一份教案，教学内容是数学三年级上册的时分秒, 20字以内")))));
 
     Flowable<Result> flowable = new Runner().run(flowCanvas, new Request().setInvokeMode(InvokeMode.SYNC));
     flowable.blockingIterable().forEach(event -> System.out.println(String.format("run result: %s", event)));
 }
 ```
 
-#### 3. Create a conditional branching flow
+#### 3. 创建条件分支流程
 
 ```java
 @Test
@@ -218,7 +214,7 @@ public void testConditionalGraph() {
     }).setId("myId").nextOnCondition(new ConditionalContainer() {
         @Override
         public Boolean eval(SystemContext systemContext) {
-            return false; // Condition check
+            return false; // 条件判断
         }
     }.setFlowNode(new ToolFlowNode(List.of(), new BaseTool() {
         @Override
@@ -234,7 +230,7 @@ public void testConditionalGraph() {
     }).setId("first tool"))).nextOnCondition(new ConditionalContainer() {
         @Override
         public Boolean eval(SystemContext systemContext) {
-            return false; // Condition check
+            return false; // 条件判断
         }
     }.setFlowNode(new ToolFlowNode(List.of(), new BaseTool() {
         @Override
@@ -264,17 +260,17 @@ public void testConditionalGraph() {
 }
 ```
 
-### More Examples
-[DeepSearchAgent Code Example](../ali-agentic-adk-extension/ali-agentic-example/src/test/java/com/alibaba/agentic/example/DeepSearchAgentTest.java)
+### 更多案例
+[DeepSearchAgent 代码示例](../ali-agentic-adk-extension/ali-agentic-example/src/test/java/com/alibaba/agentic/example/DeepSearchAgentTest.java)
 
-## Configuration Instructions
+## 配置说明
 
-### Application Configuration
+### 应用配置
 
-Configure the necessary parameters in `application.properties`:
+在 `application.properties` 中配置必要的参数：
 
 ```properties
-# Redis configuration (for flow storage)
+# Redis 配置（用于流程存储）
 ali.agentic.adk.properties.redisHost=your-redis-host
 ali.agentic.adk.properties.redisPort=6379
 ali.agentic.adk.properties.redisPassword=your-redis-password
@@ -285,9 +281,9 @@ ali.agentic.adk.properties.flowStorageStrategy=redis
 ali.agentic.adk.flownode.dashscope.apiKey=your-dashscope-api-key
 ```
 
-### Service Registration
+### 服务注册
 
-Create service registration files in the `META-INF/services/` directory:
+在 `META-INF/services/` 目录下创建服务注册文件：
 
 1. `com.alibaba.agentic.core.models.BasicLlm`:
 ```
@@ -299,19 +295,19 @@ com.alibaba.agentic.core.models.DashScopeLlm
 com.alibaba.agentic.core.tools.DashScopeTools
 ```
 
-## Execution Modes
+## 执行模式
 
-The framework supports three execution modes:
+框架支持三种执行模式：
 
-1. **SYNC (Synchronous Mode)**: Sequential execution, waiting for each node to complete before executing the next
-2. **ASYNC (Asynchronous Mode)**: Asynchronous execution, can process multiple tasks in parallel
-3. **BIDI (Bidirectional Mode)**: Supports bidirectional communication, can dynamically receive input
+1. **SYNC (同步模式)**: 顺序执行，等待每个节点完成后再执行下一个
+2. **ASYNC (异步模式)**: 异步执行，可以并行处理多个任务
+3. **BIDI (双向模式)**: 支持双向通信，可以动态接收输入
 
-## Extension Development
+## 扩展开发
 
-### Custom LLM Model
+### 自定义 LLM 模型
 
-Implement the `BasicLlm` interface to integrate new LLM models:
+实现 `BasicLlm` 接口来集成新的 LLM 模型：
 
 ```java
 public class CustomLlm implements BasicLlm {
@@ -322,14 +318,14 @@ public class CustomLlm implements BasicLlm {
 
     @Override
     public Flowable<LlmResponse> invoke(LlmRequest llmRequest, SystemContext systemContext) {
-        // Implement calling logic
+        // 实现调用逻辑
     }
 }
 ```
 
-### Custom Tools
+### 自定义工具
 
-Implement the `BaseTool` interface to create new tools:
+实现 `BaseTool` 接口来创建新的工具：
 
 ```java
 public class CustomTool implements BaseTool {
@@ -340,7 +336,7 @@ public class CustomTool implements BaseTool {
 
     @Override
     public Flowable<Map<String, Object>> run(Map<String, Object> args, SystemContext systemContext) {
-        // Implement tool logic
+        // 实现工具逻辑
         return Flowable.just(Map.of("result", "success"));
     }
 }
