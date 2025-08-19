@@ -55,7 +55,6 @@
 	<modules>
 		<module>ali-langengine-core</module>
 		<module>ali-langengine-demo</module>
-		<module>ali-agentic-adk-core</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use-example</module>
 		<module>ali-agentic-adk-extension/ali-agentic-example</module>
@@ -102,12 +101,13 @@
 		<module>ali-langengine-community/ali-langengine-jsonrepair</module>
 		<module>ali-langengine-community/ali-langengine-tavily</module>
 		<module>ali-langengine-community/ali-langengine-weaviate</module>
+    <module>ali-langengine-community/ali-langengine-serp</module>
 		<module>ali-langengine-community/ali-langengine-pgvector</module>
 		<module>ali-langengine-community/ali-langengine-aliyunaisearch</module>
 		<module>ali-langengine-community/ali-langengine-sinanews</module>
 		<module>ali-langengine-community/ali-langengine-weather</module>
-        <module>ali-langengine-community/ali-langengine-bravesearch</module>
-        <module>ali-langengine-community/ali-langengine-baidusearch</module>
+    <module>ali-langengine-community/ali-langengine-bravesearch</module>
+    <module>ali-langengine-community/ali-langengine-baidusearch</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
