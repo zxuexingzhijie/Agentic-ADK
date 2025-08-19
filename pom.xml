@@ -49,12 +49,13 @@
 		<root.basedir>${project.basedir}</root.basedir>
 		<maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
 		<flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-		<ali-agentic-adk.version>1.2.7-20250812</ali-agentic-adk.version>
+		<ali-agentic-adk.version>1.2.6-202508111516</ali-agentic-adk.version>
 	</properties>
 
 	<modules>
 		<module>ali-langengine-core</module>
 		<module>ali-langengine-demo</module>
+		<module>ali-agentic-adk-core</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use-example</module>
 		<module>ali-agentic-adk-extension/ali-agentic-example</module>
@@ -101,15 +102,17 @@
 		<module>ali-langengine-community/ali-langengine-jsonrepair</module>
 		<module>ali-langengine-community/ali-langengine-tavily</module>
 		<module>ali-langengine-community/ali-langengine-weaviate</module>
-    <module>ali-langengine-community/ali-langengine-serp</module>
+    	<module>ali-langengine-community/ali-langengine-serp</module>
 		<module>ali-langengine-community/ali-langengine-pgvector</module>
 		<module>ali-langengine-community/ali-langengine-aliyunaisearch</module>
 		<module>ali-langengine-community/ali-langengine-sinanews</module>
 		<module>ali-langengine-community/ali-langengine-weather</module>
-    <module>ali-langengine-community/ali-langengine-bravesearch</module>
-    <module>ali-langengine-community/ali-langengine-baidusearch</module>
 
         <module>ali-langengine-community/ali-langengine-baidumap</module>
+		<module>ali-langengine-community/ali-langengine-bravesearch</module>
+		<module>ali-langengine-community/ali-langengine-baidusearch</module>
+		<module>ali-langengine-community/ali-langengine-baidu-translate</module>
+		<module>ali-langengine-community/ali-langengine-googletranslate</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
