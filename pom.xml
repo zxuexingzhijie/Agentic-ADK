@@ -107,6 +107,10 @@
 		<module>ali-langengine-community/ali-langengine-aliyunaisearch</module>
 		<module>ali-langengine-community/ali-langengine-sinanews</module>
 		<module>ali-langengine-community/ali-langengine-weather</module>
+
+        <module>ali-langengine-community/ali-langengine-amap</module>
+        <module>ali-langengine-community/ali-langengine-baidumap</module>
+        <module>ali-langengine-community/ali-langengine-tencentmap</module>
 		<module>ali-langengine-community/ali-langengine-bravesearch</module>
 		<module>ali-langengine-community/ali-langengine-baidusearch</module>
 		<module>ali-langengine-community/ali-langengine-baidu-translate</module>
