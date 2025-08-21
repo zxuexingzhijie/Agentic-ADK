@@ -102,6 +102,7 @@
 		<module>ali-langengine-community/ali-langengine-jsonrepair</module>
 		<module>ali-langengine-community/ali-langengine-tavily</module>
 		<module>ali-langengine-community/ali-langengine-weaviate</module>
+		<module>ali-langengine-community/ali-langengine-vespa</module>
 		<module>ali-langengine-community/ali-langengine-elasticsearch</module>
     <module>ali-langengine-community/ali-langengine-serp</module>
 		<module>ali-langengine-community/ali-langengine-pgvector</module>
