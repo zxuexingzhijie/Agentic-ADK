@@ -17,12 +17,7 @@ package com.alibaba.langengine.cassandra;
 
 import com.alibaba.langengine.core.util.WorkPropertiesUtils;
 
-/**
- * Cassandra Vector Search configuration
- *
- * @author: assistant
- * @create: 2025-08-21
- */
+
 public class CassandraConfiguration {
 
     public static String CASSANDRA_CONTACT_POINTS = WorkPropertiesUtils.get("cassandra_contact_points");

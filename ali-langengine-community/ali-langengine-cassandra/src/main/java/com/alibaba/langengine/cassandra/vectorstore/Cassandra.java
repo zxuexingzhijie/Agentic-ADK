@@ -195,36 +195,22 @@ public class Cassandra extends VectorStore {
         return cassandraService.similaritySearch(floatEmbedding, k, maxDistanceValue, type);
     }
 
-    /**
-     * Get the underlying Cassandra service
-     *
-     * @return CassandraService instance
-     */
+
     public CassandraService getCassandraService() {
         return cassandraService;
     }
 
-    /**
-     * Get the configuration
-     *
-     * @return CassandraConfiguration instance
-     */
+
     public CassandraConfiguration getConfiguration() {
         return configuration;
     }
 
-    /**
-     * Get the parameters
-     *
-     * @return CassandraParam instance
-     */
+
     public CassandraParam getCassandraParam() {
         return cassandraParam;
     }
 
-    /**
-     * Close the Cassandra connection
-     */
+
     public void close() {
         if (cassandraService != null) {
             cassandraService.close();
