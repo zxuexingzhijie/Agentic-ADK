@@ -49,22 +49,22 @@ public class StackOverflowLLM extends BaseLLM<ChatCompletionRequest> {
     /**
      * 搜索站点 (stackoverflow, superuser, serverfault等)
      */
-    private String site = STACKOVERFLOW_SITE;
+    private String site = getDefaultSite();
     
     /**
      * 最大结果数量
      */
-    private Integer maxResults = Integer.parseInt(STACKOVERFLOW_MAX_RESULTS);
+    private Integer maxResults;
     
     /**
      * 排序方式 (votes, activity, creation, relevance)
      */
-    private String sortOrder = STACKOVERFLOW_SORT_ORDER;
+    private String sortOrder;
     
     /**
      * 最低分数过滤
      */
-    private Integer minScore = Integer.parseInt(STACKOVERFLOW_MIN_SCORE);
+    private Integer minScore;
     
     /**
      * 只显示已回答的问题
@@ -98,10 +98,21 @@ public class StackOverflowLLM extends BaseLLM<ChatCompletionRequest> {
     
     public StackOverflowLLM() {
         this.apiService = new StackOverflowApiServiceImpl();
+        initializeConfiguration();
     }
     
     public StackOverflowLLM(StackOverflowApiService apiService) {
         this.apiService = apiService;
+        initializeConfiguration();
+    }
+    
+    /**
+     * 初始化配置参数
+     */
+    private void initializeConfiguration() {
+        this.maxResults = Integer.parseInt(StackOverflowConfiguration.getMaxResults());
+        this.sortOrder = StackOverflowConfiguration.getSortOrder();
+        this.minScore = Integer.parseInt(StackOverflowConfiguration.getMinScore());
     }
     
     public void setApiService(StackOverflowApiService apiService) {
@@ -129,6 +140,36 @@ public class StackOverflowLLM extends BaseLLM<ChatCompletionRequest> {
             }
             
             return formattedResults;
+            
+        } catch (IllegalArgumentException e) {
+            log.error("Stack Overflow搜索参数错误: {}", e.getMessage(), e);
+            String errorMessage = "搜索参数错误: " + e.getMessage();
+            
+            if (consumer != null) {
+                consumer.accept(errorMessage);
+            }
+            
+            return errorMessage;
+            
+        } catch (java.net.SocketTimeoutException e) {
+            log.error("Stack Overflow搜索超时: {}", e.getMessage(), e);
+            String errorMessage = "搜索请求超时，请稍后重试";
+            
+            if (consumer != null) {
+                consumer.accept(errorMessage);
+            }
+            
+            return errorMessage;
+            
+        } catch (java.net.ConnectException e) {
+            log.error("Stack Overflow连接失败: {}", e.getMessage(), e);
+            String errorMessage = "无法连接到Stack Overflow服务，请检查网络连接";
+            
+            if (consumer != null) {
+                consumer.accept(errorMessage);
+            }
+            
+            return errorMessage;
             
         } catch (Exception e) {
             log.error("Stack Overflow搜索失败: {}", e.getMessage(), e);

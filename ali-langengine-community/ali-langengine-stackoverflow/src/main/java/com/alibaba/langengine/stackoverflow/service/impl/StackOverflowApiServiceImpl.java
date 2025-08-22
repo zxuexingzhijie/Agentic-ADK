@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 import static com.alibaba.langengine.stackoverflow.StackOverflowConfiguration.*;
+import javax.annotation.PreDestroy;
 
 
 public class StackOverflowApiServiceImpl implements StackOverflowApiService {
@@ -64,16 +65,16 @@ public class StackOverflowApiServiceImpl implements StackOverflowApiService {
     
     public StackOverflowApiServiceImpl() {
         this.objectMapper = new ObjectMapper();
-        this.apiKey = STACKOVERFLOW_API_KEY;
-        this.baseUrl = STACKOVERFLOW_API_BASE_URL;
-        this.site = STACKOVERFLOW_SITE;
-        this.timeout = Integer.parseInt(STACKOVERFLOW_API_TIMEOUT) * 1000;
-        this.scrapingEnabled = Boolean.parseBoolean(STACKOVERFLOW_ENABLE_SCRAPING);
+        this.apiKey = getApiKey();
+        this.baseUrl = getApiBaseUrl();
+        this.site = getDefaultSite();
+        this.timeout = Integer.parseInt(getApiTimeout()) * 1000;
+        this.scrapingEnabled = Boolean.parseBoolean(getEnableScraping());
         this.remainingQuota = new AtomicInteger(-1);
         
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(timeout)
-                .setSocketTimeout(Integer.parseInt(STACKOVERFLOW_API_READ_TIMEOUT) * 1000)
+                .setSocketTimeout(Integer.parseInt(getApiReadTimeout()) * 1000)
                 .build();
                 
         this.httpClient = HttpClients.custom()
@@ -88,16 +89,16 @@ public class StackOverflowApiServiceImpl implements StackOverflowApiService {
             throw new Exception("Search request cannot be null");
         }
         
-        // Validate site parameter early
+        // Validate site parameter early with white list
         String targetSite = StringUtils.isNotBlank(request.getSite()) ? request.getSite() : site;
         if (StringUtils.isBlank(targetSite)) {
             throw new Exception("Site parameter is required");
         }
         
-        // Add basic validation for common invalid sites
-        if (targetSite.equals("invalid-site") || targetSite.contains(" ") || 
-            targetSite.contains("..") || targetSite.length() > 50) {
-            throw new Exception("Invalid site parameter: " + targetSite);
+        // Use white list validation for security
+        if (!isValidSite(targetSite)) {
+            throw new Exception("Invalid site parameter: " + targetSite + 
+                ". Allowed sites: " + getAllowedSites());
         }
         
         try {
@@ -225,15 +226,15 @@ public class StackOverflowApiServiceImpl implements StackOverflowApiService {
         String targetSite = (request != null && StringUtils.isNotBlank(request.getSite())) ? 
                             request.getSite() : site;
         
-        // Validate site parameter
+        // Validate site parameter with white list
         if (StringUtils.isBlank(targetSite)) {
             throw new Exception("Site parameter is required");
         }
         
-        // Add basic validation for common invalid sites
-        if (targetSite.equals("invalid-site") || targetSite.contains(" ") || 
-            targetSite.contains("..") || targetSite.length() > 50) {
-            throw new Exception("Invalid site parameter: " + targetSite);
+        // Use white list validation for security
+        if (!isValidSite(targetSite)) {
+            throw new Exception("Invalid site parameter: " + targetSite + 
+                ". Allowed sites: " + getAllowedSites());
         }
         
         url.append("?site=").append(targetSite);
@@ -422,5 +423,17 @@ public class StackOverflowApiServiceImpl implements StackOverflowApiService {
         }
         
         return results;
+    }
+    
+    @PreDestroy
+    public void cleanup() {
+        try {
+            if (httpClient != null) {
+                httpClient.close();
+                log.info("HTTP client closed successfully");
+            }
+        } catch (IOException e) {
+            log.warn("Error closing HTTP client during cleanup", e);
+        }
     }
 }
