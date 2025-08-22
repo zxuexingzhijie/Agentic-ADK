@@ -58,7 +58,7 @@
 		<module>ali-agentic-adk-core</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use-example</module>
-		<module>ali-agentic-adk-extension/ali-agentic-example</module>
+		<!-- <module>ali-agentic-adk-extension/ali-agentic-example</module> -->
 
 		<module>ali-langengine-infrastructure/ali-langengine-docloader</module>
 		<module>ali-langengine-infrastructure/ali-langengine-tool</module>
@@ -85,6 +85,7 @@
 		<module>ali-langengine-community/ali-langengine-polardb</module>
 		<module>ali-langengine-community/ali-langengine-pinecone</module>
 		<module>ali-langengine-community/ali-langengine-milvus</module>
+		<module>ali-langengine-community/ali-langengine-marqo</module>
 		<module>ali-langengine-community/ali-langengine-chroma</module>
 		<module>ali-langengine-community/ali-langengine-djl</module>
 		<module>ali-langengine-community/ali-langengine-huggingface</module>
