@@ -18,6 +18,7 @@ package com.alibaba.langengine.marqo.vectorstore;
 import com.alibaba.langengine.core.embeddings.Embeddings;
 import com.alibaba.langengine.core.indexes.Document;
 import com.alibaba.langengine.core.vectorstore.VectorStore;
+import com.alibaba.langengine.marqo.MarqoConfiguration;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import lombok.Data;
@@ -27,9 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.net.URI;
 import java.util.List;
-
-import static com.alibaba.langengine.marqo.MarqoConfiguration.MARQO_SERVER_URL;
-import static com.alibaba.langengine.marqo.MarqoConfiguration.MARQO_API_KEY;
 
 
 @Slf4j
@@ -48,7 +46,7 @@ public class Marqo extends VectorStore {
     public Marqo(String indexName, MarqoParam marqoParam) {
         this.indexName = indexName;
 
-        String serverUrl = MARQO_SERVER_URL;
+        String serverUrl = MarqoConfiguration.getMarqoServerUrl();
         if (StringUtils.isBlank(serverUrl)) {
             serverUrl = "http://localhost:8882";
         }
@@ -56,16 +54,19 @@ public class Marqo extends VectorStore {
             serverUrl = "http://" + serverUrl;
         }
 
-        String apiKey = MARQO_API_KEY;
+        String apiKey = MarqoConfiguration.getMarqoApiKey();
 
         try {
             URI uri = URI.create(serverUrl);
             String normalizedUrl = uri.getScheme() + "://" + uri.getAuthority();
             
             this.marqoService = new MarqoService(normalizedUrl, apiKey, indexName, marqoParam);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             log.error("Failed to parse Marqo server URL: {}", serverUrl, e);
-            throw new RuntimeException("Invalid Marqo server URL: " + serverUrl, e);
+            throw new IllegalArgumentException("Invalid Marqo server URL: " + serverUrl, e);
+        } catch (Exception e) {
+            log.error("Failed to create Marqo service", e);
+            throw new RuntimeException("Failed to create Marqo service", e);
         }
     }
 

@@ -20,8 +20,21 @@ import com.alibaba.langengine.core.util.WorkPropertiesUtils;
 
 public class MarqoConfiguration {
 
-    public static String MARQO_SERVER_URL = WorkPropertiesUtils.get("marqo_server_url");
+    private static String marqoServerUrl;
+    private static String marqoApiKey;
     
-    public static String MARQO_API_KEY = WorkPropertiesUtils.get("marqo_api_key");
+    public static String getMarqoServerUrl() {
+        if (marqoServerUrl == null) {
+            marqoServerUrl = WorkPropertiesUtils.get("marqo_server_url");
+        }
+        return marqoServerUrl;
+    }
+    
+    public static String getMarqoApiKey() {
+        if (marqoApiKey == null) {
+            marqoApiKey = WorkPropertiesUtils.get("marqo_api_key");
+        }
+        return marqoApiKey;
+    }
 
 }
