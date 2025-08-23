@@ -18,7 +18,7 @@ package com.alibaba.langengine.arxiv.service.impl;
 import com.alibaba.langengine.arxiv.model.ArXivPaper;
 import com.alibaba.langengine.arxiv.model.ArXivSearchRequest;
 import com.alibaba.langengine.arxiv.model.ArXivSearchResponse;
-import com.alibaba.langengine.arxiv.constant.ArXivConstant;
+import com.alibaba.langengine.arxiv.sdk.ArXivConstant;
 import com.alibaba.langengine.arxiv.sdk.ArXivClient;
 import com.alibaba.langengine.arxiv.sdk.ArXivException;
 import com.alibaba.langengine.arxiv.service.ArXivApiService;

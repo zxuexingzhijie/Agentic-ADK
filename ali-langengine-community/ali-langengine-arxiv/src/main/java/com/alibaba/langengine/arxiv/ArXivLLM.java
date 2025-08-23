@@ -307,7 +307,7 @@ public class ArXivLLM extends BaseLLM<ChatCompletionRequest> {
     }
     
     /**
-     * Extract main query from natural language prompt
+     * Extract main query from natural language prompt and parse date ranges
      */
     private String extractMainQuery(String prompt) {
         // Remove common prefixes
@@ -321,6 +321,9 @@ public class ArXivLLM extends BaseLLM<ChatCompletionRequest> {
             }
         }
         
+        // Extract and set date ranges from the query
+        cleaned = extractAndSetDateRanges(cleaned);
+        
         // Remove common suffixes
         String[] suffixes = {"papers", "articles", "research", "论文", "文章", "研究"};
         for (String suffix : suffixes) {
@@ -331,6 +334,52 @@ public class ArXivLLM extends BaseLLM<ChatCompletionRequest> {
         }
         
         return cleaned;
+    }
+    
+    /**
+     * Extract date ranges from query and set them as instance variables
+     */
+    private String extractAndSetDateRanges(String query) {
+        String cleaned = query;
+        
+        // Pattern for years (2020, 2021年, etc.)
+        java.util.regex.Pattern yearPattern = java.util.regex.Pattern.compile("(\\d{4})年?的?");
+        java.util.regex.Matcher yearMatcher = yearPattern.matcher(query);
+        
+        if (yearMatcher.find()) {
+            String year = yearMatcher.group(1);
+            this.startDate = year + "-01-01";
+            this.endDate = year + "-12-31";
+            cleaned = yearMatcher.replaceAll(" ").trim();
+            log.debug("Extracted year range: {} to {}", this.startDate, this.endDate);
+        }
+        
+        // Pattern for date ranges (2020-2023, 2020年到2023年, etc.)
+        java.util.regex.Pattern rangePattern = java.util.regex.Pattern.compile("(\\d{4})年?[到至-](\\d{4})年?");
+        java.util.regex.Matcher rangeMatcher = rangePattern.matcher(query);
+        
+        if (rangeMatcher.find()) {
+            String startYear = rangeMatcher.group(1);
+            String endYear = rangeMatcher.group(2);
+            this.startDate = startYear + "-01-01";
+            this.endDate = endYear + "-12-31";
+            cleaned = rangeMatcher.replaceAll(" ").trim();
+            log.debug("Extracted date range: {} to {}", this.startDate, this.endDate);
+        }
+        
+        // Pattern for recent terms (最近的, recent, last year, etc.)
+        java.util.regex.Pattern recentPattern = java.util.regex.Pattern.compile("(最近的?|recent|last\\s+year|past\\s+year)", java.util.regex.Pattern.CASE_INSENSITIVE);
+        java.util.regex.Matcher recentMatcher = recentPattern.matcher(query);
+        
+        if (recentMatcher.find()) {
+            java.time.LocalDate now = java.time.LocalDate.now();
+            this.startDate = now.minusYears(1).toString();
+            this.endDate = now.toString();
+            cleaned = recentMatcher.replaceAll(" ").trim();
+            log.debug("Extracted recent date range: {} to {}", this.startDate, this.endDate);
+        }
+        
+        return cleaned.replaceAll("\\s+", " ").trim();
     }
     
     /**

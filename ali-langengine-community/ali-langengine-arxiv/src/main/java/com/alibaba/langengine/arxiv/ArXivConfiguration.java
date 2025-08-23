@@ -25,54 +25,54 @@ public class ArXivConfiguration {
     /**
      * ArXiv API base URL, defaults to the constant BASE_URL if not configured
      */
-    public static String ARXIV_API_URL = WorkPropertiesUtils.get("arxiv_api_url", DEFAULT_BASE_URL);
+    public static final String ARXIV_API_URL = WorkPropertiesUtils.get("arxiv_api_url", DEFAULT_BASE_URL);
     
     /**
      * Default maximum number of results per search
      */
-    public static String DEFAULT_MAX_RESULTS = WorkPropertiesUtils.get("arxiv_max_results", "10");
+    public static final int DEFAULT_MAX_RESULTS = parseIntWithDefault(
+        WorkPropertiesUtils.get("arxiv_max_results", "10"), 10);
     
     /**
      * Default sort order for search results (relevance, lastUpdatedDate, submittedDate)
      */
-    public static String DEFAULT_SORT_ORDER = WorkPropertiesUtils.get("arxiv_sort_order", "relevance");
+    public static final String DEFAULT_SORT_ORDER = WorkPropertiesUtils.get("arxiv_sort_order", "relevance");
     
     /**
      * Default sort direction (ascending, descending)
      */
-    public static String DEFAULT_SORT_DIRECTION = WorkPropertiesUtils.get("arxiv_sort_direction", "descending");
+    public static final String DEFAULT_SORT_DIRECTION = WorkPropertiesUtils.get("arxiv_sort_direction", "descending");
     
     /**
      * Default timeout for HTTP requests in seconds
      */
-    public static String DEFAULT_TIMEOUT = WorkPropertiesUtils.get("arxiv_timeout", "30");
+    public static final int DEFAULT_TIMEOUT = parseIntWithDefault(
+        WorkPropertiesUtils.get("arxiv_timeout", "30"), 30);
     
     /**
      * Maximum allowed results per search request
      */
-    public static int MAX_ALLOWED_RESULTS = 100;
+    public static final int MAX_ALLOWED_RESULTS = 100;
     
     /**
-     * Get the default max results as integer
+     * Private constructor to prevent instantiation
+     */
+    private ArXivConfiguration() {
+        throw new UnsupportedOperationException("This is a configuration class and cannot be instantiated");
+    }
+    
+    /**
+     * Get the default max results as integer with bounds checking
      */
     public static int getDefaultMaxResults() {
-        try {
-            int value = Integer.parseInt(DEFAULT_MAX_RESULTS);
-            return Math.min(value, MAX_ALLOWED_RESULTS);
-        } catch (NumberFormatException e) {
-            return 10;
-        }
+        return Math.min(DEFAULT_MAX_RESULTS, MAX_ALLOWED_RESULTS);
     }
     
     /**
      * Get the default timeout as integer
      */
     public static int getDefaultTimeout() {
-        try {
-            return Integer.parseInt(DEFAULT_TIMEOUT);
-        } catch (NumberFormatException e) {
-            return 30;
-        }
+        return DEFAULT_TIMEOUT;
     }
     
     /**
@@ -87,5 +87,16 @@ public class ArXivConfiguration {
      */
     public static String getDefaultSortDirection() {
         return DEFAULT_SORT_DIRECTION;
+    }
+    
+    /**
+     * Helper method to parse integer with default fallback
+     */
+    private static int parseIntWithDefault(String value, int defaultValue) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 }
