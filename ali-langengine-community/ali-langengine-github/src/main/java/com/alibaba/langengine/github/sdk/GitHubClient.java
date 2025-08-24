@@ -34,6 +34,30 @@ public class GitHubClient {
     private final OkHttpClient client;
     private final ObjectMapper objectMapper;
 
+    // 单例的默认 OkHttpClient，用于复用连接池
+    private static volatile OkHttpClient defaultClient;
+
+    /**
+     * 获取默认的 OkHttpClient 单例实例
+     * 
+     * @return 默认的 OkHttpClient 实例
+     */
+    private static OkHttpClient getDefaultClient() {
+        if (defaultClient == null) {
+            synchronized (GitHubClient.class) {
+                if (defaultClient == null) {
+                    defaultClient = new OkHttpClient.Builder()
+                            .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                            .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                            .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                            .connectionPool(new ConnectionPool(5, 5, TimeUnit.MINUTES))
+                            .build();
+                }
+            }
+        }
+        return defaultClient;
+    }
+
     /**
      * Constructs a GitHubClient with a specified API token.
      *
@@ -41,11 +65,7 @@ public class GitHubClient {
      */
     public GitHubClient(String apiToken) {
         this.apiToken = apiToken;
-        this.client = new OkHttpClient.Builder()
-                .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                .build();
+        this.client = getDefaultClient();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -54,11 +74,7 @@ public class GitHubClient {
      */
     public GitHubClient() {
         this.apiToken = GITHUB_API_TOKEN;
-        this.client = new OkHttpClient.Builder()
-                .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                .build();
+        this.client = getDefaultClient();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -70,7 +86,7 @@ public class GitHubClient {
      */
     public GitHubClient(String apiToken, OkHttpClient okHttpClient) {
         this.apiToken = apiToken;
-        this.client = okHttpClient;
+        this.client = okHttpClient != null ? okHttpClient : getDefaultClient();
         this.objectMapper = new ObjectMapper();
     }
 

@@ -19,11 +19,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.langengine.core.embeddings.Embeddings;
 import com.alibaba.langengine.core.indexes.Document;
 import com.alibaba.langengine.core.vectorstore.VectorStore;
-import com.alibaba.langengine.github.sdk.GitHubClient;
-import com.alibaba.langengine.github.sdk.GitHubException;
-import com.alibaba.langengine.github.sdk.SearchRequest;
-import com.alibaba.langengine.github.sdk.SearchResponse;
-import com.alibaba.langengine.github.sdk.SearchResult;
+import com.alibaba.langengine.github.sdk.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +29,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 @Slf4j
 @Data
@@ -164,8 +161,10 @@ public class GitHubVectorStore extends VectorStore {
             // 设置页面内容
             doc.setPageContent(generateDocumentContent(result));
             
-            // 设置元数据
+            // 设置元数据并保存原始结果
             Map<String, Object> metadata = generateMetadata(result);
+            // 将原始SearchResult保存到元数据中，供后续使用
+            metadata.put("original_result", result);
             doc.setMetadata(metadata);
             
             // 设置评分
@@ -314,14 +313,20 @@ public class GitHubVectorStore extends VectorStore {
         }
 
         // 使用嵌入模型计算向量
-        documents = embedding.embedDocument(documents);
+        List<Document> embeddedDocuments = embedding.embedDocument(documents);
 
-        for (Document document : documents) {
+        for (Document document : embeddedDocuments) {
+            // 从元数据中提取原始结果
+            SearchResult originalResult = null;
+            if (document.getMetadata() != null && document.getMetadata().get("original_result") instanceof SearchResult) {
+                originalResult = (SearchResult) document.getMetadata().get("original_result");
+            }
+            
             GitHubDocument ghDoc = new GitHubDocument(
                     document.getUniqueId(),
                     document.getPageContent(),
                     document.getMetadata(),
-                    null
+                    originalResult
             );
             
             if (document.getEmbedding() != null) {
@@ -335,7 +340,7 @@ public class GitHubVectorStore extends VectorStore {
             this.documents.add(ghDoc);
         }
 
-        log.info("Added {} documents to GitHub vector store", documents.size());
+        log.info("Added {} documents to GitHub vector store", embeddedDocuments.size());
     }
 
     @Override
@@ -346,12 +351,30 @@ public class GitHubVectorStore extends VectorStore {
 
         // 生成查询向量
         List<String> embeddingStrings = embedding.embedQuery(query, k);
-        if (embeddingStrings.isEmpty() || !embeddingStrings.get(0).startsWith("[")) {
+        if (embeddingStrings.isEmpty()) {
             return new ArrayList<>();
         }
 
         String embeddingString = embeddingStrings.get(0);
-        List<Double> queryEmbedding = JSON.parseArray(embeddingString, Double.class);
+        
+        // 更健壮的向量解析
+        List<Double> queryEmbedding;
+        try {
+            // 尝试解析JSON数组格式的向量
+            if (embeddingString.trim().startsWith("[") && embeddingString.trim().endsWith("]")) {
+                queryEmbedding = JSON.parseArray(embeddingString, Double.class);
+            } else {
+                log.warn("Unexpected embedding format: {}", embeddingString);
+                return new ArrayList<>();
+            }
+        } catch (Exception e) {
+            log.error("Failed to parse embedding vector: {}", embeddingString, e);
+            return new ArrayList<>();
+        }
+
+        if (queryEmbedding.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         // 计算相似度并排序
         List<GitHubDocument> candidates = new ArrayList<>();

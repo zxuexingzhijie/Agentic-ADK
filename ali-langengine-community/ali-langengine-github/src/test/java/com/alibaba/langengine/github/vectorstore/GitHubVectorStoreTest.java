@@ -262,34 +262,33 @@ public class GitHubVectorStoreTest {
     }
 
     // 测试用的Embeddings实现
-    private static class TestEmbeddings implements Embeddings {
+    private static class TestEmbeddings extends Embeddings {
         @Override
-        public List<Document> embedDocument(Document document) {
-            // 简单的测试实现，直接返回包含原文档的列表
-            return Arrays.asList(document);
+        public String getModelType() {
+            return "test";
         }
 
         @Override
-        public List<List<Double>> embedDocuments(List<String> texts) {
-            // 返回简单的测试向量
-            List<List<Double>> vectors = new ArrayList<>();
-            for (String text : texts) {
+        public List<Document> embedDocument(List<Document> documents) {
+            // 简单的测试实现，为每个文档添加测试向量
+            for (Document doc : documents) {
                 List<Double> vector = new ArrayList<>();
                 for (int i = 0; i < 10; i++) {
                     vector.add(Math.random());
                 }
-                vectors.add(vector);
+                doc.setEmbedding(vector);
             }
-            return vectors;
+            return documents;
         }
 
         @Override
-        public List<Double> embedQuery(String text) {
-            List<Double> vector = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                vector.add(Math.random());
+        public List<String> embedQuery(String text, int recommend) {
+            // 返回简单的测试查询结果
+            List<String> results = new ArrayList<>();
+            for (int i = 0; i < recommend; i++) {
+                results.add("test_result_" + i);
             }
-            return vector;
+            return results;
         }
     }
 }

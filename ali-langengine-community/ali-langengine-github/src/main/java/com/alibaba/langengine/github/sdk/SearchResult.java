@@ -119,14 +119,9 @@ public class SearchResult {
     private String defaultBranch;
 
     /**
-     * 编程语言
+     * 主要编程语言
      */
     private String language;
-
-    /**
-     * 编程语言列表
-     */
-    private List<String> languages;
 
     /**
      * 主题标签

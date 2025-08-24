@@ -125,16 +125,43 @@ class GitHubClientTest {
         GitHubClient invalidClient = new GitHubClient("invalid-token");
         
         // 测试无效token时的异常处理
-        assertThrows(GitHubException.class, () -> {
+        GitHubException exception = assertThrows(GitHubException.class, () -> {
             invalidClient.searchRepositories("test");
         });
+        
+        // 验证异常包含有意义的错误信息
+        assertTrue(exception.getMessage().contains("Error occurred during GitHub API call") ||
+                  exception.getMessage().contains("Bad credentials") ||
+                  exception.getMessage().contains("Unauthorized"));
     }
 
     @Test
     void testEmptyQueryHandling() {
         // 测试空查询的处理
-        assertThrows(GitHubException.class, () -> {
+        GitHubException exception = assertThrows(GitHubException.class, () -> {
             client.searchRepositories("");
+        });
+        
+        // 验证异常信息合理
+        assertNotNull(exception.getMessage());
+    }
+
+    @Test
+    void testNullQueryHandling() {
+        // 测试null查询的处理
+        assertThrows(GitHubException.class, () -> {
+            client.searchRepositories((String) null);
+        });
+    }
+
+    @Test
+    void testInvalidSearchRequestHandling() {
+        // 测试无效的搜索请求
+        SearchRequest invalidRequest = new SearchRequest();
+        // 不设置query，应该抛出异常
+        
+        assertThrows(GitHubException.class, () -> {
+            client.searchRepositories(invalidRequest);
         });
     }
 
