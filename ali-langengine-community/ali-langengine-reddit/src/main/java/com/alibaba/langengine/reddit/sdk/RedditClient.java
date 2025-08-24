@@ -130,8 +130,9 @@ public class RedditClient {
      *
      * @param request 搜索请求
      * @return 搜索URL
+     * @throws RedditException URL构建失败时抛出
      */
-    private String buildSearchUrl(RedditSearchRequest request) {
+    private String buildSearchUrl(RedditSearchRequest request) throws RedditException {
         StringBuilder url = new StringBuilder(configuration.getBaseUrl());
 
         // 确定搜索路径
@@ -180,13 +181,17 @@ public class RedditClient {
      *
      * @param value 待编码的值
      * @return 编码后的值
+     * @throws RedditException 编码失败时抛出
      */
-    private String encodeUrl(String value) {
+    private String encodeUrl(String value) throws RedditException {
+        if (value == null) {
+            return "";
+        }
         try {
             return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
         } catch (Exception e) {
-            log.warn("Failed to encode URL parameter: {}", value, e);
-            return value;
+            log.error("Failed to encode URL parameter: {}", value, e);
+            throw new RedditException("URL encoding failed for parameter: " + value, e);
         }
     }
 
@@ -209,14 +214,24 @@ public class RedditClient {
 
                 Response response = httpClient.newCall(request).execute();
                 
-                // 检查是否需要重试（5xx错误或429）
-                if (response.isSuccessful() || 
-                    (response.code() >= 400 && response.code() < 500 && response.code() != 429)) {
+                // 检查响应状态码
+                if (response.isSuccessful()) {
                     return response;
                 }
-
+                
+                // 根据状态码决定是否重试
+                int statusCode = response.code();
+                String errorMessage = String.format("HTTP %d: %s", statusCode, response.message());
+                
                 response.close();
-                lastException = new IOException("HTTP " + response.code() + ": " + response.message());
+                
+                // 4xx错误（除了429）通常不需要重试
+                if (statusCode >= 400 && statusCode < 500 && statusCode != 429) {
+                    String specificError = getSpecificErrorMessage(statusCode);
+                    throw new IOException(specificError + " - " + errorMessage);
+                }
+                
+                lastException = new IOException(errorMessage);
 
             } catch (IOException e) {
                 lastException = e;
@@ -259,5 +274,36 @@ public class RedditClient {
     public void close() {
         // OkHttpClient的连接池会自动管理，这里不需要显式关闭
         log.info("Reddit client closed");
+    }
+
+    /**
+     * 根据HTTP状态码获取具体的错误信息
+     *
+     * @param statusCode HTTP状态码
+     * @return 具体的错误信息
+     */
+    private String getSpecificErrorMessage(int statusCode) {
+        switch (statusCode) {
+            case 400:
+                return "Bad Request - Invalid parameters or malformed request";
+            case 401:
+                return "Unauthorized - Reddit API access denied";
+            case 403:
+                return "Forbidden - Access to Reddit content is not allowed";
+            case 404:
+                return "Not Found - Reddit resource does not exist";
+            case 429:
+                return "Rate Limited - Too many requests to Reddit API";
+            case 500:
+                return "Internal Server Error - Reddit server error";
+            case 502:
+                return "Bad Gateway - Reddit service temporarily unavailable";
+            case 503:
+                return "Service Unavailable - Reddit service is temporarily down";
+            case 504:
+                return "Gateway Timeout - Reddit API response timeout";
+            default:
+                return "Reddit API Error";
+        }
     }
 }

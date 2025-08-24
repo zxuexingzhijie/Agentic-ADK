@@ -25,6 +25,11 @@ import org.apache.commons.lang3.StringUtils;
 public class RedditConfiguration {
 
     /**
+     * 默认User Agent
+     */
+    public static final String DEFAULT_USER_AGENT = "ali-langengine-reddit/1.0";
+
+    /**
      * Reddit API基础URL
      */
     private String baseUrl = "https://www.reddit.com";
@@ -32,7 +37,7 @@ public class RedditConfiguration {
     /**
      * User Agent - Reddit API要求必须设置
      */
-    private String userAgent = "ali-langengine-reddit/1.0";
+    private String userAgent = DEFAULT_USER_AGENT;
 
     /**
      * 超时时间（秒）
@@ -163,6 +168,6 @@ public class RedditConfiguration {
      * @return true如果User-Agent有效
      */
     public boolean hasValidUserAgent() {
-        return StringUtils.isNotBlank(userAgent) && !userAgent.equals("ali-langengine-reddit/1.0");
+        return StringUtils.isNotBlank(userAgent) && !userAgent.equals(DEFAULT_USER_AGENT);
     }
 }
