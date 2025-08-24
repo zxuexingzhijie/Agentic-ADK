@@ -15,10 +15,15 @@
  */
 package com.alibaba.langengine.reddit.sdk;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 
@@ -133,6 +138,37 @@ public class RedditPost {
      * 是否被删除
      */
     private Boolean removed;
+
+    /**
+     * 获取创建时间的Instant对象
+     *
+     * @return Instant对象，如果createdUtc为null则返回null
+     */
+    @JsonIgnore
+    public Instant getCreatedInstant() {
+        return createdUtc != null ? Instant.ofEpochSecond(createdUtc) : null;
+    }
+
+    /**
+     * 获取创建时间的LocalDateTime对象（系统默认时区）
+     *
+     * @return LocalDateTime对象，如果createdUtc为null则返回null
+     */
+    @JsonIgnore
+    public LocalDateTime getCreatedDateTime() {
+        Instant instant = getCreatedInstant();
+        return instant != null ? LocalDateTime.ofInstant(instant, ZoneId.systemDefault()) : null;
+    }
+
+    /**
+     * 获取创建时间的Date对象（兼容旧API）
+     *
+     * @return Date对象，如果createdUtc为null则返回null
+     */
+    @JsonIgnore
+    public Date getCreatedDate() {
+        return createdUtc != null ? new Date(createdUtc * 1000) : null;
+    }
 
     /**
      * 预览图片类

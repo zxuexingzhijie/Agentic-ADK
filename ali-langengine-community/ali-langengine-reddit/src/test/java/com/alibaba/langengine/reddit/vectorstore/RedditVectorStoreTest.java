@@ -411,10 +411,17 @@ class RedditVectorStoreTest {
 
         @Override
         public List<String> embedQuery(String text, int recommend) {
-            // 返回简单的测试查询结果
+            // 返回JSON数组格式的测试向量，符合parseEmbeddingFromQuery的期望
             List<String> results = new ArrayList<>();
             for (int i = 0; i < recommend; i++) {
-                results.add("test_result_" + i);
+                // 生成10维测试向量的JSON表示
+                StringBuilder jsonVector = new StringBuilder("[");
+                for (int j = 0; j < 10; j++) {
+                    if (j > 0) jsonVector.append(", ");
+                    jsonVector.append(String.format("%.6f", Math.random()));
+                }
+                jsonVector.append("]");
+                results.add(jsonVector.toString());
             }
             return results;
         }

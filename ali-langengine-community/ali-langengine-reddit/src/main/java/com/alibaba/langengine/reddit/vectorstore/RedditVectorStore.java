@@ -38,6 +38,11 @@ import java.util.stream.Collectors;
 public class RedditVectorStore extends VectorStore {
 
     /**
+     * 默认最大文档数（防止内存溢出）
+     */
+    public static final int DEFAULT_MAX_DOCUMENTS = 10000;
+
+    /**
      * Reddit API客户端
      */
     private RedditClient redditClient;
@@ -51,6 +56,11 @@ public class RedditVectorStore extends VectorStore {
      * 内存存储的搜索结果文档
      */
     private List<RedditDocument> documents;
+
+    /**
+     * 最大文档存储数量（防止内存溢出）
+     */
+    private int maxDocuments = DEFAULT_MAX_DOCUMENTS;
 
     /**
      * 最大搜索结果数
@@ -257,9 +267,11 @@ public class RedditVectorStore extends VectorStore {
         metadata.put("domain", post.getDomain());
         metadata.put("removed", post.getRemoved());
 
-        // 添加时间格式化
+        // 添加时间格式化（使用RedditPost的便捷方法）
         if (post.getCreatedUtc() != null) {
-            metadata.put("created_date", new Date(post.getCreatedUtc() * 1000));
+            metadata.put("created_date", post.getCreatedDate());
+            metadata.put("created_instant", post.getCreatedInstant().toString());
+            metadata.put("created_datetime", post.getCreatedDateTime().toString());
         }
 
         // 保存原始帖子数据
@@ -351,10 +363,12 @@ public class RedditVectorStore extends VectorStore {
      *
      * @param queryResults 查询结果
      * @return 嵌入向量
+     * @throws IllegalArgumentException 当嵌入格式无效时抛出
      */
     private List<Double> parseEmbeddingFromQuery(List<String> queryResults) {
         if (queryResults == null || queryResults.isEmpty()) {
-            return null;
+            log.error("Embedding query results are null or empty");
+            throw new IllegalArgumentException("Embedding service returned empty results");
         }
 
         try {
@@ -364,16 +378,13 @@ public class RedditVectorStore extends VectorStore {
                 return JSON.parseArray(firstResult, Double.class);
             }
 
-            // 如果不是JSON格式，生成随机向量作为fallback
-            log.warn("Unexpected embedding format: {}", firstResult);
-            List<Double> randomVector = new ArrayList<>();
-            for (int i = 0; i < 768; i++) { // 假设768维向量
-                randomVector.add(Math.random());
-            }
-            return randomVector;
+            // 如果不是JSON格式，抛出异常而不是生成随机向量
+            log.error("Invalid embedding format from service. Expected JSON array but got: {}", firstResult);
+            throw new IllegalArgumentException("Embedding service returned invalid format: " + firstResult);
+            
         } catch (Exception e) {
-            log.error("Failed to parse embedding from query results", e);
-            return null;
+            log.error("Failed to parse embedding from query results: {}", queryResults, e);
+            throw new IllegalArgumentException("Failed to parse embedding vector", e);
         }
     }
 
@@ -429,6 +440,17 @@ public class RedditVectorStore extends VectorStore {
         }
 
         try {
+            // 检查内存限制
+            if (this.documents.size() + documents.size() > maxDocuments) {
+                int toRemove = this.documents.size() + documents.size() - maxDocuments;
+                log.warn("Document limit ({}) would be exceeded. Removing {} oldest documents", maxDocuments, toRemove);
+                
+                // 移除最早的文档（FIFO策略）
+                for (int i = 0; i < toRemove && !this.documents.isEmpty(); i++) {
+                    this.documents.remove(0);
+                }
+            }
+
             // 生成嵌入向量
             List<Document> embeddedDocs = embedding.embedDocument(documents);
 
@@ -453,7 +475,7 @@ public class RedditVectorStore extends VectorStore {
                 }
             }
 
-            log.info("Added {} documents to Reddit vector store", embeddedDocs.size());
+            log.info("Added {} documents to Reddit vector store (total: {})", embeddedDocs.size(), this.documents.size());
         } catch (Exception e) {
             log.error("Error adding documents to Reddit vector store", e);
             throw new RuntimeException("Failed to add documents", e);
