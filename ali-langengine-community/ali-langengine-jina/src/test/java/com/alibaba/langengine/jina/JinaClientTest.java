@@ -16,7 +16,7 @@
 
 package com.alibaba.langengine.jina;
 
-import com.alibaba.langengine.jina.sdk.JinaService;
+import com.alibaba.langengine.jina.sdk.JinaClient;
 import com.alibaba.langengine.jina.sdk.request.ClassifierRequest;
 import com.alibaba.langengine.jina.sdk.request.DeepSearchRequest;
 import com.alibaba.langengine.jina.sdk.request.EmbeddingsRequest;
@@ -53,16 +53,16 @@ import static org.junit.Assert.assertTrue;
  * Get your Jina AI API key for free: https://jina.ai/?sui=apikey
  */
 @EnabledIfEnvironmentVariable(named = "JINA_API_KEY", matches = ".*")
-public class JinaServiceTest {
+public class JinaClientTest {
 
-	private JinaService jinaService;
+	private JinaClient jinaClient;
 
 	@Before
 	public void setUp() {
 		// Get API key from environment variable
 		String apiKey = System.getenv("JINA_API_KEY");
 		assertNotNull("JINA_API_KEY environment variable must be set", apiKey);
-		jinaService = new JinaService(apiKey);
+		jinaClient = new JinaClient(apiKey);
 	}
 
 	@Test
@@ -74,7 +74,7 @@ public class JinaServiceTest {
 		request.setInput(Arrays.asList("Hello, world!", "Jina AI is awesome"));
 
 		// When
-		EmbeddingsResponse response = jinaService.createEmbeddings(request);
+		EmbeddingsResponse response = jinaClient.createEmbeddings(request);
 
 		// Then
 		assertNotNull(response);
@@ -95,7 +95,7 @@ public class JinaServiceTest {
 				"The weather is sunny today", "Jina AI provides embeddings and rerankers for search applications"));
 
 		// When
-		RerankResponse response = jinaService.rerankDocuments(request);
+		RerankResponse response = jinaClient.rerankDocuments(request);
 
 		// Then
 		assertNotNull(response);
@@ -123,7 +123,7 @@ public class JinaServiceTest {
 		headers.put("X-With-Images-Summary", "true");
 
 		// When
-		ReaderResponse response = jinaService.readUrl(request, headers);
+		ReaderResponse response = jinaClient.readUrl(request, headers);
 
 		// Then
 		assertNotNull(response);
@@ -145,7 +145,7 @@ public class JinaServiceTest {
 		headers.put("X-No-Cache", "true");
 
 		// When
-		SearchResponse response = jinaService.search(request, headers);
+		SearchResponse response = jinaClient.search(request, headers);
 
 		// Then
 		assertNotNull(response);
@@ -177,7 +177,7 @@ public class JinaServiceTest {
 		request.setStream(false);
 
 		// When
-		DeepSearchResponse response = jinaService.deepSearch(request);
+		DeepSearchResponse response = jinaClient.deepSearch(request);
 
 		// Then
 		assertNotNull(response);
@@ -196,7 +196,7 @@ public class JinaServiceTest {
 		request.setMaxChunkLength(100);
 
 		// When
-		SegmenterResponse response = jinaService.segmentText(request);
+		SegmenterResponse response = jinaClient.segmentText(request);
 
 		// Then
 		assertNotNull(response);
@@ -219,7 +219,7 @@ public class JinaServiceTest {
 		request.setLabels(Arrays.asList("Intensive activity", "Creative work", "Light activity"));
 
 		// When
-		ClassifierResponse response = jinaService.classify(request);
+		ClassifierResponse response = jinaClient.classify(request);
 
 		// Then
 		assertNotNull(response);

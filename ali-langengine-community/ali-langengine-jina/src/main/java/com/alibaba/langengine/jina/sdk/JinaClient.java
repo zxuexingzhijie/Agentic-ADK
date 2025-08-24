@@ -54,13 +54,13 @@ import static com.alibaba.langengine.jina.sdk.JinaConstant.TIME_OUT;
  * Jina Crawler Java Client Service Get your Jina AI API key for free:
  * https://jina.ai/?sui=apikey
  */
-public class JinaService {
+public class JinaClient {
 
 	private final OkHttpClient client;
 
 	private final String apiKey;
 
-	public JinaService(String apiKey, int timeout, TimeUnit timeUnit) {
+	public JinaClient(String apiKey, int timeout, TimeUnit timeUnit) {
 		this.apiKey = apiKey;
 		this.client = new OkHttpClient.Builder().connectTimeout(timeout, timeUnit)
 			.readTimeout(timeout, timeUnit)
@@ -68,11 +68,15 @@ public class JinaService {
 			.build();
 	}
 
-	public JinaService(String apiKey) {
+    public JinaClient(int timeout, TimeUnit timeUnit) {
+        this(JINA_API_KEY, timeout, timeUnit);
+    }
+
+	public JinaClient(String apiKey) {
 		this(apiKey, TIME_OUT, TimeUnit.SECONDS);
 	}
 
-    public JinaService() {
+    public JinaClient() {
         this(JINA_API_KEY);
     }
 
