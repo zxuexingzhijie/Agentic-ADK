@@ -17,6 +17,7 @@ package com.alibaba.langengine.pubmed;
 
 import com.alibaba.langengine.core.embeddings.Embeddings;
 import com.alibaba.langengine.core.indexes.Document;
+import com.alibaba.langengine.core.util.VectorUtils;
 import com.alibaba.langengine.core.vectorstore.VectorStore;
 import com.alibaba.langengine.pubmed.model.PubMedArticle;
 import com.alibaba.langengine.pubmed.model.PubMedSearchRequest;
@@ -60,28 +61,36 @@ public class PubMedVectorStore extends VectorStore {
 
     private final PubMedClient pubmedClient;
     private final Map<String, Document> documentCache;
+    private final Map<String, List<Double>> embeddingCache;
     private final int maxCacheSize;
     private final double similarityThreshold;
+    private final Embeddings embeddings;
 
     /**
      * 构造函数
      *
+     * @param embeddings 嵌入模型
      * @param configuration PubMed配置
      */
-    public PubMedVectorStore(PubMedConfiguration configuration) {
-        this(configuration, DEFAULT_MAX_CACHE_SIZE, DEFAULT_SIMILARITY_THRESHOLD);
+    public PubMedVectorStore(Embeddings embeddings, PubMedConfiguration configuration) {
+        this(embeddings, configuration, DEFAULT_MAX_CACHE_SIZE, DEFAULT_SIMILARITY_THRESHOLD);
     }
 
     /**
      * 构造函数
      *
+     * @param embeddings 嵌入模型
      * @param configuration PubMed配置
      * @param maxCacheSize 最大缓存大小
      * @param similarityThreshold 相似度阈值
      */
-    public PubMedVectorStore(PubMedConfiguration configuration, 
+    public PubMedVectorStore(Embeddings embeddings, PubMedConfiguration configuration, 
                            int maxCacheSize, double similarityThreshold) {
         super();
+        
+        if (embeddings == null) {
+            throw new IllegalArgumentException("Embeddings cannot be null");
+        }
         
         if (configuration == null) {
             throw new IllegalArgumentException("PubMed configuration cannot be null");
@@ -95,8 +104,10 @@ public class PubMedVectorStore extends VectorStore {
             throw new IllegalArgumentException("Similarity threshold must be between 0.0 and 1.0");
         }
 
+        this.embeddings = embeddings;
         this.pubmedClient = new PubMedClient(configuration);
         this.documentCache = new ConcurrentHashMap<>();
+        this.embeddingCache = new ConcurrentHashMap<>();
         this.maxCacheSize = maxCacheSize;
         this.similarityThreshold = similarityThreshold;
 
@@ -105,32 +116,46 @@ public class PubMedVectorStore extends VectorStore {
     }
 
     @Override
-    public void addDocuments(List<Document> documents) {
+    public void addDocuments(List<Document> documents) throws PubMedException {
         if (documents == null || documents.isEmpty()) {
             return;
         }
 
-        for (Document document : documents) {
-            try {
-                String id = generateDocumentId(document);
-                
-                // 检查缓存大小限制
-                enforceMemoryLimit();
-                
-                // 缓存文档
-                documentCache.put(id, document);
-                
-            } catch (Exception e) {
-                log.error("Failed to add document: {}", e.getMessage(), e);
-                throw new RuntimeException("Failed to add document", e);
+        // 首先为所有文档生成嵌入向量
+        try {
+            List<Document> embeddedDocuments = embeddings.embedDocument(documents);
+            
+            for (Document document : embeddedDocuments) {
+                try {
+                    String id = generateDocumentId(document);
+                    
+                    // 检查缓存大小限制
+                    enforceMemoryLimit();
+                    
+                    // 缓存文档
+                    documentCache.put(id, document);
+                    
+                    // 缓存嵌入向量
+                    if (document.getEmbedding() != null) {
+                        embeddingCache.put(id, document.getEmbedding());
+                    }
+                    
+                } catch (Exception e) {
+                    log.error("Failed to add document: {}", e.getMessage(), e);
+                    throw new PubMedException("Failed to add document", e);
+                }
             }
+            
+            log.info("Added {} documents with embeddings to PubMed vector store", embeddedDocuments.size());
+            
+        } catch (Exception e) {
+            log.error("Failed to generate embeddings for documents: {}", e.getMessage(), e);
+            throw new PubMedException("Failed to generate embeddings for documents", e);
         }
-        
-        log.info("Added {} documents to PubMed vector store", documents.size());
     }
 
     @Override
-    public List<Document> similaritySearch(String query, int k, Double maxDistanceValue, Integer type) {
+    public List<Document> similaritySearch(String query, int k, Double maxDistanceValue, Integer type) throws PubMedException {
         if (StringUtils.isBlank(query)) {
             throw new IllegalArgumentException("Query cannot be null or empty");
         }
@@ -142,29 +167,58 @@ public class PubMedVectorStore extends VectorStore {
         try {
             log.info("Performing similarity search for query: '{}' with k={}", query, k);
             
-            // 搜索PubMed
-            PubMedSearchRequest request = PubMedSearchRequest.withLimit(query, Math.max(k * 2, 20));
-            PubMedSearchResponse response = pubmedClient.search(request);
+            // 1. 生成查询向量
+            List<Double> queryEmbedding = embeddings.embedQuery(query);
             
-            if (!response.isSuccessful()) {
-                log.warn("PubMed search failed: {}", response.getErrorMessage());
-                throw new RuntimeException("PubMed search failed: " + response.getErrorMessage());
+            // 2. 如果缓存为空，先从PubMed搜索一些候选文档
+            if (documentCache.isEmpty()) {
+                PubMedSearchRequest request = PubMedSearchRequest.withLimit(query, Math.max(k * 3, 50));
+                pubmedClient.enforceRateLimit(); // 强制执行速率限制
+                PubMedSearchResponse response = pubmedClient.search(request);
+                
+                if (response.isSuccessful() && response.hasResults()) {
+                    List<Document> candidateDocuments = convertArticlesToDocuments(response.getArticles());
+                    addDocuments(candidateDocuments); // 这会生成嵌入并添加到缓存
+                }
             }
             
-            if (!response.hasResults()) {
-                log.info("No results found for query: {}", query);
-                return new ArrayList<>();
+            // 3. 计算相似度并排序
+            List<DocumentWithScore> scoredDocuments = new ArrayList<>();
+            
+            for (Map.Entry<String, Document> entry : documentCache.entrySet()) {
+                Document document = entry.getValue();
+                List<Double> docEmbedding = embeddingCache.get(entry.getKey());
+                
+                if (docEmbedding != null) {
+                    double similarity = VectorUtils.calculateCosineSimilarity(queryEmbedding, docEmbedding);
+                    double distance = 1.0 - similarity; // 转换为距离
+                    
+                    // 应用距离阈值过滤
+                    if (maxDistanceValue == null || distance <= maxDistanceValue) {
+                        scoredDocuments.add(new DocumentWithScore(document, similarity, distance));
+                    }
+                }
             }
             
-            // 转换为文档并计算相似度
-            List<Document> documents = convertArticlesToDocuments(response.getArticles());
+            // 4. 按相似度排序并返回前k个结果
+            List<Document> results = scoredDocuments.stream()
+                    .sorted((a, b) -> Double.compare(b.similarity, a.similarity)) // 按相似度降序
+                    .limit(k)
+                    .map(ds -> {
+                        // 添加相似度分数到元数据
+                        Map<String, Object> metadata = new HashMap<>(ds.document.getMetadata());
+                        metadata.put("similarity_score", ds.similarity);
+                        metadata.put("distance", ds.distance);
+                        return new Document(ds.document.getPageContent(), metadata);
+                    })
+                    .collect(Collectors.toList());
             
-            // 直接返回结果
-            return documents.stream().limit(k).collect(Collectors.toList());
+            log.info("Similarity search completed, returning {} documents", results.size());
+            return results;
             
         } catch (Exception e) {
             log.error("Similarity search failed: {}", e.getMessage(), e);
-            throw new RuntimeException("Similarity search failed", e);
+            throw new PubMedException("Similarity search failed", e);
         }
     }
 
@@ -174,7 +228,7 @@ public class PubMedVectorStore extends VectorStore {
      * @param request 搜索请求
      * @return 文档列表
      */
-    public List<Document> searchPubMed(PubMedSearchRequest request) {
+    public List<Document> searchPubMed(PubMedSearchRequest request) throws PubMedException {
         if (request == null) {
             throw new IllegalArgumentException("Search request cannot be null");
         }
@@ -182,11 +236,12 @@ public class PubMedVectorStore extends VectorStore {
         try {
             log.info("Searching PubMed with request: {}", request.getQuery());
             
+            pubmedClient.enforceRateLimit(); // 强制执行速率限制
             PubMedSearchResponse response = pubmedClient.search(request);
             
             if (!response.isSuccessful()) {
                 log.warn("PubMed search failed: {}", response.getErrorMessage());
-                throw new RuntimeException("PubMed search failed: " + response.getErrorMessage());
+                throw new PubMedException("PubMed search failed: " + response.getErrorMessage());
             }
             
             if (!response.hasResults()) {
@@ -201,7 +256,7 @@ public class PubMedVectorStore extends VectorStore {
             
         } catch (Exception e) {
             log.error("PubMed search failed: {}", e.getMessage(), e);
-            throw new RuntimeException("PubMed search failed", e);
+            throw new PubMedException("PubMed search failed", e);
         }
     }
 
@@ -351,38 +406,6 @@ public class PubMedVectorStore extends VectorStore {
     }
 
     /**
-     * 计算余弦相似度
-     *
-     * @param vector1 向量1
-     * @param vector2 向量2
-     * @return 余弦相似度
-     */
-    private double calculateCosineSimilarity(List<Double> vector1, List<Double> vector2) {
-        if (vector1 == null || vector2 == null || vector1.size() != vector2.size()) {
-            throw new IllegalArgumentException("Invalid vectors for similarity calculation");
-        }
-        
-        double dotProduct = 0.0;
-        double norm1 = 0.0;
-        double norm2 = 0.0;
-        
-        for (int i = 0; i < vector1.size(); i++) {
-            dotProduct += vector1.get(i) * vector2.get(i);
-            norm1 += Math.pow(vector1.get(i), 2);
-            norm2 += Math.pow(vector2.get(i), 2);
-        }
-        
-        norm1 = Math.sqrt(norm1);
-        norm2 = Math.sqrt(norm2);
-        
-        if (norm1 == 0.0 || norm2 == 0.0) {
-            return 0.0;
-        }
-        
-        return dotProduct / (norm1 * norm2);
-    }
-
-    /**
      * 生成文档ID
      *
      * @param document 文档
@@ -413,6 +436,7 @@ public class PubMedVectorStore extends VectorStore {
             
             for (String key : keysToRemove) {
                 documentCache.remove(key);
+                embeddingCache.remove(key);
             }
             
             log.debug("Removed {} cached items to enforce memory limit", removeCount);
@@ -425,8 +449,9 @@ public class PubMedVectorStore extends VectorStore {
      * @return 缓存统计信息
      */
     public String getCacheStatistics() {
-        return String.format("Document cache: %d/%d", 
-                documentCache.size(), maxCacheSize);
+        return String.format("Document cache: %d/%d, Embedding cache: %d/%d", 
+                documentCache.size(), maxCacheSize,
+                embeddingCache.size(), maxCacheSize);
     }
 
     /**
@@ -434,6 +459,7 @@ public class PubMedVectorStore extends VectorStore {
      */
     public void clearCache() {
         documentCache.clear();
+        embeddingCache.clear();
         log.info("PubMed vector store cache cleared");
     }
 
@@ -453,11 +479,13 @@ public class PubMedVectorStore extends VectorStore {
      */
     private static class DocumentWithScore {
         final Document document;
-        final double score;
+        final double similarity;
+        final double distance;
         
-        DocumentWithScore(Document document, double score) {
+        DocumentWithScore(Document document, double similarity, double distance) {
             this.document = document;
-            this.score = score;
+            this.similarity = similarity;
+            this.distance = distance;
         }
     }
 }

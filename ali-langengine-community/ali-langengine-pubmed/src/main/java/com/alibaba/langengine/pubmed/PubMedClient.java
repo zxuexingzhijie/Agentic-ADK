@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -549,6 +550,24 @@ public class PubMedClient {
     }
 
     /**
+     * 强制执行速率限制
+     * 
+     * @throws InterruptedException 如果线程在等待期间被中断
+     */
+    public synchronized void enforceRateLimit() throws InterruptedException {
+        if (lastRequestTime != null) {
+            long elapsedTime = System.currentTimeMillis() - lastRequestTime.toEpochSecond(ZoneOffset.UTC) * 1000;
+            long minInterval = (long) (1000.0 / configuration.getRequestsPerSecond());
+            
+            if (elapsedTime < minInterval) {
+                long waitTime = minInterval - elapsedTime;
+                Thread.sleep(waitTime);
+            }
+        }
+        lastRequestTime = LocalDateTime.now();
+    }
+
+    /**
      * 获取配置信息
      *
      * @return 配置对象
@@ -566,18 +585,5 @@ public class PubMedClient {
             httpClient.connectionPool().evictAll();
         }
         log.info("PubMed client closed");
-    }
-
-    /**
-     * PubMed客户端异常
-     */
-    public static class PubMedClientException extends Exception {
-        public PubMedClientException(String message) {
-            super(message);
-        }
-
-        public PubMedClientException(String message, Throwable cause) {
-            super(message, cause);
-        }
     }
 }
