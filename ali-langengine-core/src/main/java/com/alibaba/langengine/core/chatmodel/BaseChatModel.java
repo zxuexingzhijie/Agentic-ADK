@@ -17,7 +17,9 @@ package com.alibaba.langengine.core.chatmodel;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.langengine.core.agent.AgentOutputParser;
+import com.alibaba.langengine.core.caches.BaseCache;
 import com.alibaba.langengine.core.callback.ExecutionContext;
+import com.alibaba.langengine.core.config.LangEngineContext;
 import com.alibaba.langengine.core.config.LangEngineConfiguration;
 import com.alibaba.langengine.core.languagemodel.BaseLanguageModel;
 import com.alibaba.langengine.core.memory.BaseMemory;
@@ -112,12 +114,24 @@ public abstract class BaseChatModel<T extends ChatCompletionRequest> extends Bas
     public ChatResult generateWithCache(List<BaseMessage> messages, List<FunctionDefinition> functions, List<String> stops, ExecutionContext executionContext, Consumer<BaseMessage> consumer, Map<String, Object> extraAttributes) {
         String prompt = null;
         String llmString = null;
-        if(LangEngineConfiguration.CurrentCache != null) {
+        BaseCache cache = null;
+
+        // 优先使用上下文的 cache（从 BaseLanguageModel 继承的 context）
+        LangEngineContext ctx = getContext();
+        if (ctx != null && ctx.getConfig() != null) {
+            cache = ctx.getConfig().getCache();
+        }
+        // 回退到旧的静态全局
+        if (cache == null) {
+            cache = LangEngineConfiguration.CurrentCache;
+        }
+
+        if(cache != null) {
             prompt = JSON.toJSONString(messages);
             if (!CollectionUtils.isEmpty(stops)) {
                 llmString = JSON.toJSONString(stops);
             }
-            List<Generation> cacheVal = LangEngineConfiguration.CurrentCache.get(prompt, llmString);
+            List<Generation> cacheVal = cache.get(prompt, llmString);
             if(cacheVal != null) {
                 ChatResult chatResult = new ChatResult();
                 chatResult.setGenerations(cacheVal);
@@ -139,8 +153,8 @@ public abstract class BaseChatModel<T extends ChatCompletionRequest> extends Bas
         chatResult.setGenerations(new ArrayList<>());
         chatResult.getGenerations().add(generation);
 
-        if (LangEngineConfiguration.CurrentCache != null) {
-            LangEngineConfiguration.CurrentCache.update(prompt, llmString, chatResult.getGenerations());
+        if (cache != null) {
+            cache.update(prompt, llmString, chatResult.getGenerations());
         }
 
         return chatResult;

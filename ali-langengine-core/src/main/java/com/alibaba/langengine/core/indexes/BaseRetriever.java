@@ -18,6 +18,7 @@ package com.alibaba.langengine.core.indexes;
 import com.alibaba.langengine.core.callback.BaseCallbackManager;
 import com.alibaba.langengine.core.callback.CallbackManager;
 import com.alibaba.langengine.core.callback.ExecutionContext;
+import com.alibaba.langengine.core.config.LangEngineContext;
 import com.alibaba.langengine.core.runnables.RunnableStreamCallback;
 import com.alibaba.langengine.core.runnables.*;
 import com.alibaba.langengine.core.runnables.Runnable;
@@ -45,15 +46,30 @@ public abstract class BaseRetriever extends Runnable<RunnableInput, RunnableOutp
     /**
      * 回调管理器
      */
-    @JsonIgnore
-    private BaseCallbackManager callbackManager;
+	@JsonIgnore
+	private BaseCallbackManager callbackManager;
 
-    public BaseCallbackManager getCallbackManager() {
-        if(callbackManager == null) {
-            callbackManager = LangEngineConfiguration.CALLBACK_MANAGER;
-        }
-        return callbackManager;
-    }
+	@JsonIgnore
+	private LangEngineContext context;
+
+	public LangEngineContext getContext() {
+		return context;
+	}
+
+	public void setContext(LangEngineContext context) {
+		this.context = context;
+	}
+
+	public BaseCallbackManager getCallbackManager() {
+		if(callbackManager == null) {
+			if (context != null && context.getConfig() != null && context.getConfig().getCallbackManager() != null) {
+				callbackManager = context.getConfig().getCallbackManager();
+			} else {
+				callbackManager = LangEngineConfiguration.CALLBACK_MANAGER;
+			}
+		}
+		return callbackManager;
+	}
 
     public void setCallbackManager(BaseCallbackManager callbackManager) {
         if (callbackManager != null && callbackManager.getRunManager() != null) {
