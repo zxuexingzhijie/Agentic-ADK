@@ -25,6 +25,7 @@ import com.alibaba.langengine.core.agent.AgentOutputParser;
 import com.alibaba.langengine.core.callback.BaseCallbackManager;
 import com.alibaba.langengine.core.callback.CallbackManager;
 import com.alibaba.langengine.core.callback.ExecutionContext;
+import com.alibaba.langengine.core.config.LangEngineContext;
 import com.alibaba.langengine.core.runnables.RunnableStreamCallback;
 import com.alibaba.langengine.core.memory.BaseMemory;
 import com.alibaba.langengine.core.messages.BaseMessage;
@@ -43,7 +44,7 @@ import com.alibaba.langengine.core.runnables.RunnableOutput;
 import com.alibaba.langengine.core.runnables.RunnableStringVar;
 import com.alibaba.langengine.core.tokenizers.GPT2Tokenizer;
 import com.alibaba.langengine.core.util.JacksonUtils;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import org.apache.commons.collections.CollectionUtils;
@@ -123,6 +124,17 @@ public abstract class BaseLanguageModel<T> extends Runnable<RunnableInput, Runna
      * 如果您希望对于某一类问题，Function Calling 能够强制调用某个工具，可以设定tool_choice参数为{"type": "function", "function": {"name": "the_function_to_call"}}，其中the_function_to_call是您指定的工具函数名称。
      */
     private Object toolChoice = "auto";
+
+	@JsonIgnore
+	private LangEngineContext context;
+
+	public LangEngineContext getContext() {
+		return context;
+	}
+
+	public void setContext(LangEngineContext context) {
+		this.context = context;
+	}
 
 
     /**
