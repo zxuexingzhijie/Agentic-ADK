@@ -100,6 +100,7 @@
 		<module>ali-langengine-community/ali-langengine-deepseek</module>
 		<module>ali-langengine-community/ali-langengine-openmanus</module>
 		<module>ali-langengine-community/ali-langengine-tablestore</module>
+        <module>ali-langengine-community/ali-langengine-jina</module>
 		<module>ali-langengine-community/ali-langengine-jsonrepair</module>
 		<module>ali-langengine-community/ali-langengine-tavily</module>
 		<module>ali-langengine-community/ali-langengine-weaviate</module>
