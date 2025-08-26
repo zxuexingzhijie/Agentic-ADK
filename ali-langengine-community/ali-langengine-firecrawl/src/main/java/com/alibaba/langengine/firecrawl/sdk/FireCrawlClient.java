@@ -16,7 +16,12 @@
 
 package com.alibaba.langengine.firecrawl.sdk;
 
+import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
+import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeErrorsResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeStatusResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.CancelBatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ErrorResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -94,4 +99,121 @@ public class FireCrawlClient {
             throw new FireCrawlException("HTTP Error " + response.code());
         }
     }
+
+    public BatchScrapeResponse batchScrape(BatchScrapeRequest request) throws FireCrawlException {
+        try {
+            String json = objectMapper.writeValueAsString(request);
+            RequestBody body = RequestBody.create(json, MediaType.get("application/json"));
+
+            Request httpRequest = new Request.Builder()
+                    .url(FIRE_CRAWL_BASE_URL + "/batch/scrape")
+                    .post(body)
+                    .addHeader("Authorization", "Bearer " + apiKey)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try (Response response = client.newCall(httpRequest).execute()) {
+                if (!response.isSuccessful()) {
+                    String errorMessage = response.body() != null ?
+                            response.body().string() : "Unknown error";
+                    throw new FireCrawlException("API request failed with code: " + response.code() +
+                            ", message: " + errorMessage);
+                }
+
+                if (response.body() == null) {
+                    throw new FireCrawlException("Empty response body");
+                }
+
+                String responseBody = response.body().string();
+                return objectMapper.readValue(responseBody, BatchScrapeResponse.class);
+            }
+        } catch (IOException e) {
+            throw new FireCrawlException("Failed to execute batch scrape request", e);
+        }
+    }
+
+    /**
+     * Get the status of a batch scrape job
+     * @param id The ID of the batch scrape job
+     * @return BatchScrapeStatusResponse containing the status information
+     * @throws FireCrawlException if the request fails
+     */
+    public BatchScrapeStatusResponse getBatchScrapeStatus(String id) throws FireCrawlException {
+        Request request = new Request.Builder()
+                .url(FIRE_CRAWL_BASE_URL + "/batch/scrape/" + id)
+                .addHeader("Authorization", "Bearer " + apiKey)
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new FireCrawlException("Failed to get batch scrape status: " + response.code());
+            }
+
+            if (response.body() == null) {
+                throw new FireCrawlException("Empty response body");
+            }
+
+            return objectMapper.readValue(response.body().string(), BatchScrapeStatusResponse.class);
+        } catch (IOException e) {
+            throw new FireCrawlException("Error getting batch scrape status", e);
+        }
+    }
+
+    /**
+     * Get errors from a batch scrape job
+     * @param id The ID of the batch scrape job
+     * @return BatchScrapeErrorsResponse containing error information
+     * @throws FireCrawlException if the request fails
+     */
+    public BatchScrapeErrorsResponse getBatchScrapeErrors(String id) throws FireCrawlException {
+        Request request = new Request.Builder()
+                .url(FIRE_CRAWL_BASE_URL + "/batch/scrape/" + id + "/errors")
+                .addHeader("Authorization", "Bearer " + apiKey)
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new FireCrawlException("Failed to get batch scrape errors: " + response.code());
+            }
+
+            if (response.body() == null) {
+                throw new FireCrawlException("Empty response body");
+            }
+
+            return objectMapper.readValue(response.body().string(), BatchScrapeErrorsResponse.class);
+        } catch (IOException e) {
+            throw new FireCrawlException("Error getting batch scrape errors", e);
+        }
+    }
+
+    /**
+     * Cancel a batch scrape job
+     * @param id The ID of the batch scrape job
+     * @return CancelBatchScrapeResponse containing the result of the cancellation
+     * @throws FireCrawlException if the request fails
+     */
+    public CancelBatchScrapeResponse cancelBatchScrape(String id) throws FireCrawlException {
+        Request request = new Request.Builder()
+                .url(FIRE_CRAWL_BASE_URL + "/batch/scrape/" + id)
+                .addHeader("Authorization", "Bearer " + apiKey)
+                .delete()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new FireCrawlException("Failed to cancel batch scrape: " + response.code());
+            }
+
+            if (response.body() == null) {
+                throw new FireCrawlException("Empty response body");
+            }
+
+            return objectMapper.readValue(response.body().string(), CancelBatchScrapeResponse.class);
+        } catch (IOException e) {
+            throw new FireCrawlException("Error canceling batch scrape", e);
+        }
+    }
+
 }

@@ -18,18 +18,23 @@ package com.alibaba.langengine.firecrawl;
 
 import com.alibaba.langengine.firecrawl.sdk.FireCrawlClient;
 import com.alibaba.langengine.firecrawl.sdk.FireCrawlException;
+import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
+import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @EnabledIfEnvironmentVariable(named = "FIRECRAWL_API_KEY", matches = ".*")
 public class FireCrawlClientTest {
@@ -42,7 +47,7 @@ public class FireCrawlClientTest {
     public void setUp() {
         String apiKey = System.getenv("FIRECRAWL_API_KEY");
         if (apiKey == null || apiKey.isEmpty()) {
-            // 如果没有设置API密钥，则禁用测试
+            // Disable tests if API key is not set
             throw new IllegalStateException("FIRECRAWL_API_KEY environment variable must be set to run tests");
         }
         client = new FireCrawlClient(apiKey);
@@ -69,7 +74,7 @@ public class FireCrawlClientTest {
         ScrapeRequest request = new ScrapeRequest();
         request.setUrl(TEST_URL);
         
-        // 设置格式为rawHtml
+        // Set format to rawHtml
         List<Object> formats = new ArrayList<>();
         formats.add("rawHtml");
         request.setFormats(formats);
@@ -88,7 +93,7 @@ public class FireCrawlClientTest {
         ScrapeRequest request = new ScrapeRequest();
         request.setUrl(TEST_URL);
         
-        // 设置格式为links
+        // Set format to links
         List<Object> formats = new ArrayList<>();
         formats.add("links");
         request.setFormats(formats);
@@ -106,7 +111,7 @@ public class FireCrawlClientTest {
         ScrapeRequest request = new ScrapeRequest();
         request.setUrl(TEST_URL);
         
-        // 设置多种格式
+        // Set multiple formats
         List<Object> formats = new ArrayList<>();
         formats.add("markdown");
         formats.add("html");
@@ -118,12 +123,51 @@ public class FireCrawlClientTest {
         assertNotNull(response);
         assertTrue(response.getSuccess());
         assertNotNull(response.getData());
-        // 检查所有格式都返回了
+        // Check that all formats are returned
         assertNotNull(response.getData().getMarkdown());
         assertFalse(response.getData().getMarkdown().isEmpty());
         assertNotNull(response.getData().getHtml());
         assertFalse(response.getData().getHtml().isEmpty());
         assertNotNull(response.getData().getLinks());
+    }
+
+    @Test
+    public void testBatchScrapeWithFormats() throws FireCrawlException {
+
+        BatchScrapeRequest request = new BatchScrapeRequest();
+        request.setUrls(Collections.singletonList("https://example.com"));
+        request.setFormats(Arrays.asList("markdown", "html"));
+        request.setIgnoreInvalidURLs(true);
+
+        BatchScrapeResponse response = client.batchScrape(request);
+
+        assertNotNull("Response should not be null", response);
+        assertTrue("Response should be successful", response.getSuccess());
+        assertNotNull("Response ID should not be null", response.getId());
+    }
+
+    @Test
+    public void testGetBatchScrapeStatusWithInvalidId() {
+        try {
+            // Test with an invalid ID to check error handling
+            client.getBatchScrapeStatus("invalid-id");
+            fail("Expected FireCrawlException to be thrown");
+        } catch (FireCrawlException e) {
+            // Expected exception
+            assertNotNull(e);
+        }
+    }
+
+    @Test
+    public void testCancelBatchScrapeWithInvalidId() {
+        try {
+            // Test with an invalid ID to check error handling
+            client.cancelBatchScrape("invalid-id");
+            fail("Expected FireCrawlException to be thrown");
+        } catch (FireCrawlException e) {
+            // Expected exception
+            assertNotNull(e);
+        }
     }
 
 }
