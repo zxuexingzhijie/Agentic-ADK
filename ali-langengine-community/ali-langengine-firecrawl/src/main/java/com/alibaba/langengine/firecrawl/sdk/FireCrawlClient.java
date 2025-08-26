@@ -17,6 +17,8 @@
 package com.alibaba.langengine.firecrawl.sdk;
 
 import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
+import com.alibaba.langengine.firecrawl.sdk.request.CrawlParamsPreviewRequest;
+import com.alibaba.langengine.firecrawl.sdk.request.CrawlRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.MapRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.SearchRequest;
@@ -24,7 +26,13 @@ import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeErrorsResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeStatusResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CancelBatchScrapeResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.CancelCrawlResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.CrawlErrorsResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.CrawlParamsPreviewResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.CrawlResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.CrawlStatusResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ErrorResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.GetActiveCrawlsResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.MapResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.SearchResponse;
@@ -37,6 +45,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static com.alibaba.langengine.firecrawl.sdk.FireCrawlConstant.FIRE_CRAWL_BASE_URL;
 
@@ -285,6 +294,157 @@ public class FireCrawlClient {
 		}
 		catch (IOException e) {
 			throw new FireCrawlException("Error executing map request", e);
+		}
+	}
+
+	/**
+	 * Get active crawls for the team
+	 * @return GetActiveCrawlsResponse
+	 * @throws FireCrawlException if request fails
+	 */
+	public GetActiveCrawlsResponse getActiveCrawls() throws FireCrawlException {
+		Request request = new Request.Builder().url(FIRE_CRAWL_BASE_URL + "/crawl/active")
+			.addHeader("Authorization", "Bearer " + apiKey)
+			.get()
+			.build();
+
+		try (Response response = client.newCall(request).execute()) {
+			if (!response.isSuccessful()) {
+				throw new FireCrawlException("Failed to get active crawls: " + response.code());
+			}
+			String responseBody = response.body().string();
+			return objectMapper.readValue(responseBody, GetActiveCrawlsResponse.class);
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Error getting active crawls", e);
+		}
+	}
+
+	/**
+	 * Start a new crawl job
+	 * @param request Crawl request parameters
+	 * @return CrawlResponse with job ID
+	 * @throws FireCrawlException if request fails
+	 */
+	public CrawlResponse crawl(CrawlRequest request) throws FireCrawlException {
+		try {
+			String json = objectMapper.writeValueAsString(request);
+			Request httpRequest = new Request.Builder().url(FIRE_CRAWL_BASE_URL + "/crawl")
+				.addHeader("Authorization", "Bearer " + apiKey)
+				.addHeader("Content-Type", "application/json")
+				.post(RequestBody.create(json, MediaType.get("application/json")))
+				.build();
+
+			try (Response response = client.newCall(httpRequest).execute()) {
+				if (!response.isSuccessful()) {
+					throw new FireCrawlException("Failed to start crawl: " + response.code());
+				}
+				String responseBody = response.body().string();
+				return objectMapper.readValue(responseBody, CrawlResponse.class);
+			}
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Error starting crawl", e);
+		}
+	}
+
+	/**
+	 * Get status of a crawl job
+	 * @param id ID of the crawl job
+	 * @return CrawlStatusResponse with current status and data
+	 * @throws FireCrawlException if request fails
+	 */
+	public CrawlStatusResponse getCrawlStatus(UUID id) throws FireCrawlException {
+		Request request = new Request.Builder().url(FIRE_CRAWL_BASE_URL + "/crawl/" + id.toString())
+			.addHeader("Authorization", "Bearer " + apiKey)
+			.get()
+			.build();
+
+		try (Response response = client.newCall(request).execute()) {
+			if (!response.isSuccessful()) {
+				throw new FireCrawlException("Failed to get crawl status: " + response.code());
+			}
+			String responseBody = response.body().string();
+			return objectMapper.readValue(responseBody, CrawlStatusResponse.class);
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Error getting crawl status", e);
+		}
+	}
+
+	/**
+	 * Cancel a crawl job
+	 * @param id ID of the crawl job to cancel
+	 * @return CancelCrawlResponse with status
+	 * @throws FireCrawlException if request fails
+	 */
+	public CancelCrawlResponse cancelCrawl(UUID id) throws FireCrawlException {
+		Request request = new Request.Builder().url(FIRE_CRAWL_BASE_URL + "/crawl/" + id.toString())
+			.addHeader("Authorization", "Bearer " + apiKey)
+			.delete()
+			.build();
+
+		try (Response response = client.newCall(request).execute()) {
+			if (!response.isSuccessful()) {
+				throw new FireCrawlException("Failed to cancel crawl: " + response.code());
+			}
+			String responseBody = response.body().string();
+			return objectMapper.readValue(responseBody, CancelCrawlResponse.class);
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Error cancelling crawl", e);
+		}
+	}
+
+	/**
+	 * Get errors for a crawl job
+	 * @param id ID of the crawl job
+	 * @return CrawlErrorsResponse with error details
+	 * @throws FireCrawlException if request fails
+	 */
+	public CrawlErrorsResponse getCrawlErrors(UUID id) throws FireCrawlException {
+		Request request = new Request.Builder().url(FIRE_CRAWL_BASE_URL + "/crawl/" + id.toString() + "/errors")
+			.addHeader("Authorization", "Bearer " + apiKey)
+			.get()
+			.build();
+
+		try (Response response = client.newCall(request).execute()) {
+			if (!response.isSuccessful()) {
+				throw new FireCrawlException("Failed to get crawl errors: " + response.code());
+			}
+			String responseBody = response.body().string();
+			return objectMapper.readValue(responseBody, CrawlErrorsResponse.class);
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Error getting crawl errors", e);
+		}
+	}
+
+	/**
+	 * Preview crawl parameters based on natural language prompt
+	 * @param request CrawlParamsPreviewRequest with URL and prompt
+	 * @return CrawlParamsPreviewResponse with generated parameters
+	 * @throws FireCrawlException if request fails
+	 */
+	public CrawlParamsPreviewResponse crawlParamsPreview(CrawlParamsPreviewRequest request) throws FireCrawlException {
+		try {
+			String json = objectMapper.writeValueAsString(request);
+			Request httpRequest = new Request.Builder().url(FIRE_CRAWL_BASE_URL + "/crawl/params-preview")
+				.addHeader("Authorization", "Bearer " + apiKey)
+				.addHeader("Content-Type", "application/json")
+				.post(RequestBody.create(json, MediaType.get("application/json")))
+				.build();
+
+			try (Response response = client.newCall(httpRequest).execute()) {
+				if (!response.isSuccessful()) {
+					throw new FireCrawlException("Failed to preview crawl params: " + response.code());
+				}
+				String responseBody = response.body().string();
+				return objectMapper.readValue(responseBody, CrawlParamsPreviewResponse.class);
+			}
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Error previewing crawl params", e);
 		}
 	}
 

@@ -19,13 +19,17 @@ package com.alibaba.langengine.firecrawl;
 import com.alibaba.langengine.firecrawl.sdk.FireCrawlClient;
 import com.alibaba.langengine.firecrawl.sdk.FireCrawlException;
 import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
+import com.alibaba.langengine.firecrawl.sdk.request.CrawlParamsPreviewRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.MapRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.SearchRequest;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.CrawlParamsPreviewResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.GetActiveCrawlsResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.MapResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.SearchResponse;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -34,11 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @EnabledIfEnvironmentVariable(named = "FIRECRAWL_API_KEY", matches = ".*")
 public class FireCrawlClientTest {
@@ -64,13 +63,13 @@ public class FireCrawlClientTest {
 
 		ScrapeResponse response = client.scrape(request);
 
-		assertNotNull(response);
-		assertTrue(response.getSuccess());
-		assertNotNull(response.getData());
-		assertNotNull(response.getData().getMarkdown());
-		assertFalse(response.getData().getMarkdown().isEmpty());
-		assertNotNull(response.getData().getMetadata());
-		assertNotNull(response.getData().getMetadata().getTitle());
+		Assertions.assertNotNull(response);
+		Assertions.assertTrue(response.getSuccess());
+		Assertions.assertNotNull(response.getData());
+		Assertions.assertNotNull(response.getData().getMarkdown());
+		Assertions.assertFalse(response.getData().getMarkdown().isEmpty());
+		Assertions.assertNotNull(response.getData().getMetadata());
+		Assertions.assertNotNull(response.getData().getMetadata().getTitle());
 	}
 
 	@Test
@@ -85,11 +84,11 @@ public class FireCrawlClientTest {
 
 		ScrapeResponse response = client.scrape(request);
 
-		assertNotNull(response);
-		assertTrue(response.getSuccess());
-		assertNotNull(response.getData());
-		assertNotNull(response.getData().getRawHtml());
-		assertFalse(response.getData().getRawHtml().isEmpty());
+		Assertions.assertNotNull(response);
+		Assertions.assertTrue(response.getSuccess());
+		Assertions.assertNotNull(response.getData());
+		Assertions.assertNotNull(response.getData().getRawHtml());
+		Assertions.assertFalse(response.getData().getRawHtml().isEmpty());
 	}
 
 	@Test
@@ -104,10 +103,10 @@ public class FireCrawlClientTest {
 
 		ScrapeResponse response = client.scrape(request);
 
-		assertNotNull(response);
-		assertTrue(response.getSuccess());
-		assertNotNull(response.getData());
-		assertNotNull(response.getData().getLinks());
+		Assertions.assertNotNull(response);
+		Assertions.assertTrue(response.getSuccess());
+		Assertions.assertNotNull(response.getData());
+		Assertions.assertNotNull(response.getData().getLinks());
 	}
 
 	@Test
@@ -124,15 +123,15 @@ public class FireCrawlClientTest {
 
 		ScrapeResponse response = client.scrape(request);
 
-		assertNotNull(response);
-		assertTrue(response.getSuccess());
-		assertNotNull(response.getData());
+		Assertions.assertNotNull(response);
+		Assertions.assertTrue(response.getSuccess());
+		Assertions.assertNotNull(response.getData());
 		// Check that all formats are returned
-		assertNotNull(response.getData().getMarkdown());
-		assertFalse(response.getData().getMarkdown().isEmpty());
-		assertNotNull(response.getData().getHtml());
-		assertFalse(response.getData().getHtml().isEmpty());
-		assertNotNull(response.getData().getLinks());
+		Assertions.assertNotNull(response.getData().getMarkdown());
+		Assertions.assertFalse(response.getData().getMarkdown().isEmpty());
+		Assertions.assertNotNull(response.getData().getHtml());
+		Assertions.assertFalse(response.getData().getHtml().isEmpty());
+		Assertions.assertNotNull(response.getData().getLinks());
 	}
 
 	@Test
@@ -145,9 +144,9 @@ public class FireCrawlClientTest {
 
 		BatchScrapeResponse response = client.batchScrape(request);
 
-		assertNotNull("Response should not be null", response);
-		assertTrue("Response should be successful", response.getSuccess());
-		assertNotNull("Response ID should not be null", response.getId());
+		Assertions.assertNotNull(response, "Response should not be null");
+		Assertions.assertTrue(response.getSuccess(), "Response should be successful");
+		Assertions.assertNotNull(response.getId(), "Response ID should not be null");
 	}
 
 	@Test
@@ -155,11 +154,11 @@ public class FireCrawlClientTest {
 		try {
 			// Test with an invalid ID to check error handling
 			client.getBatchScrapeStatus("invalid-id");
-			fail("Expected FireCrawlException to be thrown");
+			Assertions.fail("Expected FireCrawlException to be thrown");
 		}
 		catch (FireCrawlException e) {
 			// Expected exception
-			assertNotNull(e);
+			Assertions.assertNotNull(e);
 		}
 	}
 
@@ -168,11 +167,11 @@ public class FireCrawlClientTest {
 		try {
 			// Test with an invalid ID to check error handling
 			client.cancelBatchScrape("invalid-id");
-			fail("Expected FireCrawlException to be thrown");
+			Assertions.fail("Expected FireCrawlException to be thrown");
 		}
 		catch (FireCrawlException e) {
 			// Expected exception
-			assertNotNull(e);
+			Assertions.assertNotNull(e);
 		}
 	}
 
@@ -184,16 +183,16 @@ public class FireCrawlClientTest {
 
 		SearchResponse response = client.search(request);
 
-		assertNotNull("Response should not be null", response);
-		assertTrue("Request should be successful", response.getSuccess());
-		assertNotNull("Data should not be null", response.getData());
-		assertNotNull("Web results should not be null", response.getData().getWeb());
-		assertTrue("Should have at least one web result", response.getData().getWeb().length > 0);
+		Assertions.assertNotNull(response, "Response should not be null");
+		Assertions.assertTrue(response.getSuccess(), "Request should be successful");
+		Assertions.assertNotNull(response.getData(), "Data should not be null");
+		Assertions.assertNotNull(response.getData().getWeb(), "Web results should not be null");
+		Assertions.assertTrue(response.getData().getWeb().length > 0, "Should have at least one web result");
 
 		SearchResponse.WebResult firstResult = response.getData().getWeb()[0];
-		assertNotNull("First result title should not be null", firstResult.getTitle());
-		assertNotNull("First result URL should not be null", firstResult.getUrl());
-		assertNotNull("First result description should not be null", firstResult.getDescription());
+		Assertions.assertNotNull(firstResult.getTitle(), "First result title should not be null");
+		Assertions.assertNotNull(firstResult.getUrl(), "First result URL should not be null");
+		Assertions.assertNotNull(firstResult.getDescription(), "First result description should not be null");
 	}
 
 	@Test
@@ -208,10 +207,10 @@ public class FireCrawlClientTest {
 
 		SearchResponse response = client.search(request);
 
-		assertNotNull("Response should not be null", response);
-		assertTrue("Request should be successful", response.getSuccess());
-		assertNotNull("Data should not be null", response.getData());
-		assertNotNull("Web results should not be null", response.getData().getWeb());
+		Assertions.assertNotNull(response, "Response should not be null");
+		Assertions.assertTrue(response.getSuccess(), "Request should be successful");
+		Assertions.assertNotNull(response.getData(), "Data should not be null");
+		Assertions.assertNotNull(response.getData().getWeb(), "Web results should not be null");
 	}
 
 	@Test
@@ -222,13 +221,32 @@ public class FireCrawlClientTest {
 
 		MapResponse response = client.map(request);
 
-		assertNotNull("Response should not be null", response);
-		assertTrue("Request should be successful", response.getSuccess());
-		assertNotNull("Links should not be null", response.getLinks());
-		assertFalse("Links should not be empty", response.getLinks().isEmpty());
+		Assertions.assertNotNull(response, "Response should not be null");
+		Assertions.assertTrue(response.getSuccess(), "Request should be successful");
+		Assertions.assertNotNull(response.getLinks(), "Links should not be null");
+		Assertions.assertFalse(response.getLinks().isEmpty(), "Links should not be empty");
 
 		MapResponse.Link firstLink = response.getLinks().get(0);
-		assertNotNull("URL should not be null", firstLink.getUrl());
+		Assertions.assertNotNull(firstLink.getUrl(), "URL should not be null");
+	}
+
+	@Test
+	public void testGetActiveCrawls() throws FireCrawlException {
+		GetActiveCrawlsResponse response = client.getActiveCrawls();
+		Assertions.assertNotNull(response);
+		Assertions.assertNotNull(response.getSuccess());
+	}
+
+	@Test
+	public void testCrawlParamsPreview() throws FireCrawlException {
+		CrawlParamsPreviewRequest request = new CrawlParamsPreviewRequest();
+		request.setUrl("https://example.com");
+		request.setPrompt("Crawl all product pages");
+
+		CrawlParamsPreviewResponse response = client.crawlParamsPreview(request);
+		Assertions.assertNotNull(response);
+		Assertions.assertEquals(true, response.getSuccess());
+		Assertions.assertNotNull(response.getData());
 	}
 
 }
