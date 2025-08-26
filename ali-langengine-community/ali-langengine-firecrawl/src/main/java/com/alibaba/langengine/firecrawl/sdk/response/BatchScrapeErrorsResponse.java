@@ -10,65 +10,99 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BatchScrapeErrorsResponse {
-    /**
-     * Errored scrape jobs and error details
-     */
-    @JsonProperty("errors")
-    private List<ErrorItem> errors;
 
-    /**
-     * List of URLs that were attempted in scraping but were blocked by robots.txt
-     */
-    @JsonProperty("robotsBlocked")
-    private List<String> robotsBlocked;
+	/**
+	 * Errored scrape jobs and error details
+	 */
+	@JsonProperty("errors")
+	private List<ErrorItem> errors;
 
-    // Getters and setters
-    public List<ErrorItem> getErrors() { return errors; }
-    public void setErrors(List<ErrorItem> errors) { this.errors = errors; }
+	/**
+	 * List of URLs that were attempted in scraping but were blocked by robots.txt
+	 */
+	@JsonProperty("robotsBlocked")
+	private List<String> robotsBlocked;
 
-    public List<String> getRobotsBlocked() { return robotsBlocked; }
-    public void setRobotsBlocked(List<String> robotsBlocked) { this.robotsBlocked = robotsBlocked; }
+	// Getters and setters
+	public List<ErrorItem> getErrors() {
+		return errors;
+	}
 
-    /**
-     * Details of a specific error in scraping
-     */
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class ErrorItem {
-        /**
-         * ID of the failed scrape job
-         */
-        @JsonProperty("id")
-        private String id;
+	public void setErrors(List<ErrorItem> errors) {
+		this.errors = errors;
+	}
 
-        /**
-         * ISO timestamp of failure
-         */
-        @JsonProperty("timestamp")
-        private String timestamp;
+	public List<String> getRobotsBlocked() {
+		return robotsBlocked;
+	}
 
-        /**
-         * Scraped URL that failed
-         */
-        @JsonProperty("url")
-        private String url;
+	public void setRobotsBlocked(List<String> robotsBlocked) {
+		this.robotsBlocked = robotsBlocked;
+	}
 
-        /**
-         * Error message explaining the failure
-         */
-        @JsonProperty("error")
-        private String error;
+	/**
+	 * Details of a specific error in scraping
+	 */
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class ErrorItem {
 
-        // Getters and setters
-        public String getId() { return id; }
-        public void setId(String id) { this.id = id; }
+		/**
+		 * ID of the failed scrape job
+		 */
+		@JsonProperty("id")
+		private String id;
 
-        public String getTimestamp() { return timestamp; }
-        public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
+		/**
+		 * ISO timestamp of failure
+		 */
+		@JsonProperty("timestamp")
+		private String timestamp;
 
-        public String getUrl() { return url; }
-        public void setUrl(String url) { this.url = url; }
+		/**
+		 * Scraped URL that failed
+		 */
+		@JsonProperty("url")
+		private String url;
 
-        public String getError() { return error; }
-        public void setError(String error) { this.error = error; }
-    }
+		/**
+		 * Error message explaining the failure
+		 */
+		@JsonProperty("error")
+		private String error;
+
+		// Getters and setters
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public String getTimestamp() {
+			return timestamp;
+		}
+
+		public void setTimestamp(String timestamp) {
+			this.timestamp = timestamp;
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		public String getError() {
+			return error;
+		}
+
+		public void setError(String error) {
+			this.error = error;
+		}
+
+	}
+
 }

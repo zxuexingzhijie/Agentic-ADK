@@ -17,10 +17,13 @@
 package com.alibaba.langengine.firecrawl.sdk;
 
 public class FireCrawlException extends RuntimeException {
-    public FireCrawlException(String message) {
-        super(message);
-    }
-    public FireCrawlException(String message, Throwable cause) {
-        super(message, cause);
-    }
+
+	public FireCrawlException(String message) {
+		super(message);
+	}
+
+	public FireCrawlException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

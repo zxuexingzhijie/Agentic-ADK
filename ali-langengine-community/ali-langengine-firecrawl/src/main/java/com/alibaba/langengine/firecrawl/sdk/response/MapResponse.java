@@ -7,78 +7,82 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MapResponse {
-    /**
-     * Indicates if the request was successful
-     */
-    @JsonProperty("success")
-    private Boolean success;
-    
-    /**
-     * List of discovered links
-     */
-    @JsonProperty("links")
-    private List<Link> links;
 
-    // Getters and setters
-    public Boolean getSuccess() {
-        return success;
-    }
+	/**
+	 * Indicates if the request was successful
+	 */
+	@JsonProperty("success")
+	private Boolean success;
 
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
+	/**
+	 * List of discovered links
+	 */
+	@JsonProperty("links")
+	private List<Link> links;
 
-    public List<Link> getLinks() {
-        return links;
-    }
+	// Getters and setters
+	public Boolean getSuccess() {
+		return success;
+	}
 
-    public void setLinks(List<Link> links) {
-        this.links = links;
-    }
+	public void setSuccess(Boolean success) {
+		this.success = success;
+	}
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Link {
-        /**
-         * URL of the page
-         */
-        @JsonProperty("url")
-        private String url;
-        
-        /**
-         * Title of the page, if available
-         */
-        @JsonProperty("title")
-        private String title;
-        
-        /**
-         * Description of the page, if available
-         */
-        @JsonProperty("description")
-        private String description;
+	public List<Link> getLinks() {
+		return links;
+	}
 
-        // Getters and setters
-        public String getUrl() {
-            return url;
-        }
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
 
-        public void setUrl(String url) {
-            this.url = url;
-        }
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class Link {
 
-        public String getTitle() {
-            return title;
-        }
+		/**
+		 * URL of the page
+		 */
+		@JsonProperty("url")
+		private String url;
 
-        public void setTitle(String title) {
-            this.title = title;
-        }
+		/**
+		 * Title of the page, if available
+		 */
+		@JsonProperty("title")
+		private String title;
 
-        public String getDescription() {
-            return description;
-        }
+		/**
+		 * Description of the page, if available
+		 */
+		@JsonProperty("description")
+		private String description;
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
-    }
+		// Getters and setters
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+	}
+
 }

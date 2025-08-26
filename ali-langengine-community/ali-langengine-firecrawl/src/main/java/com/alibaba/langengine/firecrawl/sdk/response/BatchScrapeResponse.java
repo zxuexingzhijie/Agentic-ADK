@@ -7,47 +7,49 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BatchScrapeResponse {
-    @JsonProperty("success")
-    private Boolean success;
-    
-    @JsonProperty("id")
-    private String id;
-    
-    @JsonProperty("url")
-    private String url;
-    
-    @JsonProperty("invalidURLs")
-    private List<String> invalidURLs;
 
-    public Boolean getSuccess() {
-        return success;
-    }
+	@JsonProperty("success")
+	private Boolean success;
 
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
+	@JsonProperty("id")
+	private String id;
 
-    public String getId() {
-        return id;
-    }
+	@JsonProperty("url")
+	private String url;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	@JsonProperty("invalidURLs")
+	private List<String> invalidURLs;
 
-    public String getUrl() {
-        return url;
-    }
+	public Boolean getSuccess() {
+		return success;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public void setSuccess(Boolean success) {
+		this.success = success;
+	}
 
-    public List<String> getInvalidURLs() {
-        return invalidURLs;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setInvalidURLs(List<String> invalidURLs) {
-        this.invalidURLs = invalidURLs;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public List<String> getInvalidURLs() {
+		return invalidURLs;
+	}
+
+	public void setInvalidURLs(List<String> invalidURLs) {
+		this.invalidURLs = invalidURLs;
+	}
+
 }

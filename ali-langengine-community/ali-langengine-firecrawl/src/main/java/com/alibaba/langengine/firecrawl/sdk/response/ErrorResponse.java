@@ -5,21 +5,38 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorResponse {
-    @JsonProperty("error")
-    private String error;
 
-    @JsonProperty("success")
-    private Boolean success;
+	@JsonProperty("error")
+	private String error;
 
-    @JsonProperty("code")
-    private String code;
+	@JsonProperty("success")
+	private Boolean success;
 
-    public String getError() { return error; }
-    public void setError(String error) { this.error = error; }
+	@JsonProperty("code")
+	private String code;
 
-    public Boolean getSuccess() { return success; }
-    public void setSuccess(Boolean success) { this.success = success; }
+	public String getError() {
+		return error;
+	}
 
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
+	public void setError(String error) {
+		this.error = error;
+	}
+
+	public Boolean getSuccess() {
+		return success;
+	}
+
+	public void setSuccess(Boolean success) {
+		this.success = success;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 }

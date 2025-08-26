@@ -10,190 +10,292 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BatchScrapeStatusResponse {
-    /**
-     * The current status of the batch scrape. Can be `scraping`, `completed`, or `failed`.
-     */
-    @JsonProperty("status")
-    private String status;
 
-    /**
-     * The total number of pages that were attempted to be scraped.
-     */
-    @JsonProperty("total")
-    private Integer total;
+	/**
+	 * The current status of the batch scrape. Can be `scraping`, `completed`, or
+	 * `failed`.
+	 */
+	@JsonProperty("status")
+	private String status;
 
-    /**
-     * The number of pages that have been successfully scraped.
-     */
-    @JsonProperty("completed")
-    private Integer completed;
+	/**
+	 * The total number of pages that were attempted to be scraped.
+	 */
+	@JsonProperty("total")
+	private Integer total;
 
-    /**
-     * The number of credits used for the batch scrape.
-     */
-    @JsonProperty("creditsUsed")
-    private Integer creditsUsed;
+	/**
+	 * The number of pages that have been successfully scraped.
+	 */
+	@JsonProperty("completed")
+	private Integer completed;
 
-    /**
-     * The date and time when the batch scrape will expire.
-     */
-    @JsonProperty("expiresAt")
-    private String expiresAt;
+	/**
+	 * The number of credits used for the batch scrape.
+	 */
+	@JsonProperty("creditsUsed")
+	private Integer creditsUsed;
 
-    /**
-     * The URL to retrieve the next 10MB of data. 
-     * Returned if the batch scrape is not completed or if the response is larger than 10MB.
-     */
-    @JsonProperty("next")
-    private String next;
+	/**
+	 * The date and time when the batch scrape will expire.
+	 */
+	@JsonProperty("expiresAt")
+	private String expiresAt;
 
-    /**
-     * The data of the batch scrape.
-     */
-    @JsonProperty("data")
-    private List<DataItem> data;
+	/**
+	 * The URL to retrieve the next 10MB of data. Returned if the batch scrape is not
+	 * completed or if the response is larger than 10MB.
+	 */
+	@JsonProperty("next")
+	private String next;
 
-    // Getters and setters
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+	/**
+	 * The data of the batch scrape.
+	 */
+	@JsonProperty("data")
+	private List<DataItem> data;
 
-    public Integer getTotal() { return total; }
-    public void setTotal(Integer total) { this.total = total; }
+	// Getters and setters
+	public String getStatus() {
+		return status;
+	}
 
-    public Integer getCompleted() { return completed; }
-    public void setCompleted(Integer completed) { this.completed = completed; }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public Integer getCreditsUsed() { return creditsUsed; }
-    public void setCreditsUsed(Integer creditsUsed) { this.creditsUsed = creditsUsed; }
+	public Integer getTotal() {
+		return total;
+	}
 
-    public String getExpiresAt() { return expiresAt; }
-    public void setExpiresAt(String expiresAt) { this.expiresAt = expiresAt; }
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
 
-    public String getNext() { return next; }
-    public void setNext(String next) { this.next = next; }
+	public Integer getCompleted() {
+		return completed;
+	}
 
-    public List<DataItem> getData() { return data; }
-    public void setData(List<DataItem> data) { this.data = data; }
+	public void setCompleted(Integer completed) {
+		this.completed = completed;
+	}
 
-    /**
-     * Data item containing scraped content
-     */
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class DataItem {
-        /**
-         * Markdown version of the content
-         */
-        @JsonProperty("markdown")
-        private String markdown;
+	public Integer getCreditsUsed() {
+		return creditsUsed;
+	}
 
-        /**
-         * HTML version of the content on page if `includeHtml` is true
-         */
-        @JsonProperty("html")
-        private String html;
+	public void setCreditsUsed(Integer creditsUsed) {
+		this.creditsUsed = creditsUsed;
+	}
 
-        /**
-         * Raw HTML content of the page if `includeRawHtml` is true
-         */
-        @JsonProperty("rawHtml")
-        private String rawHtml;
+	public String getExpiresAt() {
+		return expiresAt;
+	}
 
-        /**
-         * List of links on the page if `includeLinks` is true
-         */
-        @JsonProperty("links")
-        private List<String> links;
+	public void setExpiresAt(String expiresAt) {
+		this.expiresAt = expiresAt;
+	}
 
-        /**
-         * Screenshot of the page if `includeScreenshot` is true
-         */
-        @JsonProperty("screenshot")
-        private String screenshot;
+	public String getNext() {
+		return next;
+	}
 
-        /**
-         * Metadata information about the page
-         */
-        @JsonProperty("metadata")
-        private Metadata metadata;
+	public void setNext(String next) {
+		this.next = next;
+	}
 
-        // Getters and setters
-        public String getMarkdown() { return markdown; }
-        public void setMarkdown(String markdown) { this.markdown = markdown; }
+	public List<DataItem> getData() {
+		return data;
+	}
 
-        public String getHtml() { return html; }
-        public void setHtml(String html) { this.html = html; }
+	public void setData(List<DataItem> data) {
+		this.data = data;
+	}
 
-        public String getRawHtml() { return rawHtml; }
-        public void setRawHtml(String rawHtml) { this.rawHtml = rawHtml; }
+	/**
+	 * Data item containing scraped content
+	 */
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class DataItem {
 
-        public List<String> getLinks() { return links; }
-        public void setLinks(List<String> links) { this.links = links; }
+		/**
+		 * Markdown version of the content
+		 */
+		@JsonProperty("markdown")
+		private String markdown;
 
-        public String getScreenshot() { return screenshot; }
-        public void setScreenshot(String screenshot) { this.screenshot = screenshot; }
+		/**
+		 * HTML version of the content on page if `includeHtml` is true
+		 */
+		@JsonProperty("html")
+		private String html;
 
-        public Metadata getMetadata() { return metadata; }
-        public void setMetadata(Metadata metadata) { this.metadata = metadata; }
+		/**
+		 * Raw HTML content of the page if `includeRawHtml` is true
+		 */
+		@JsonProperty("rawHtml")
+		private String rawHtml;
 
-        /**
-         * Metadata information for a scraped page
-         */
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public static class Metadata {
-            /**
-             * Title of the page
-             */
-            @JsonProperty("title")
-            private String title;
+		/**
+		 * List of links on the page if `includeLinks` is true
+		 */
+		@JsonProperty("links")
+		private List<String> links;
 
-            /**
-             * Description of the page
-             */
-            @JsonProperty("description")
-            private String description;
+		/**
+		 * Screenshot of the page if `includeScreenshot` is true
+		 */
+		@JsonProperty("screenshot")
+		private String screenshot;
 
-            /**
-             * Language of the page content
-             */
-            @JsonProperty("language")
-            private String language;
+		/**
+		 * Metadata information about the page
+		 */
+		@JsonProperty("metadata")
+		private Metadata metadata;
 
-            /**
-             * Original URL of the page
-             */
-            @JsonProperty("sourceURL")
-            private String sourceURL;
+		// Getters and setters
+		public String getMarkdown() {
+			return markdown;
+		}
 
-            /**
-             * HTTP status code of the page
-             */
-            @JsonProperty("statusCode")
-            private Integer statusCode;
+		public void setMarkdown(String markdown) {
+			this.markdown = markdown;
+		}
 
-            /**
-             * Error message if scraping failed for this page
-             */
-            @JsonProperty("error")
-            private String error;
+		public String getHtml() {
+			return html;
+		}
 
-            // Getters and setters
-            public String getTitle() { return title; }
-            public void setTitle(String title) { this.title = title; }
+		public void setHtml(String html) {
+			this.html = html;
+		}
 
-            public String getDescription() { return description; }
-            public void setDescription(String description) { this.description = description; }
+		public String getRawHtml() {
+			return rawHtml;
+		}
 
-            public String getLanguage() { return language; }
-            public void setLanguage(String language) { this.language = language; }
+		public void setRawHtml(String rawHtml) {
+			this.rawHtml = rawHtml;
+		}
 
-            public String getSourceURL() { return sourceURL; }
-            public void setSourceURL(String sourceURL) { this.sourceURL = sourceURL; }
+		public List<String> getLinks() {
+			return links;
+		}
 
-            public Integer getStatusCode() { return statusCode; }
-            public void setStatusCode(Integer statusCode) { this.statusCode = statusCode; }
+		public void setLinks(List<String> links) {
+			this.links = links;
+		}
 
-            public String getError() { return error; }
-            public void setError(String error) { this.error = error; }
-        }
-    }
+		public String getScreenshot() {
+			return screenshot;
+		}
+
+		public void setScreenshot(String screenshot) {
+			this.screenshot = screenshot;
+		}
+
+		public Metadata getMetadata() {
+			return metadata;
+		}
+
+		public void setMetadata(Metadata metadata) {
+			this.metadata = metadata;
+		}
+
+		/**
+		 * Metadata information for a scraped page
+		 */
+		@JsonIgnoreProperties(ignoreUnknown = true)
+		public static class Metadata {
+
+			/**
+			 * Title of the page
+			 */
+			@JsonProperty("title")
+			private String title;
+
+			/**
+			 * Description of the page
+			 */
+			@JsonProperty("description")
+			private String description;
+
+			/**
+			 * Language of the page content
+			 */
+			@JsonProperty("language")
+			private String language;
+
+			/**
+			 * Original URL of the page
+			 */
+			@JsonProperty("sourceURL")
+			private String sourceURL;
+
+			/**
+			 * HTTP status code of the page
+			 */
+			@JsonProperty("statusCode")
+			private Integer statusCode;
+
+			/**
+			 * Error message if scraping failed for this page
+			 */
+			@JsonProperty("error")
+			private String error;
+
+			// Getters and setters
+			public String getTitle() {
+				return title;
+			}
+
+			public void setTitle(String title) {
+				this.title = title;
+			}
+
+			public String getDescription() {
+				return description;
+			}
+
+			public void setDescription(String description) {
+				this.description = description;
+			}
+
+			public String getLanguage() {
+				return language;
+			}
+
+			public void setLanguage(String language) {
+				this.language = language;
+			}
+
+			public String getSourceURL() {
+				return sourceURL;
+			}
+
+			public void setSourceURL(String sourceURL) {
+				this.sourceURL = sourceURL;
+			}
+
+			public Integer getStatusCode() {
+				return statusCode;
+			}
+
+			public void setStatusCode(Integer statusCode) {
+				this.statusCode = statusCode;
+			}
+
+			public String getError() {
+				return error;
+			}
+
+			public void setError(String error) {
+				this.error = error;
+			}
+
+		}
+
+	}
+
 }

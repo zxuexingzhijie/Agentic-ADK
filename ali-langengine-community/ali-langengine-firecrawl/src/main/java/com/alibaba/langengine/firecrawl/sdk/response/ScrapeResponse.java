@@ -8,207 +8,376 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScrapeResponse {
-    @JsonProperty("success")
-    private Boolean success;
 
-    @JsonProperty("data")
-    private Data data;
+	@JsonProperty("success")
+	private Boolean success;
 
-    public Boolean getSuccess() { return success; }
-    public void setSuccess(Boolean success) { this.success = success; }
+	@JsonProperty("data")
+	private Data data;
 
-    public Data getData() { return data; }
-    public void setData(Data data) { this.data = data; }
+	public Boolean getSuccess() {
+		return success;
+	}
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Data {
-        @JsonProperty("markdown")
-        private String markdown;
+	public void setSuccess(Boolean success) {
+		this.success = success;
+	}
 
-        @JsonProperty("summary")
-        private String summary;
+	public Data getData() {
+		return data;
+	}
 
-        @JsonProperty("html")
-        private String html;
+	public void setData(Data data) {
+		this.data = data;
+	}
 
-        @JsonProperty("rawHtml")
-        private String rawHtml;
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class Data {
 
-        @JsonProperty("screenshot")
-        private String screenshot;
+		@JsonProperty("markdown")
+		private String markdown;
 
-        @JsonProperty("links")
-        private List<String> links;
+		@JsonProperty("summary")
+		private String summary;
 
-        @JsonProperty("actions")
-        private Actions actions;
+		@JsonProperty("html")
+		private String html;
 
-        @JsonProperty("metadata")
-        private Metadata metadata;
+		@JsonProperty("rawHtml")
+		private String rawHtml;
 
-        @JsonProperty("warning")
-        private String warning;
+		@JsonProperty("screenshot")
+		private String screenshot;
 
-        @JsonProperty("changeTracking")
-        private ChangeTracking changeTracking;
+		@JsonProperty("links")
+		private List<String> links;
 
-        public String getMarkdown() { return markdown; }
-        public void setMarkdown(String markdown) { this.markdown = markdown; }
+		@JsonProperty("actions")
+		private Actions actions;
 
-        public String getSummary() { return summary; }
-        public void setSummary(String summary) { this.summary = summary; }
+		@JsonProperty("metadata")
+		private Metadata metadata;
 
-        public String getHtml() { return html; }
-        public void setHtml(String html) { this.html = html; }
+		@JsonProperty("warning")
+		private String warning;
 
-        public String getRawHtml() { return rawHtml; }
-        public void setRawHtml(String rawHtml) { this.rawHtml = rawHtml; }
+		@JsonProperty("changeTracking")
+		private ChangeTracking changeTracking;
 
-        public String getScreenshot() { return screenshot; }
-        public void setScreenshot(String screenshot) { this.screenshot = screenshot; }
+		public String getMarkdown() {
+			return markdown;
+		}
 
-        public List<String> getLinks() { return links; }
-        public void setLinks(List<String> links) { this.links = links; }
+		public void setMarkdown(String markdown) {
+			this.markdown = markdown;
+		}
 
-        public Actions getActions() { return actions; }
-        public void setActions(Actions actions) { this.actions = actions; }
+		public String getSummary() {
+			return summary;
+		}
 
-        public Metadata getMetadata() { return metadata; }
-        public void setMetadata(Metadata metadata) { this.metadata = metadata; }
+		public void setSummary(String summary) {
+			this.summary = summary;
+		}
 
-        public String getWarning() { return warning; }
-        public void setWarning(String warning) { this.warning = warning; }
+		public String getHtml() {
+			return html;
+		}
 
-        public ChangeTracking getChangeTracking() { return changeTracking; }
-        public void setChangeTracking(ChangeTracking changeTracking) { this.changeTracking = changeTracking; }
+		public void setHtml(String html) {
+			this.html = html;
+		}
 
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public static class Actions {
-            @JsonProperty("screenshots")
-            private List<String> screenshots;
+		public String getRawHtml() {
+			return rawHtml;
+		}
 
-            @JsonProperty("scrapes")
-            private List<ScrapeResult> scrapes;
+		public void setRawHtml(String rawHtml) {
+			this.rawHtml = rawHtml;
+		}
 
-            @JsonProperty("javascriptReturns")
-            private List<JavascriptReturn> javascriptReturns;
+		public String getScreenshot() {
+			return screenshot;
+		}
 
-            @JsonProperty("pdfs")
-            private List<String> pdfs;
+		public void setScreenshot(String screenshot) {
+			this.screenshot = screenshot;
+		}
 
-            public List<String> getScreenshots() { return screenshots; }
-            public void setScreenshots(List<String> screenshots) { this.screenshots = screenshots; }
+		public List<String> getLinks() {
+			return links;
+		}
 
-            public List<ScrapeResult> getScrapes() { return scrapes; }
-            public void setScrapes(List<ScrapeResult> scrapes) { this.scrapes = scrapes; }
+		public void setLinks(List<String> links) {
+			this.links = links;
+		}
 
-            public List<JavascriptReturn> getJavascriptReturns() { return javascriptReturns; }
-            public void setJavascriptReturns(List<JavascriptReturn> javascriptReturns) { this.javascriptReturns = javascriptReturns; }
+		public Actions getActions() {
+			return actions;
+		}
 
-            public List<String> getPdfs() { return pdfs; }
-            public void setPdfs(List<String> pdfs) { this.pdfs = pdfs; }
+		public void setActions(Actions actions) {
+			this.actions = actions;
+		}
 
-            @JsonIgnoreProperties(ignoreUnknown = true)
-            public static class ScrapeResult {
-                @JsonProperty("url")
-                private String url;
+		public Metadata getMetadata() {
+			return metadata;
+		}
 
-                @JsonProperty("html")
-                private String html;
+		public void setMetadata(Metadata metadata) {
+			this.metadata = metadata;
+		}
 
-                public String getUrl() { return url; }
-                public void setUrl(String url) { this.url = url; }
+		public String getWarning() {
+			return warning;
+		}
 
-                public String getHtml() { return html; }
-                public void setHtml(String html) { this.html = html; }
-            }
+		public void setWarning(String warning) {
+			this.warning = warning;
+		}
 
-            @JsonIgnoreProperties(ignoreUnknown = true)
-            public static class JavascriptReturn {
-                @JsonProperty("type")
-                private String type;
+		public ChangeTracking getChangeTracking() {
+			return changeTracking;
+		}
 
-                @JsonProperty("value")
-                private JsonNode value;
+		public void setChangeTracking(ChangeTracking changeTracking) {
+			this.changeTracking = changeTracking;
+		}
 
-                public String getType() { return type; }
-                public void setType(String type) { this.type = type; }
+		@JsonIgnoreProperties(ignoreUnknown = true)
+		public static class Actions {
 
-                public JsonNode getValue() { return value; }
-                public void setValue(JsonNode value) { this.value = value; }
-            }
-        }
+			@JsonProperty("screenshots")
+			private List<String> screenshots;
 
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public static class Metadata {
-            @JsonProperty("title")
-            private String title;
+			@JsonProperty("scrapes")
+			private List<ScrapeResult> scrapes;
 
-            @JsonProperty("description")
-            private String description;
+			@JsonProperty("javascriptReturns")
+			private List<JavascriptReturn> javascriptReturns;
 
-            @JsonProperty("language")
-            private String language;
+			@JsonProperty("pdfs")
+			private List<String> pdfs;
 
-            @JsonProperty("sourceURL")
-            private String sourceURL;
+			public List<String> getScreenshots() {
+				return screenshots;
+			}
 
-            @JsonProperty("statusCode")
-            private Integer statusCode;
+			public void setScreenshots(List<String> screenshots) {
+				this.screenshots = screenshots;
+			}
 
-            @JsonProperty("error")
-            private String error;
+			public List<ScrapeResult> getScrapes() {
+				return scrapes;
+			}
 
-            public String getTitle() { return title; }
-            public void setTitle(String title) { this.title = title; }
+			public void setScrapes(List<ScrapeResult> scrapes) {
+				this.scrapes = scrapes;
+			}
 
-            public String getDescription() { return description; }
-            public void setDescription(String description) { this.description = description; }
+			public List<JavascriptReturn> getJavascriptReturns() {
+				return javascriptReturns;
+			}
 
-            public String getLanguage() { return language; }
-            public void setLanguage(String language) { this.language = language; }
+			public void setJavascriptReturns(List<JavascriptReturn> javascriptReturns) {
+				this.javascriptReturns = javascriptReturns;
+			}
 
-            public String getSourceURL() { return sourceURL; }
-            public void setSourceURL(String sourceURL) { this.sourceURL = sourceURL; }
+			public List<String> getPdfs() {
+				return pdfs;
+			}
 
-            public Integer getStatusCode() { return statusCode; }
-            public void setStatusCode(Integer statusCode) { this.statusCode = statusCode; }
+			public void setPdfs(List<String> pdfs) {
+				this.pdfs = pdfs;
+			}
 
-            public String getError() { return error; }
-            public void setError(String error) { this.error = error; }
-        }
+			@JsonIgnoreProperties(ignoreUnknown = true)
+			public static class ScrapeResult {
 
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public static class ChangeTracking {
-            @JsonProperty("previousScrapeAt")
-            private String previousScrapeAt;
+				@JsonProperty("url")
+				private String url;
 
-            @JsonProperty("changeStatus")
-            private String changeStatus;
+				@JsonProperty("html")
+				private String html;
 
-            @JsonProperty("visibility")
-            private String visibility;
+				public String getUrl() {
+					return url;
+				}
 
-            @JsonProperty("diff")
-            private String diff;
+				public void setUrl(String url) {
+					this.url = url;
+				}
 
-            @JsonProperty("json")
-            private JsonNode json;
+				public String getHtml() {
+					return html;
+				}
 
-            public String getPreviousScrapeAt() { return previousScrapeAt; }
-            public void setPreviousScrapeAt(String previousScrapeAt) { this.previousScrapeAt = previousScrapeAt; }
+				public void setHtml(String html) {
+					this.html = html;
+				}
 
-            public String getChangeStatus() { return changeStatus; }
-            public void setChangeStatus(String changeStatus) { this.changeStatus = changeStatus; }
+			}
 
-            public String getVisibility() { return visibility; }
-            public void setVisibility(String visibility) { this.visibility = visibility; }
+			@JsonIgnoreProperties(ignoreUnknown = true)
+			public static class JavascriptReturn {
 
-            public String getDiff() { return diff; }
-            public void setDiff(String diff) { this.diff = diff; }
+				@JsonProperty("type")
+				private String type;
 
-            public JsonNode getJson() { return json; }
-            public void setJson(JsonNode json) { this.json = json; }
-        }
-    }
+				@JsonProperty("value")
+				private JsonNode value;
+
+				public String getType() {
+					return type;
+				}
+
+				public void setType(String type) {
+					this.type = type;
+				}
+
+				public JsonNode getValue() {
+					return value;
+				}
+
+				public void setValue(JsonNode value) {
+					this.value = value;
+				}
+
+			}
+
+		}
+
+		@JsonIgnoreProperties(ignoreUnknown = true)
+		public static class Metadata {
+
+			@JsonProperty("title")
+			private String title;
+
+			@JsonProperty("description")
+			private String description;
+
+			@JsonProperty("language")
+			private String language;
+
+			@JsonProperty("sourceURL")
+			private String sourceURL;
+
+			@JsonProperty("statusCode")
+			private Integer statusCode;
+
+			@JsonProperty("error")
+			private String error;
+
+			public String getTitle() {
+				return title;
+			}
+
+			public void setTitle(String title) {
+				this.title = title;
+			}
+
+			public String getDescription() {
+				return description;
+			}
+
+			public void setDescription(String description) {
+				this.description = description;
+			}
+
+			public String getLanguage() {
+				return language;
+			}
+
+			public void setLanguage(String language) {
+				this.language = language;
+			}
+
+			public String getSourceURL() {
+				return sourceURL;
+			}
+
+			public void setSourceURL(String sourceURL) {
+				this.sourceURL = sourceURL;
+			}
+
+			public Integer getStatusCode() {
+				return statusCode;
+			}
+
+			public void setStatusCode(Integer statusCode) {
+				this.statusCode = statusCode;
+			}
+
+			public String getError() {
+				return error;
+			}
+
+			public void setError(String error) {
+				this.error = error;
+			}
+
+		}
+
+		@JsonIgnoreProperties(ignoreUnknown = true)
+		public static class ChangeTracking {
+
+			@JsonProperty("previousScrapeAt")
+			private String previousScrapeAt;
+
+			@JsonProperty("changeStatus")
+			private String changeStatus;
+
+			@JsonProperty("visibility")
+			private String visibility;
+
+			@JsonProperty("diff")
+			private String diff;
+
+			@JsonProperty("json")
+			private JsonNode json;
+
+			public String getPreviousScrapeAt() {
+				return previousScrapeAt;
+			}
+
+			public void setPreviousScrapeAt(String previousScrapeAt) {
+				this.previousScrapeAt = previousScrapeAt;
+			}
+
+			public String getChangeStatus() {
+				return changeStatus;
+			}
+
+			public void setChangeStatus(String changeStatus) {
+				this.changeStatus = changeStatus;
+			}
+
+			public String getVisibility() {
+				return visibility;
+			}
+
+			public void setVisibility(String visibility) {
+				this.visibility = visibility;
+			}
+
+			public String getDiff() {
+				return diff;
+			}
+
+			public void setDiff(String diff) {
+				this.diff = diff;
+			}
+
+			public JsonNode getJson() {
+				return json;
+			}
+
+			public void setJson(JsonNode json) {
+				this.json = json;
+			}
+
+		}
+
+	}
+
 }

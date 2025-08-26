@@ -10,306 +10,543 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ScrapeRequest {
-    @JsonProperty("url")
-    private String url;
 
-    @JsonProperty("formats")
-    private List<Object> formats;
+	@JsonProperty("url")
+	private String url;
 
-    @JsonProperty("onlyMainContent")
-    private Boolean onlyMainContent;
+	@JsonProperty("formats")
+	private List<Object> formats;
 
-    @JsonProperty("includeTags")
-    private List<String> includeTags;
+	@JsonProperty("onlyMainContent")
+	private Boolean onlyMainContent;
 
-    @JsonProperty("excludeTags")
-    private List<String> excludeTags;
+	@JsonProperty("includeTags")
+	private List<String> includeTags;
 
-    @JsonProperty("maxAge")
-    private Integer maxAge;
+	@JsonProperty("excludeTags")
+	private List<String> excludeTags;
 
-    @JsonProperty("headers")
-    private Map<String, Object> headers;
+	@JsonProperty("maxAge")
+	private Integer maxAge;
 
-    @JsonProperty("waitFor")
-    private Integer waitFor;
+	@JsonProperty("headers")
+	private Map<String, Object> headers;
 
-    @JsonProperty("mobile")
-    private Boolean mobile;
+	@JsonProperty("waitFor")
+	private Integer waitFor;
 
-    @JsonProperty("skipTlsVerification")
-    private Boolean skipTlsVerification;
+	@JsonProperty("mobile")
+	private Boolean mobile;
 
-    @JsonProperty("timeout")
-    private Integer timeout;
+	@JsonProperty("skipTlsVerification")
+	private Boolean skipTlsVerification;
 
-    @JsonProperty("parsers")
-    private List<String> parsers;
+	@JsonProperty("timeout")
+	private Integer timeout;
 
-    @JsonProperty("actions")
-    private List<Action> actions;
+	@JsonProperty("parsers")
+	private List<String> parsers;
 
-    @JsonProperty("location")
-    private Location location;
+	@JsonProperty("actions")
+	private List<Action> actions;
 
-    @JsonProperty("removeBase64Images")
-    private Boolean removeBase64Images;
+	@JsonProperty("location")
+	private Location location;
 
-    @JsonProperty("blockAds")
-    private Boolean blockAds;
+	@JsonProperty("removeBase64Images")
+	private Boolean removeBase64Images;
 
-    @JsonProperty("proxy")
-    private String proxy;
+	@JsonProperty("blockAds")
+	private Boolean blockAds;
 
-    @JsonProperty("storeInCache")
-    private Boolean storeInCache;
+	@JsonProperty("proxy")
+	private String proxy;
 
-    @JsonProperty("zeroDataRetention")
-    private Boolean zeroDataRetention;
+	@JsonProperty("storeInCache")
+	private Boolean storeInCache;
 
-    // Getters and setters
-    public String getUrl() { return url; }
-    public void setUrl(String url) { this.url = url; }
+	@JsonProperty("zeroDataRetention")
+	private Boolean zeroDataRetention;
 
-    public List<Object> getFormats() { return formats; }
-    public void setFormats(List<Object> formats) { this.formats = formats; }
+	// Getters and setters
+	public String getUrl() {
+		return url;
+	}
 
-    public Boolean getOnlyMainContent() { return onlyMainContent; }
-    public void setOnlyMainContent(Boolean onlyMainContent) { this.onlyMainContent = onlyMainContent; }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public List<String> getIncludeTags() { return includeTags; }
-    public void setIncludeTags(List<String> includeTags) { this.includeTags = includeTags; }
+	public List<Object> getFormats() {
+		return formats;
+	}
 
-    public List<String> getExcludeTags() { return excludeTags; }
-    public void setExcludeTags(List<String> excludeTags) { this.excludeTags = excludeTags; }
+	public void setFormats(List<Object> formats) {
+		this.formats = formats;
+	}
 
-    public Integer getMaxAge() { return maxAge; }
-    public void setMaxAge(Integer maxAge) { this.maxAge = maxAge; }
+	public Boolean getOnlyMainContent() {
+		return onlyMainContent;
+	}
 
-    public Map<String, Object> getHeaders() { return headers; }
-    public void setHeaders(Map<String, Object> headers) { this.headers = headers; }
+	public void setOnlyMainContent(Boolean onlyMainContent) {
+		this.onlyMainContent = onlyMainContent;
+	}
 
-    public Integer getWaitFor() { return waitFor; }
-    public void setWaitFor(Integer waitFor) { this.waitFor = waitFor; }
+	public List<String> getIncludeTags() {
+		return includeTags;
+	}
 
-    public Boolean getMobile() { return mobile; }
-    public void setMobile(Boolean mobile) { this.mobile = mobile; }
+	public void setIncludeTags(List<String> includeTags) {
+		this.includeTags = includeTags;
+	}
 
-    public Boolean getSkipTlsVerification() { return skipTlsVerification; }
-    public void setSkipTlsVerification(Boolean skipTlsVerification) { this.skipTlsVerification = skipTlsVerification; }
+	public List<String> getExcludeTags() {
+		return excludeTags;
+	}
 
-    public Integer getTimeout() { return timeout; }
-    public void setTimeout(Integer timeout) { this.timeout = timeout; }
+	public void setExcludeTags(List<String> excludeTags) {
+		this.excludeTags = excludeTags;
+	}
 
-    public List<String> getParsers() { return parsers; }
-    public void setParsers(List<String> parsers) { this.parsers = parsers; }
+	public Integer getMaxAge() {
+		return maxAge;
+	}
+
+	public void setMaxAge(Integer maxAge) {
+		this.maxAge = maxAge;
+	}
+
+	public Map<String, Object> getHeaders() {
+		return headers;
+	}
+
+	public void setHeaders(Map<String, Object> headers) {
+		this.headers = headers;
+	}
+
+	public Integer getWaitFor() {
+		return waitFor;
+	}
+
+	public void setWaitFor(Integer waitFor) {
+		this.waitFor = waitFor;
+	}
+
+	public Boolean getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(Boolean mobile) {
+		this.mobile = mobile;
+	}
+
+	public Boolean getSkipTlsVerification() {
+		return skipTlsVerification;
+	}
+
+	public void setSkipTlsVerification(Boolean skipTlsVerification) {
+		this.skipTlsVerification = skipTlsVerification;
+	}
+
+	public Integer getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(Integer timeout) {
+		this.timeout = timeout;
+	}
+
+	public List<String> getParsers() {
+		return parsers;
+	}
+
+	public void setParsers(List<String> parsers) {
+		this.parsers = parsers;
+	}
+
+	public List<Action> getActions() {
+		return actions;
+	}
+
+	public void setActions(List<Action> actions) {
+		this.actions = actions;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	public Boolean getRemoveBase64Images() {
+		return removeBase64Images;
+	}
+
+	public void setRemoveBase64Images(Boolean removeBase64Images) {
+		this.removeBase64Images = removeBase64Images;
+	}
 
-    public List<Action> getActions() { return actions; }
-    public void setActions(List<Action> actions) { this.actions = actions; }
+	public Boolean getBlockAds() {
+		return blockAds;
+	}
 
-    public Location getLocation() { return location; }
-    public void setLocation(Location location) { this.location = location; }
+	public void setBlockAds(Boolean blockAds) {
+		this.blockAds = blockAds;
+	}
 
-    public Boolean getRemoveBase64Images() { return removeBase64Images; }
-    public void setRemoveBase64Images(Boolean removeBase64Images) { this.removeBase64Images = removeBase64Images; }
+	public String getProxy() {
+		return proxy;
+	}
 
-    public Boolean getBlockAds() { return blockAds; }
-    public void setBlockAds(Boolean blockAds) { this.blockAds = blockAds; }
+	public void setProxy(String proxy) {
+		this.proxy = proxy;
+	}
 
-    public String getProxy() { return proxy; }
-    public void setProxy(String proxy) { this.proxy = proxy; }
+	public Boolean getStoreInCache() {
+		return storeInCache;
+	}
 
-    public Boolean getStoreInCache() { return storeInCache; }
-    public void setStoreInCache(Boolean storeInCache) { this.storeInCache = storeInCache; }
+	public void setStoreInCache(Boolean storeInCache) {
+		this.storeInCache = storeInCache;
+	}
 
-    public Boolean getZeroDataRetention() { return zeroDataRetention; }
-    public void setZeroDataRetention(Boolean zeroDataRetention) { this.zeroDataRetention = zeroDataRetention; }
+	public Boolean getZeroDataRetention() {
+		return zeroDataRetention;
+	}
 
-    // Action classes
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonSubTypes({
-            @JsonSubTypes.Type(value = WaitAction.class, name = "wait"),
-            @JsonSubTypes.Type(value = ScreenshotAction.class, name = "screenshot"),
-            @JsonSubTypes.Type(value = ClickAction.class, name = "click"),
-            @JsonSubTypes.Type(value = WriteAction.class, name = "write"),
-            @JsonSubTypes.Type(value = PressAction.class, name = "press"),
-            @JsonSubTypes.Type(value = ScrollAction.class, name = "scroll"),
-            @JsonSubTypes.Type(value = ScrapeAction.class, name = "scrape"),
-            @JsonSubTypes.Type(value = ExecuteJavascriptAction.class, name = "executeJavascript"),
-            @JsonSubTypes.Type(value = PdfAction.class, name = "pdf")
-    })
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-    public static abstract class Action {
-        @JsonProperty("type")
-        private String type;
+	public void setZeroDataRetention(Boolean zeroDataRetention) {
+		this.zeroDataRetention = zeroDataRetention;
+	}
 
-        public String getType() { return type; }
-        public void setType(String type) { this.type = type; }
-    }
+	// Action classes
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonSubTypes({ @JsonSubTypes.Type(value = WaitAction.class, name = "wait"),
+			@JsonSubTypes.Type(value = ScreenshotAction.class, name = "screenshot"),
+			@JsonSubTypes.Type(value = ClickAction.class, name = "click"),
+			@JsonSubTypes.Type(value = WriteAction.class, name = "write"),
+			@JsonSubTypes.Type(value = PressAction.class, name = "press"),
+			@JsonSubTypes.Type(value = ScrollAction.class, name = "scroll"),
+			@JsonSubTypes.Type(value = ScrapeAction.class, name = "scrape"),
+			@JsonSubTypes.Type(value = ExecuteJavascriptAction.class, name = "executeJavascript"),
+			@JsonSubTypes.Type(value = PdfAction.class, name = "pdf") })
+	@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+	public static abstract class Action {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class WaitAction extends Action {
-        @JsonProperty("milliseconds")
-        private Integer milliseconds;
+		@JsonProperty("type")
+		private String type;
 
-        @JsonProperty("selector")
-        private String selector;
+		public String getType() {
+			return type;
+		}
 
-        public WaitAction() { setType("wait"); }
+		public void setType(String type) {
+			this.type = type;
+		}
 
-        public Integer getMilliseconds() { return milliseconds; }
-        public void setMilliseconds(Integer milliseconds) { this.milliseconds = milliseconds; }
+	}
 
-        public String getSelector() { return selector; }
-        public void setSelector(String selector) { this.selector = selector; }
-    }
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class WaitAction extends Action {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class ScreenshotAction extends Action {
-        @JsonProperty("fullPage")
-        private Boolean fullPage;
+		@JsonProperty("milliseconds")
+		private Integer milliseconds;
 
-        @JsonProperty("quality")
-        private Integer quality;
+		@JsonProperty("selector")
+		private String selector;
 
-        @JsonProperty("viewport")
-        private Viewport viewport;
+		public WaitAction() {
+			setType("wait");
+		}
 
-        public ScreenshotAction() { setType("screenshot"); }
+		public Integer getMilliseconds() {
+			return milliseconds;
+		}
 
-        public Boolean getFullPage() { return fullPage; }
-        public void setFullPage(Boolean fullPage) { this.fullPage = fullPage; }
+		public void setMilliseconds(Integer milliseconds) {
+			this.milliseconds = milliseconds;
+		}
 
-        public Integer getQuality() { return quality; }
-        public void setQuality(Integer quality) { this.quality = quality; }
+		public String getSelector() {
+			return selector;
+		}
 
-        public Viewport getViewport() { return viewport; }
-        public void setViewport(Viewport viewport) { this.viewport = viewport; }
+		public void setSelector(String selector) {
+			this.selector = selector;
+		}
 
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        public static class Viewport {
-            @JsonProperty("width")
-            private Integer width;
+	}
 
-            @JsonProperty("height")
-            private Integer height;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class ScreenshotAction extends Action {
 
-            public Integer getWidth() { return width; }
-            public void setWidth(Integer width) { this.width = width; }
+		@JsonProperty("fullPage")
+		private Boolean fullPage;
 
-            public Integer getHeight() { return height; }
-            public void setHeight(Integer height) { this.height = height; }
-        }
-    }
+		@JsonProperty("quality")
+		private Integer quality;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class ClickAction extends Action {
-        @JsonProperty("selector")
-        private String selector;
+		@JsonProperty("viewport")
+		private Viewport viewport;
 
-        @JsonProperty("all")
-        private Boolean all;
+		public ScreenshotAction() {
+			setType("screenshot");
+		}
 
-        public ClickAction() { setType("click"); }
+		public Boolean getFullPage() {
+			return fullPage;
+		}
 
-        public String getSelector() { return selector; }
-        public void setSelector(String selector) { this.selector = selector; }
+		public void setFullPage(Boolean fullPage) {
+			this.fullPage = fullPage;
+		}
 
-        public Boolean getAll() { return all; }
-        public void setAll(Boolean all) { this.all = all; }
-    }
+		public Integer getQuality() {
+			return quality;
+		}
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class WriteAction extends Action {
-        @JsonProperty("text")
-        private String text;
+		public void setQuality(Integer quality) {
+			this.quality = quality;
+		}
 
-        public WriteAction() { setType("write"); }
+		public Viewport getViewport() {
+			return viewport;
+		}
 
-        public String getText() { return text; }
-        public void setText(String text) { this.text = text; }
-    }
+		public void setViewport(Viewport viewport) {
+			this.viewport = viewport;
+		}
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class PressAction extends Action {
-        @JsonProperty("key")
-        private String key;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		public static class Viewport {
 
-        public PressAction() { setType("press"); }
+			@JsonProperty("width")
+			private Integer width;
 
-        public String getKey() { return key; }
-        public void setKey(String key) { this.key = key; }
-    }
+			@JsonProperty("height")
+			private Integer height;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class ScrollAction extends Action {
-        @JsonProperty("direction")
-        private String direction;
+			public Integer getWidth() {
+				return width;
+			}
 
-        @JsonProperty("selector")
-        private String selector;
+			public void setWidth(Integer width) {
+				this.width = width;
+			}
 
-        public ScrollAction() { setType("scroll"); }
+			public Integer getHeight() {
+				return height;
+			}
 
-        public String getDirection() { return direction; }
-        public void setDirection(String direction) { this.direction = direction; }
+			public void setHeight(Integer height) {
+				this.height = height;
+			}
 
-        public String getSelector() { return selector; }
-        public void setSelector(String selector) { this.selector = selector; }
-    }
+		}
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class ScrapeAction extends Action {
-        public ScrapeAction() { setType("scrape"); }
-    }
+	}
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class ExecuteJavascriptAction extends Action {
-        @JsonProperty("script")
-        private String script;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class ClickAction extends Action {
 
-        public ExecuteJavascriptAction() { setType("executeJavascript"); }
+		@JsonProperty("selector")
+		private String selector;
 
-        public String getScript() { return script; }
-        public void setScript(String script) { this.script = script; }
-    }
+		@JsonProperty("all")
+		private Boolean all;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class PdfAction extends Action {
-        @JsonProperty("format")
-        private String format;
+		public ClickAction() {
+			setType("click");
+		}
 
-        @JsonProperty("landscape")
-        private Boolean landscape;
+		public String getSelector() {
+			return selector;
+		}
 
-        @JsonProperty("scale")
-        private Double scale;
+		public void setSelector(String selector) {
+			this.selector = selector;
+		}
 
-        public PdfAction() { setType("pdf"); }
+		public Boolean getAll() {
+			return all;
+		}
 
-        public String getFormat() { return format; }
-        public void setFormat(String format) { this.format = format; }
+		public void setAll(Boolean all) {
+			this.all = all;
+		}
 
-        public Boolean getLandscape() { return landscape; }
-        public void setLandscape(Boolean landscape) { this.landscape = landscape; }
+	}
 
-        public Double getScale() { return scale; }
-        public void setScale(Double scale) { this.scale = scale; }
-    }
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class WriteAction extends Action {
 
-    // Location class
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Location {
-        @JsonProperty("country")
-        private String country;
+		@JsonProperty("text")
+		private String text;
 
-        @JsonProperty("languages")
-        private List<String> languages;
+		public WriteAction() {
+			setType("write");
+		}
 
-        public String getCountry() { return country; }
-        public void setCountry(String country) { this.country = country; }
+		public String getText() {
+			return text;
+		}
 
-        public List<String> getLanguages() { return languages; }
-        public void setLanguages(List<String> languages) { this.languages = languages; }
-    }
+		public void setText(String text) {
+			this.text = text;
+		}
+
+	}
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class PressAction extends Action {
+
+		@JsonProperty("key")
+		private String key;
+
+		public PressAction() {
+			setType("press");
+		}
+
+		public String getKey() {
+			return key;
+		}
+
+		public void setKey(String key) {
+			this.key = key;
+		}
+
+	}
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class ScrollAction extends Action {
+
+		@JsonProperty("direction")
+		private String direction;
+
+		@JsonProperty("selector")
+		private String selector;
+
+		public ScrollAction() {
+			setType("scroll");
+		}
+
+		public String getDirection() {
+			return direction;
+		}
+
+		public void setDirection(String direction) {
+			this.direction = direction;
+		}
+
+		public String getSelector() {
+			return selector;
+		}
+
+		public void setSelector(String selector) {
+			this.selector = selector;
+		}
+
+	}
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class ScrapeAction extends Action {
+
+		public ScrapeAction() {
+			setType("scrape");
+		}
+
+	}
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class ExecuteJavascriptAction extends Action {
+
+		@JsonProperty("script")
+		private String script;
+
+		public ExecuteJavascriptAction() {
+			setType("executeJavascript");
+		}
+
+		public String getScript() {
+			return script;
+		}
+
+		public void setScript(String script) {
+			this.script = script;
+		}
+
+	}
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class PdfAction extends Action {
+
+		@JsonProperty("format")
+		private String format;
+
+		@JsonProperty("landscape")
+		private Boolean landscape;
+
+		@JsonProperty("scale")
+		private Double scale;
+
+		public PdfAction() {
+			setType("pdf");
+		}
+
+		public String getFormat() {
+			return format;
+		}
+
+		public void setFormat(String format) {
+			this.format = format;
+		}
+
+		public Boolean getLandscape() {
+			return landscape;
+		}
+
+		public void setLandscape(Boolean landscape) {
+			this.landscape = landscape;
+		}
+
+		public Double getScale() {
+			return scale;
+		}
+
+		public void setScale(Double scale) {
+			this.scale = scale;
+		}
+
+	}
+
+	// Location class
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	public static class Location {
+
+		@JsonProperty("country")
+		private String country;
+
+		@JsonProperty("languages")
+		private List<String> languages;
+
+		public String getCountry() {
+			return country;
+		}
+
+		public void setCountry(String country) {
+			this.country = country;
+		}
+
+		public List<String> getLanguages() {
+			return languages;
+		}
+
+		public void setLanguages(List<String> languages) {
+			this.languages = languages;
+		}
+
+	}
+
 }
