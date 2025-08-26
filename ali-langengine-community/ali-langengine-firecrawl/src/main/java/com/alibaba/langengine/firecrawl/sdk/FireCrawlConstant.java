@@ -17,4 +17,7 @@
 package com.alibaba.langengine.firecrawl.sdk;
 
 public final class FireCrawlConstant {
+
+    public static final String FIRE_CRAWL_BASE_URL = "https://api.firecrawl.dev/v2";
+
 }
