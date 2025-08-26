@@ -147,6 +147,7 @@ public class ScrapeRequest {
         public void setType(String type) { this.type = type; }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class WaitAction extends Action {
         @JsonProperty("milliseconds")
         private Integer milliseconds;
@@ -163,6 +164,7 @@ public class ScrapeRequest {
         public void setSelector(String selector) { this.selector = selector; }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ScreenshotAction extends Action {
         @JsonProperty("fullPage")
         private Boolean fullPage;
@@ -184,6 +186,7 @@ public class ScrapeRequest {
         public Viewport getViewport() { return viewport; }
         public void setViewport(Viewport viewport) { this.viewport = viewport; }
 
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         public static class Viewport {
             @JsonProperty("width")
             private Integer width;
@@ -199,6 +202,7 @@ public class ScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ClickAction extends Action {
         @JsonProperty("selector")
         private String selector;
@@ -215,6 +219,7 @@ public class ScrapeRequest {
         public void setAll(Boolean all) { this.all = all; }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class WriteAction extends Action {
         @JsonProperty("text")
         private String text;
@@ -225,6 +230,7 @@ public class ScrapeRequest {
         public void setText(String text) { this.text = text; }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class PressAction extends Action {
         @JsonProperty("key")
         private String key;
@@ -235,6 +241,7 @@ public class ScrapeRequest {
         public void setKey(String key) { this.key = key; }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ScrollAction extends Action {
         @JsonProperty("direction")
         private String direction;
@@ -251,10 +258,12 @@ public class ScrapeRequest {
         public void setSelector(String selector) { this.selector = selector; }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ScrapeAction extends Action {
         public ScrapeAction() { setType("scrape"); }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ExecuteJavascriptAction extends Action {
         @JsonProperty("script")
         private String script;
@@ -265,6 +274,7 @@ public class ScrapeRequest {
         public void setScript(String script) { this.script = script; }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class PdfAction extends Action {
         @JsonProperty("format")
         private String format;

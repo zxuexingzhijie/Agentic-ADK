@@ -253,6 +253,7 @@ public class BatchScrapeRequest {
         this.zeroDataRetention = zeroDataRetention;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Webhook {
         @JsonProperty("url")
         private String url;
@@ -324,6 +325,7 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class WaitAction extends Action {
         @JsonProperty("milliseconds")
         private Integer milliseconds;
@@ -348,6 +350,7 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ScreenshotAction extends Action {
         @JsonProperty("fullPage")
         private Boolean fullPage;
@@ -383,6 +386,7 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ClickAction extends Action {
         @JsonProperty("selector")
         private String selector;
@@ -407,6 +411,7 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class WriteAction extends Action {
         @JsonProperty("text")
         private String text;
@@ -420,6 +425,7 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class PressAction extends Action {
         @JsonProperty("key")
         private String key;
@@ -433,6 +439,7 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ScrollAction extends Action {
         @JsonProperty("direction")
         private String direction;
@@ -457,10 +464,12 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ScrapeAction extends Action {
         // No additional fields
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ExecuteJavascriptAction extends Action {
         @JsonProperty("script")
         private String script;
@@ -474,6 +483,7 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class PdfAction extends Action {
         @JsonProperty("format")
         private String format;
@@ -509,6 +519,7 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Viewport {
         @JsonProperty("width")
         private Integer width;
@@ -533,6 +544,7 @@ public class BatchScrapeRequest {
         }
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Location {
         @JsonProperty("country")
         private String country;

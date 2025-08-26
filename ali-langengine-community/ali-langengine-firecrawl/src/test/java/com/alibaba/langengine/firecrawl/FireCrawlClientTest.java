@@ -20,8 +20,10 @@ import com.alibaba.langengine.firecrawl.sdk.FireCrawlClient;
 import com.alibaba.langengine.firecrawl.sdk.FireCrawlException;
 import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
+import com.alibaba.langengine.firecrawl.sdk.request.SearchRequest;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.SearchResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -168,6 +170,44 @@ public class FireCrawlClientTest {
             // Expected exception
             assertNotNull(e);
         }
+    }
+
+    @Test
+    public void testSearchWeb() throws FireCrawlException {
+        SearchRequest request = new SearchRequest();
+        request.setQuery("firecrawl");
+        request.setLimit(5);
+
+        SearchResponse response = client.search(request);
+
+        assertNotNull("Response should not be null", response);
+        assertTrue("Request should be successful", response.getSuccess());
+        assertNotNull("Data should not be null", response.getData());
+        assertNotNull("Web results should not be null", response.getData().getWeb());
+        assertTrue("Should have at least one web result", response.getData().getWeb().length > 0);
+
+        SearchResponse.WebResult firstResult = response.getData().getWeb()[0];
+        assertNotNull("First result title should not be null", firstResult.getTitle());
+        assertNotNull("First result URL should not be null", firstResult.getUrl());
+        assertNotNull("First result description should not be null", firstResult.getDescription());
+    }
+
+    @Test
+    public void testSearchWithScrapeOptions() throws FireCrawlException {
+        SearchRequest request = new SearchRequest();
+        request.setQuery("firecrawl java sdk");
+        request.setLimit(3);
+
+        SearchRequest.ScrapeOptions scrapeOptions = new SearchRequest.ScrapeOptions();
+        scrapeOptions.setOnlyMainContent(true);
+        request.setScrapeOptions(scrapeOptions);
+
+        SearchResponse response = client.search(request);
+
+        assertNotNull("Response should not be null", response);
+        assertTrue("Request should be successful", response.getSuccess());
+        assertNotNull("Data should not be null", response.getData());
+        assertNotNull("Web results should not be null", response.getData().getWeb());
     }
 
 }

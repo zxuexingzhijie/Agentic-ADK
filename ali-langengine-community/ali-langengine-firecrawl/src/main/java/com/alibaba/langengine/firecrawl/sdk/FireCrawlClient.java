@@ -18,12 +18,14 @@ package com.alibaba.langengine.firecrawl.sdk;
 
 import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
+import com.alibaba.langengine.firecrawl.sdk.request.SearchRequest;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeErrorsResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeStatusResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CancelBatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ErrorResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.SearchResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -213,6 +215,40 @@ public class FireCrawlClient {
             return objectMapper.readValue(response.body().string(), CancelBatchScrapeResponse.class);
         } catch (IOException e) {
             throw new FireCrawlException("Error canceling batch scrape", e);
+        }
+    }
+
+    /**
+     * Perform a search using the FireCrawl Search API
+     *
+     * @param request The search request parameters
+     * @return The search response with results
+     * @throws FireCrawlException if there's an error with the request
+     */
+    public SearchResponse search(SearchRequest request) throws FireCrawlException {
+        try {
+            String json = objectMapper.writeValueAsString(request);
+            RequestBody body = RequestBody.create(json, MediaType.get("application/json"));
+            Request httpRequest = new Request.Builder()
+                    .url(FIRE_CRAWL_BASE_URL + "/search")
+                    .post(body)
+                    .addHeader("Authorization", "Bearer " + apiKey)
+                    .build();
+
+            try (Response response = client.newCall(httpRequest).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new FireCrawlException("Unexpected response code: " + response);
+                }
+
+                ResponseBody responseBody = response.body();
+                if (responseBody == null) {
+                    throw new FireCrawlException("Empty response body");
+                }
+
+                return objectMapper.readValue(responseBody.string(), SearchResponse.class);
+            }
+        } catch (IOException e) {
+            throw new FireCrawlException("Error executing search request", e);
         }
     }
 
