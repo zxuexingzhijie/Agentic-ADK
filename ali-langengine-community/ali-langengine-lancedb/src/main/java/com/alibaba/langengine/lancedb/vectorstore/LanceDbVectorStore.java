@@ -168,55 +168,113 @@ public class LanceDbVectorStore extends VectorStore {
 
         log.info("Adding {} documents to LanceDB vector store", documents.size());
 
+        List<LanceDbVector> vectors = convertDocumentsToVectors(documents);
+        
+        // 批量插入到LanceDB
+        if (!vectors.isEmpty()) {
+            lanceDbClient.insert(tableName, vectors);
+            log.info("Successfully inserted {} vectors into LanceDB table: {}", vectors.size(), tableName);
+        }
+    }
+
+    /**
+     * 将文档列表转换为LanceDB向量列表
+     *
+     * @param documents 文档列表
+     * @return 向量列表
+     * @throws LanceDbException 转换异常
+     */
+    private List<LanceDbVector> convertDocumentsToVectors(List<Document> documents) throws LanceDbException {
+        List<LanceDbVector> vectors = new ArrayList<>();
+        
+        for (Document document : documents) {
+            Optional<LanceDbVector> vectorOpt = convertDocumentToLanceDbVector(document);
+            vectorOpt.ifPresent(vectors::add);
+        }
+        
+        return vectors;
+    }
+
+    /**
+     * 将单个文档转换为LanceDB向量
+     *
+     * @param document 文档
+     * @return 向量对象的Optional
+     */
+    private Optional<LanceDbVector> convertDocumentToLanceDbVector(Document document) {
         try {
-            List<LanceDbVector> vectors = new ArrayList<>();
-            
-            for (Document document : documents) {
-                try {
-                    // 生成文档嵌入
-                    List<Document> embeddedDocs = embeddings.embedDocument(Arrays.asList(document));
-                    if (embeddedDocs.isEmpty() || embeddedDocs.get(0).getEmbedding() == null) {
-                        log.warn("Failed to generate embedding for document: {}", document.getPageContent());
-                        continue;
-                    }
-                    List<Double> embedding = embeddedDocs.get(0).getEmbedding();
-                    
-                    // 验证向量维度
-                    if (embedding.size() != vectorDimension) {
-                        log.warn("Document embedding dimension {} does not match expected dimension {}", 
-                                embedding.size(), vectorDimension);
-                        continue;
-                    }
-                    
-                    // 生成文档ID
-                    String docId = generateDocumentId(document);
-                    
-                    // 创建LanceDB向量记录
-                    LanceDbVector vector = LanceDbVector.of(docId, embedding, document.getPageContent(), 
-                                                          document.getMetadata());
-                    vectors.add(vector);
-                    
-                    // 缓存文档和嵌入
-                    manageCacheSize();
-                    documentCache.put(docId, document);
-                    embeddingCache.put(docId, embedding);
-                    
-                } catch (Exception e) {
-                    log.error("Failed to add document: {}", e.getMessage(), e);
-                    throw new LanceDbException("Failed to add document", e);
-                }
+            // 生成文档嵌入
+            List<Double> embedding = generateDocumentEmbedding(document);
+            if (embedding == null) {
+                return Optional.empty();
             }
             
-            // 批量插入到LanceDB
-            if (!vectors.isEmpty()) {
-                lanceDbClient.insert(tableName, vectors);
-                log.info("Successfully inserted {} vectors into LanceDB table: {}", vectors.size(), tableName);
+            // 验证向量维度
+            if (!isValidVectorDimension(embedding)) {
+                log.warn("Document embedding dimension {} does not match expected dimension {}", 
+                        embedding.size(), vectorDimension);
+                return Optional.empty();
             }
+            
+            // 生成文档ID
+            String docId = generateDocumentId(document);
+            
+            // 创建LanceDB向量记录
+            LanceDbVector vector = LanceDbVector.of(docId, embedding, document.getPageContent(), 
+                                                  document.getMetadata());
+            
+            // 更新缓存
+            updateDocumentCache(docId, document, embedding);
+            
+            return Optional.of(vector);
             
         } catch (Exception e) {
-            log.error("Failed to generate embeddings for documents: {}", e.getMessage(), e);
-            throw new LanceDbException("Failed to generate embeddings for documents", e);
+            log.error("Failed to convert document to vector: {}", e.getMessage(), e);
+            return Optional.empty();
         }
+    }
+
+    /**
+     * 生成文档嵌入
+     *
+     * @param document 文档
+     * @return 嵌入向量，失败时返回null
+     */
+    private List<Double> generateDocumentEmbedding(Document document) {
+        try {
+            List<Document> embeddedDocs = embeddings.embedDocument(Arrays.asList(document));
+            if (embeddedDocs.isEmpty() || embeddedDocs.get(0).getEmbedding() == null) {
+                log.warn("Failed to generate embedding for document: {}", document.getPageContent());
+                return null;
+            }
+            return embeddedDocs.get(0).getEmbedding();
+        } catch (Exception e) {
+            log.error("Error generating embedding for document: {}", e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * 验证向量维度是否正确
+     *
+     * @param embedding 嵌入向量
+     * @return 是否有效
+     */
+    private boolean isValidVectorDimension(List<Double> embedding) {
+        return embedding != null && embedding.size() == vectorDimension;
+    }
+
+    /**
+     * 更新文档缓存
+     *
+     * @param docId     文档ID
+     * @param document  文档
+     * @param embedding 嵌入向量
+     */
+    private void updateDocumentCache(String docId, Document document, List<Double> embedding) {
+        manageCacheSize();
+        documentCache.put(docId, document);
+        embeddingCache.put(docId, embedding);
     }
 
     @Override
@@ -236,64 +294,113 @@ public class LanceDbVectorStore extends VectorStore {
             throw new IllegalArgumentException("k must be positive");
         }
 
-        try {
-            log.info("Performing similarity search in LanceDB for query: '{}', k: {}", query, k);
+        log.info("Performing similarity search in LanceDB for query: '{}', k: {}", query, k);
 
-            // 生成查询嵌入
+        // 生成查询嵌入
+        List<Double> queryEmbedding = generateQueryEmbedding(query);
+        
+        // 构建查询请求
+        LanceDbQueryRequest request = buildLanceDbQueryRequest(queryEmbedding, k, maxDistanceValue);
+        
+        // 执行查询
+        LanceDbQueryResponse response = performLanceDbQuery(request);
+        
+        // 处理查询结果
+        return processQueryResponse(response, query);
+    }
+
+    /**
+     * 生成查询嵌入
+     *
+     * @param query 查询文本
+     * @return 查询嵌入向量
+     * @throws LanceDbException 生成异常
+     */
+    private List<Double> generateQueryEmbedding(String query) throws LanceDbException {
+        try {
             List<Document> queryDocs = embeddings.embedTexts(Arrays.asList(query));
             if (queryDocs.isEmpty() || queryDocs.get(0).getEmbedding() == null) {
                 throw new LanceDbException("Failed to generate embedding for query: " + query);
             }
+            
             List<Double> queryEmbedding = queryDocs.get(0).getEmbedding();
             
             // 验证查询向量维度
-            if (queryEmbedding.size() != vectorDimension) {
+            if (!isValidVectorDimension(queryEmbedding)) {
                 throw new LanceDbException("Query embedding dimension " + queryEmbedding.size() + 
                                          " does not match expected dimension " + vectorDimension);
             }
-
-            // 创建查询请求
-            LanceDbQueryRequest.LanceDbQueryRequestBuilder requestBuilder = LanceDbQueryRequest.builder()
-                    .vector(queryEmbedding)
-                    .limit(k)
-                    .metric("cosine")
-                    .includeMetadata(true);
-
-            // 如果指定了距离阈值，添加过滤条件
-            if (maxDistanceValue != null) {
-                requestBuilder.distanceThreshold(maxDistanceValue);
-            } else {
-                // 使用相似度阈值转换为距离阈值（余弦距离 = 1 - 余弦相似度）
-                requestBuilder.distanceThreshold(1.0 - similarityThreshold);
-            }
-
-            LanceDbQueryRequest request = requestBuilder.build();
-
-            // 执行查询
-            LanceDbQueryResponse response = lanceDbClient.query(tableName, request);
-
-            if (!response.isSuccessful()) {
-                throw new LanceDbException("LanceDB query failed: " + response.getErrorMessage());
-            }
-
-            if (!response.hasResults()) {
-                log.info("No results found for query: '{}'", query);
-                return new ArrayList<>();
-            }
-
-            // 转换结果为Document列表
-            List<Document> results = response.getResults().stream()
-                    .map(this::convertVectorToDocument)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-
-            log.info("Found {} similar documents for query: '{}'", results.size(), query);
-            return results;
-
+            
+            return queryEmbedding;
         } catch (Exception e) {
-            log.error("Similarity search failed: {}", e.getMessage(), e);
-            throw new LanceDbException("Similarity search failed", e);
+            throw new LanceDbException("Failed to generate query embedding", e);
         }
+    }
+
+    /**
+     * 构建LanceDB查询请求
+     *
+     * @param queryEmbedding   查询嵌入向量
+     * @param k               返回结果数量
+     * @param maxDistanceValue 最大距离值
+     * @return 查询请求对象
+     */
+    private LanceDbQueryRequest buildLanceDbQueryRequest(List<Double> queryEmbedding, int k, Double maxDistanceValue) {
+        LanceDbQueryRequest.LanceDbQueryRequestBuilder requestBuilder = LanceDbQueryRequest.builder()
+                .vector(queryEmbedding)
+                .limit(k)
+                .metric("cosine")
+                .includeMetadata(true);
+
+        // 如果指定了距离阈值，添加过滤条件
+        if (maxDistanceValue != null) {
+            requestBuilder.distanceThreshold(maxDistanceValue);
+        } else {
+            // 使用相似度阈值转换为距离阈值（余弦距离 = 1 - 余弦相似度）
+            requestBuilder.distanceThreshold(1.0 - similarityThreshold);
+        }
+
+        return requestBuilder.build();
+    }
+
+    /**
+     * 执行LanceDB查询
+     *
+     * @param request 查询请求
+     * @return 查询响应
+     * @throws LanceDbException 查询异常
+     */
+    private LanceDbQueryResponse performLanceDbQuery(LanceDbQueryRequest request) throws LanceDbException {
+        LanceDbQueryResponse response = lanceDbClient.query(tableName, request);
+
+        if (!response.isSuccessful()) {
+            throw new LanceDbException("LanceDB query failed: " + response.getErrorMessage());
+        }
+
+        return response;
+    }
+
+    /**
+     * 处理查询响应，转换为文档列表
+     *
+     * @param response 查询响应
+     * @param query    原始查询文本，用于日志
+     * @return 文档列表
+     */
+    private List<Document> processQueryResponse(LanceDbQueryResponse response, String query) {
+        if (!response.hasResults()) {
+            log.info("No results found for query: '{}'", query);
+            return new ArrayList<>();
+        }
+
+        // 转换结果为Document列表
+        List<Document> results = response.getResults().stream()
+                .map(this::convertVectorToDocument)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        log.info("Found {} similar documents for query: '{}'", results.size(), query);
+        return results;
     }
 
     /**

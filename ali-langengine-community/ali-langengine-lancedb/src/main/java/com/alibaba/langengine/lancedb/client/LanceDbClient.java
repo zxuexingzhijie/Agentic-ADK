@@ -17,6 +17,8 @@ package com.alibaba.langengine.lancedb.client;
 
 import com.alibaba.langengine.lancedb.LanceDbConfiguration;
 import com.alibaba.langengine.lancedb.LanceDbException;
+import com.alibaba.langengine.lancedb.client.interceptor.AuthenticationInterceptor;
+import com.alibaba.langengine.lancedb.client.interceptor.LoggingInterceptor;
 import com.alibaba.langengine.lancedb.model.LanceDbQueryRequest;
 import com.alibaba.langengine.lancedb.model.LanceDbQueryResponse;
 import com.alibaba.langengine.lancedb.model.LanceDbVector;
@@ -33,11 +35,12 @@ import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
-public class LanceDbClient {
+public class LanceDbClient implements AutoCloseable {
 
     private final LanceDbConfiguration configuration;
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
+    private final HttpRequestExecutor requestExecutor;
     private volatile LocalDateTime lastRequestTime;
 
     /**
@@ -56,6 +59,7 @@ public class LanceDbClient {
         this.configuration = configuration;
         this.objectMapper = new ObjectMapper();
         this.httpClient = createHttpClient();
+        this.requestExecutor = new HttpRequestExecutor(httpClient, objectMapper);
 
         log.info("LanceDB client initialized with server: {}", configuration.getFullServerUrl());
     }
@@ -79,33 +83,23 @@ public class LanceDbClient {
                 .writeTimeout(configuration.getWriteTimeout(), TimeUnit.MILLISECONDS)
                 .retryOnConnectionFailure(true);
 
-        // 添加认证拦截器
-        if (configuration.getApiKey() != null && !configuration.getApiKey().trim().isEmpty()) {
-            builder.addInterceptor(chain -> {
-                Request original = chain.request();
-                Request.Builder requestBuilder = original.newBuilder()
-                        .header("Authorization", "Bearer " + configuration.getApiKey())
-                        .header("Content-Type", "application/json");
-                return chain.proceed(requestBuilder.build());
-            });
-        }
-
-        // 添加日志拦截器
-        builder.addInterceptor(chain -> {
-            Request request = chain.request();
-            long startTime = System.currentTimeMillis();
-            
-            log.debug("Sending request to {}", request.url());
-            
-            Response response = chain.proceed(request);
-            long endTime = System.currentTimeMillis();
-            
-            log.debug("Received response {} in {}ms", response.code(), endTime - startTime);
-            
-            return response;
-        });
+        // 添加拦截器
+        addInterceptors(builder);
 
         return builder.build();
+    }
+
+    /**
+     * 添加拦截器到HTTP客户端构建器
+     *
+     * @param builder HTTP客户端构建器
+     */
+    private void addInterceptors(OkHttpClient.Builder builder) {
+        // 添加认证拦截器
+        builder.addInterceptor(new AuthenticationInterceptor(configuration.getApiKey()));
+        
+        // 添加日志拦截器
+        builder.addInterceptor(new LoggingInterceptor());
     }
 
     /**
@@ -174,28 +168,20 @@ public class LanceDbClient {
                     .post(body)
                     .build();
 
-            try (Response response = httpClient.newCall(httpRequest).execute()) {
-                String responseBody = response.body() != null ? response.body().string() : "";
-                
-                if (!response.isSuccessful()) {
-                    String errorMsg = String.format("Query failed with status %d: %s", 
-                            response.code(), responseBody);
-                    throw new LanceDbException(errorMsg, "QUERY_FAILED", response.code());
-                }
-
-                if (responseBody.isEmpty()) {
-                    throw new LanceDbException("Empty response from LanceDB query API");
-                }
-
-                return parseQueryResponse(responseBody);
-            }
+            String responseText = requestExecutor.executeForRawResponse(httpRequest, "QUERY_FAILED");
+            return parseQueryResponse(responseText);
         } catch (IOException e) {
-            throw new LanceDbException("Failed to execute query", e);
+            throw new LanceDbException("Failed to serialize query request", e, "QUERY_FAILED", null);
         }
     }
 
     /**
      * 解析查询响应
+     * 
+     * 注意：由于LanceDB API在某些情况下返回不同的响应格式，
+     * 我们首先尝试解析为完整的LanceDbQueryResponse对象，
+     * 如果失败则尝试解析为向量列表并包装成响应对象。
+     * 这种设计是为了兼容不同版本的API响应格式。
      *
      * @param responseText 响应文本
      * @return 查询响应
@@ -206,13 +192,14 @@ public class LanceDbClient {
             // 尝试解析为完整响应对象
             return objectMapper.readValue(responseText, LanceDbQueryResponse.class);
         } catch (Exception e) {
+            log.debug("Failed to parse as LanceDbQueryResponse, trying as vector list", e);
             try {
                 // 如果失败，尝试解析为向量列表
                 List<LanceDbVector> vectors = objectMapper.readValue(
                         responseText, new TypeReference<List<LanceDbVector>>() {});
                 return LanceDbQueryResponse.success(vectors);
             } catch (Exception e2) {
-                throw new LanceDbException("Failed to parse query response", e);
+                throw new LanceDbException("Failed to parse query response: incompatible format", e, "PARSE_FAILED", null);
             }
         }
     }
@@ -260,16 +247,9 @@ public class LanceDbClient {
                     .post(body)
                     .build();
 
-            try (Response response = httpClient.newCall(httpRequest).execute()) {
-                if (!response.isSuccessful()) {
-                    String responseBody = response.body() != null ? response.body().string() : "";
-                    String errorMsg = String.format("Insert failed with status %d: %s", 
-                            response.code(), responseBody);
-                    throw new LanceDbException(errorMsg, "INSERT_FAILED", response.code());
-                }
-            }
+            requestExecutor.executeNoResponse(httpRequest, "INSERT_FAILED");
         } catch (IOException e) {
-            throw new LanceDbException("Failed to execute insert", e);
+            throw new LanceDbException("Failed to serialize insert request", e, "INSERT_FAILED", null);
         }
     }
 
@@ -307,26 +287,15 @@ public class LanceDbClient {
     private void executeCreateTable(String tableName, int dimension) throws LanceDbException {
         String url = configuration.getFullServerUrl() + "/tables/" + tableName;
         
-        try {
-            String requestBody = String.format("{\"dimension\": %d}", dimension);
-            RequestBody body = RequestBody.create(requestBody, MediaType.get("application/json"));
-            
-            Request httpRequest = new Request.Builder()
-                    .url(url)
-                    .put(body)
-                    .build();
+        String requestBody = String.format("{\"dimension\": %d}", dimension);
+        RequestBody body = RequestBody.create(requestBody, MediaType.get("application/json"));
+        
+        Request httpRequest = new Request.Builder()
+                .url(url)
+                .put(body)
+                .build();
 
-            try (Response response = httpClient.newCall(httpRequest).execute()) {
-                if (!response.isSuccessful()) {
-                    String responseBody = response.body() != null ? response.body().string() : "";
-                    String errorMsg = String.format("Create table failed with status %d: %s", 
-                            response.code(), responseBody);
-                    throw new LanceDbException(errorMsg, "CREATE_TABLE_FAILED", response.code());
-                }
-            }
-        } catch (IOException e) {
-            throw new LanceDbException("Failed to create table", e);
-        }
+        requestExecutor.executeNoResponse(httpRequest, "CREATE_TABLE_FAILED");
     }
 
     /**
@@ -358,23 +327,12 @@ public class LanceDbClient {
     private void executeDropTable(String tableName) throws LanceDbException {
         String url = configuration.getFullServerUrl() + "/tables/" + tableName;
         
-        try {
-            Request httpRequest = new Request.Builder()
-                    .url(url)
-                    .delete()
-                    .build();
+        Request httpRequest = new Request.Builder()
+                .url(url)
+                .delete()
+                .build();
 
-            try (Response response = httpClient.newCall(httpRequest).execute()) {
-                if (!response.isSuccessful()) {
-                    String responseBody = response.body() != null ? response.body().string() : "";
-                    String errorMsg = String.format("Drop table failed with status %d: %s", 
-                            response.code(), responseBody);
-                    throw new LanceDbException(errorMsg, "DROP_TABLE_FAILED", response.code());
-                }
-            }
-        } catch (IOException e) {
-            throw new LanceDbException("Failed to drop table", e);
-        }
+        requestExecutor.executeNoResponse(httpRequest, "DROP_TABLE_FAILED");
     }
 
     /**
