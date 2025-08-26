@@ -52,6 +52,7 @@ import okhttp3.ResponseBody;
 import java.io.IOException;
 import java.util.UUID;
 
+import static com.alibaba.langengine.firecrawl.FireCrawlConfiguration.FIRE_CRAWL_API_KEY;
 import static com.alibaba.langengine.firecrawl.sdk.FireCrawlConstant.FIRE_CRAWL_BASE_URL;
 
 public class FireCrawlClient {
@@ -67,6 +68,10 @@ public class FireCrawlClient {
 		this.objectMapper = new ObjectMapper();
 		this.apiKey = apiKey;
 	}
+
+    public FireCrawlClient() {
+        this(FIRE_CRAWL_API_KEY);
+    }
 
 	/**
 	 * Scrape a URL using FireCrawl service
