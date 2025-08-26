@@ -19,7 +19,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.langengine.core.agent.AgentOutputParser;
 import com.alibaba.langengine.core.agent.structured.StructuredChatOutputParser;
 import com.alibaba.langengine.core.callback.ExecutionContext;
+import com.alibaba.langengine.core.config.LangEngineContext;
 import com.alibaba.langengine.core.config.LangEngineConfiguration;
+import com.alibaba.langengine.core.caches.BaseCache;
 import com.alibaba.langengine.core.model.fastchat.completion.chat.ChatCompletionRequest;
 import com.alibaba.langengine.core.model.fastchat.completion.chat.ChatMessage;
 import com.alibaba.langengine.core.model.fastchat.completion.chat.FunctionDefinition;
@@ -80,12 +82,24 @@ public abstract class BaseLLM<T extends ChatCompletionRequest> extends BaseLangu
                 }
                 llmResult = new LLMResult();
                 List<List<Generation>> generationsList = new ArrayList<>();
-                if (LangEngineConfiguration.CurrentCache != null) {
+                BaseCache cache = null;
+
+                // 优先使用上下文的 cache
+                LangEngineContext ctx = getContext();
+                if (ctx != null && ctx.getConfig() != null) {
+                    cache = ctx.getConfig().getCache();
+                }
+                // 回退到旧的静态全局
+                if (cache == null) {
+                    cache = LangEngineConfiguration.CurrentCache;
+                }
+
+                if (cache != null) {
                     for (int i = 0; i < prompts.size(); i++) {
                         String prompt = prompts.get(i);
-                        List<Generation> cacheVal = LangEngineConfiguration.CurrentCache.get(prompt, llmString);
+                        List<Generation> cacheVal = cache.get(prompt, llmString);
                         if (CollectionUtils.isEmpty(cacheVal)) {
-                            cacheVal = LangEngineConfiguration.CurrentCache.get(executionContext, prompt, llmString);
+                            cacheVal = cache.get(executionContext, prompt, llmString);
                         }
                         if (cacheVal != null) {
                             generationsList.add(cacheVal);
@@ -108,9 +122,9 @@ public abstract class BaseLLM<T extends ChatCompletionRequest> extends BaseLangu
                         generation.setText(responseContent);
                         generation.setGenerationInfo(LlmResultHolder.getResult());
 
-                        if (LangEngineConfiguration.CurrentCache != null) {
-                            LangEngineConfiguration.CurrentCache.update(prompt, llmString, generations);
-                            LangEngineConfiguration.CurrentCache.update(executionContext, prompt, llmString, generations);
+                        if (cache != null) {
+                            cache.update(prompt, llmString, generations);
+                            cache.update(executionContext, prompt, llmString, generations);
                         }
                     }
                     llmResult.setLlmOutput(LlmResultHolder.getResult());

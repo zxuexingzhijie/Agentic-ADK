@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.langengine.core.callback.BaseCallbackManager;
 import com.alibaba.langengine.core.callback.CallbackManager;
 import com.alibaba.langengine.core.callback.ExecutionContext;
+import com.alibaba.langengine.core.config.LangEngineContext;
 import com.alibaba.langengine.core.model.fastchat.completion.chat.FunctionDefinition;
 import com.alibaba.langengine.core.model.fastchat.completion.chat.FunctionParameter;
 import com.alibaba.langengine.core.runnables.RunnableStreamCallback;
@@ -29,6 +30,7 @@ import com.alibaba.langengine.core.runnables.RunnableConfig;
 import com.alibaba.langengine.core.runnables.RunnableHashMap;
 import com.alibaba.langengine.core.runnables.RunnableOutput;
 import com.alibaba.langengine.core.util.JacksonUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
@@ -56,14 +58,29 @@ public abstract class BaseTool extends Runnable<Object, RunnableOutput> {
     /**
      * callback manager
      */
-    private BaseCallbackManager callbackManager;
+	private BaseCallbackManager callbackManager;
 
-    public BaseCallbackManager getCallbackManager() {
-        if(callbackManager == null) {
-            callbackManager = LangEngineConfiguration.CALLBACK_MANAGER;
-        }
-        return callbackManager;
-    }
+	@JsonIgnore
+	private LangEngineContext context;
+
+	public LangEngineContext getContext() {
+		return context;
+	}
+
+	public void setContext(LangEngineContext context) {
+		this.context = context;
+	}
+
+	public BaseCallbackManager getCallbackManager() {
+		if(callbackManager == null) {
+			if (context != null && context.getConfig() != null && context.getConfig().getCallbackManager() != null) {
+				callbackManager = context.getConfig().getCallbackManager();
+			} else {
+				callbackManager = LangEngineConfiguration.CALLBACK_MANAGER;
+			}
+		}
+		return callbackManager;
+	}
 
     /**
      * 明确传达其用途的工具的唯一名称，英文key

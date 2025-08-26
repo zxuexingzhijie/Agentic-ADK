@@ -63,9 +63,9 @@
 		<module>ali-langengine-infrastructure/ali-langengine-docloader</module>
 		<module>ali-langengine-infrastructure/ali-langengine-tool</module>
 
-<!--		<module>ali-langengine-infrastructure/ali-langengine-mcp</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
-<!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
+		<!--		<module>ali-langengine-infrastructure/ali-langengine-mcp</module>-->
+		<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
+		<!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
 
 		<module>ali-langengine-infrastructure/ali-langengine-deepsearch</module>
 		<module>ali-langengine-infrastructure/ali-langengine-gpt</module>
@@ -100,25 +100,27 @@
 		<module>ali-langengine-community/ali-langengine-deepseek</module>
 		<module>ali-langengine-community/ali-langengine-openmanus</module>
 		<module>ali-langengine-community/ali-langengine-tablestore</module>
+        <module>ali-langengine-community/ali-langengine-jina</module>
 		<module>ali-langengine-community/ali-langengine-jsonrepair</module>
 		<module>ali-langengine-community/ali-langengine-tavily</module>
 		<module>ali-langengine-community/ali-langengine-weaviate</module>
 		<module>ali-langengine-community/ali-langengine-vespa</module>
 		<module>ali-langengine-community/ali-langengine-elasticsearch</module>
-    <module>ali-langengine-community/ali-langengine-serp</module>
+		<module>ali-langengine-community/ali-langengine-serp</module>
 		<module>ali-langengine-community/ali-langengine-pgvector</module>
 		<module>ali-langengine-community/ali-langengine-mongodb</module>
 		<module>ali-langengine-community/ali-langengine-aliyunaisearch</module>
 		<module>ali-langengine-community/ali-langengine-sinanews</module>
 		<module>ali-langengine-community/ali-langengine-weather</module>
-    <module>ali-langengine-community/ali-langengine-amap</module>
-    <module>ali-langengine-community/ali-langengine-baidumap</module>
-    <module>ali-langengine-community/ali-langengine-tencentmap</module>
+		<module>ali-langengine-community/ali-langengine-amap</module>
+		<module>ali-langengine-community/ali-langengine-baidumap</module>
+		<module>ali-langengine-community/ali-langengine-tencentmap</module>
 		<module>ali-langengine-community/ali-langengine-bravesearch</module>
 		<module>ali-langengine-community/ali-langengine-baidusearch</module>
 		<module>ali-langengine-community/ali-langengine-stackoverflow</module>
 		<module>ali-langengine-community/ali-langengine-baidu-translate</module>
 		<module>ali-langengine-community/ali-langengine-googletranslate</module>
+		<module>ali-langengine-community/ali-langengine-ollama</module>
 		<module>ali-langengine-community/ali-langengine-metaso</module>
 	</modules>
 	<dependencyManagement>

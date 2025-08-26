@@ -25,6 +25,7 @@ import com.alibaba.langengine.core.callback.BaseCallbackManager;
 import com.alibaba.langengine.core.callback.CallbackManager;
 import com.alibaba.langengine.core.callback.ExecutionContext;
 import com.alibaba.langengine.core.runnables.RunnableStreamCallback;
+import com.alibaba.langengine.core.config.LangEngineContext;
 import com.alibaba.langengine.core.config.LangEngineConfiguration;
 import com.alibaba.langengine.core.memory.BaseMemory;
 import com.alibaba.langengine.core.languagemodel.BaseLanguageModel;
@@ -75,9 +76,24 @@ public abstract class Chain extends Runnable<RunnableInput, RunnableOutput> {
     @JsonIgnore
     private BaseCallbackManager callbackManager;
 
+    @JsonIgnore
+    private LangEngineContext context;
+
+    public LangEngineContext getContext() {
+        return context;
+    }
+
+    public void setContext(LangEngineContext context) {
+        this.context = context;
+    }
+
     public BaseCallbackManager getCallbackManager() {
         if(callbackManager == null) {
-            callbackManager = LangEngineConfiguration.CALLBACK_MANAGER;
+            if (context != null && context.getConfig() != null && context.getConfig().getCallbackManager() != null) {
+                callbackManager = context.getConfig().getCallbackManager();
+            } else {
+                callbackManager = LangEngineConfiguration.CALLBACK_MANAGER;
+            }
         }
         return callbackManager;
     }
