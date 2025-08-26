@@ -26,12 +26,14 @@ import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.SearchRequest;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CrawlParamsPreviewResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.CreditUsageResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ExtractResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ExtractStatusResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.GetActiveCrawlsResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.MapResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.SearchResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.TokenUsageResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -286,6 +288,30 @@ public class FireCrawlClientTest {
 		Assertions.assertTrue(statusResponse.getSuccess());
 		Assertions.assertNotNull(statusResponse.getStatus());
 		System.out.println("Extract job status: " + statusResponse.getStatus());
+	}
+
+	@Test
+	public void testGetTokenUsage() {
+		TokenUsageResponse response = client.getTokenUsage();
+		Assertions.assertNotNull(response);
+		// If API key is valid, success should be true
+		if (response.getSuccess() != null && response.getSuccess()) {
+			Assertions.assertNotNull(response.getData());
+			Assertions.assertNotNull(response.getData().getRemainingTokens());
+			Assertions.assertTrue(response.getData().getRemainingTokens() >= 0);
+		}
+	}
+
+	@Test
+	public void testGetCreditUsage() {
+		CreditUsageResponse response = client.getCreditUsage();
+		Assertions.assertNotNull(response);
+		// If API key is valid, success should be true
+		if (response.getSuccess() != null && response.getSuccess()) {
+			Assertions.assertNotNull(response.getData());
+			Assertions.assertNotNull(response.getData().getRemainingCredits());
+			Assertions.assertTrue(response.getData().getRemainingCredits() >= 0);
+		}
 	}
 
 }

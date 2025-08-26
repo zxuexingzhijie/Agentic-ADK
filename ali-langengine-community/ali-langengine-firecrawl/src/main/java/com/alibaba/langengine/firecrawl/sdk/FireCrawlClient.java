@@ -32,6 +32,7 @@ import com.alibaba.langengine.firecrawl.sdk.response.CrawlErrorsResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CrawlParamsPreviewResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CrawlResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CrawlStatusResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.CreditUsageResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ErrorResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ExtractResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ExtractStatusResponse;
@@ -39,6 +40,7 @@ import com.alibaba.langengine.firecrawl.sdk.response.GetActiveCrawlsResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.MapResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.SearchResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.TokenUsageResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -514,6 +516,62 @@ public class FireCrawlClient {
 		}
 		catch (IOException e) {
 			throw new FireCrawlException("Failed to get extract status", e);
+		}
+	}
+
+	/**
+	 * Get token usage for the team
+	 * @return TokenUsageResponse containing remaining tokens
+	 * @throws FireCrawlException if API call fails
+	 */
+	public TokenUsageResponse getTokenUsage() throws FireCrawlException {
+		Request request = new Request.Builder().url(FIRE_CRAWL_BASE_URL + "/team/token-usage")
+			.addHeader("Authorization", "Bearer " + apiKey)
+			.get()
+			.build();
+
+		try (Response response = client.newCall(request).execute()) {
+			if (!response.isSuccessful()) {
+				throw new FireCrawlException("API request failed with code: " + response.code());
+			}
+
+			ResponseBody responseBody = response.body();
+			if (responseBody == null) {
+				throw new FireCrawlException("Empty response body");
+			}
+
+			return objectMapper.readValue(responseBody.string(), TokenUsageResponse.class);
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Failed to get token usage", e);
+		}
+	}
+
+	/**
+	 * Get credit usage for the team
+	 * @return CreditUsageResponse containing remaining credits
+	 * @throws FireCrawlException if API call fails
+	 */
+	public CreditUsageResponse getCreditUsage() throws FireCrawlException {
+		Request request = new Request.Builder().url(FIRE_CRAWL_BASE_URL + "/team/credit-usage")
+			.addHeader("Authorization", "Bearer " + apiKey)
+			.get()
+			.build();
+
+		try (Response response = client.newCall(request).execute()) {
+			if (!response.isSuccessful()) {
+				throw new FireCrawlException("API request failed with code: " + response.code());
+			}
+
+			ResponseBody responseBody = response.body();
+			if (responseBody == null) {
+				throw new FireCrawlException("Empty response body");
+			}
+
+			return objectMapper.readValue(responseBody.string(), CreditUsageResponse.class);
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Failed to get credit usage", e);
 		}
 	}
 
