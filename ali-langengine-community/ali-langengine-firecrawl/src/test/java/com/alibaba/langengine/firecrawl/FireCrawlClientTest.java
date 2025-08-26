@@ -19,9 +19,11 @@ package com.alibaba.langengine.firecrawl;
 import com.alibaba.langengine.firecrawl.sdk.FireCrawlClient;
 import com.alibaba.langengine.firecrawl.sdk.FireCrawlException;
 import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
+import com.alibaba.langengine.firecrawl.sdk.request.MapRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.SearchRequest;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.MapResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.SearchResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -208,6 +210,23 @@ public class FireCrawlClientTest {
         assertTrue("Request should be successful", response.getSuccess());
         assertNotNull("Data should not be null", response.getData());
         assertNotNull("Web results should not be null", response.getData().getWeb());
+    }
+
+    @Test
+    public void testMap() throws FireCrawlException {
+        MapRequest request = new MapRequest();
+        request.setUrl("https://firecrawl.dev");
+        request.setLimit(10);
+
+        MapResponse response = client.map(request);
+
+        assertNotNull("Response should not be null", response);
+        assertTrue("Request should be successful", response.getSuccess());
+        assertNotNull("Links should not be null", response.getLinks());
+        assertFalse("Links should not be empty", response.getLinks().isEmpty());
+
+        MapResponse.Link firstLink = response.getLinks().get(0);
+        assertNotNull("URL should not be null", firstLink.getUrl());
     }
 
 }

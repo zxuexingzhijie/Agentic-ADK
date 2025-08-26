@@ -17,6 +17,7 @@
 package com.alibaba.langengine.firecrawl.sdk;
 
 import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
+import com.alibaba.langengine.firecrawl.sdk.request.MapRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.SearchRequest;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeErrorsResponse;
@@ -24,6 +25,7 @@ import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeStatusResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CancelBatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ErrorResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.MapResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.SearchResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -249,6 +251,41 @@ public class FireCrawlClient {
             }
         } catch (IOException e) {
             throw new FireCrawlException("Error executing search request", e);
+        }
+    }
+
+    /**
+     * Map endpoint - discover URLs from a website
+     *
+     * @param request The map request parameters
+     * @return MapResponse containing discovered URLs
+     * @throws FireCrawlException if the request fails
+     */
+    public MapResponse map(MapRequest request) throws FireCrawlException {
+        try {
+            String json = objectMapper.writeValueAsString(request);
+            RequestBody body = RequestBody.create(json, MediaType.get("application/json"));
+
+            Request httpRequest = new Request.Builder()
+                    .url(FIRE_CRAWL_BASE_URL + "/map")
+                    .post(body)
+                    .addHeader("Authorization", "Bearer " + apiKey)
+                    .build();
+
+            try (Response response = client.newCall(httpRequest).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new FireCrawlException("Request failed with code: " + response.code());
+                }
+
+                ResponseBody responseBody = response.body();
+                if (responseBody == null) {
+                    throw new FireCrawlException("Empty response body");
+                }
+
+                return objectMapper.readValue(responseBody.string(), MapResponse.class);
+            }
+        } catch (IOException e) {
+            throw new FireCrawlException("Error executing map request", e);
         }
     }
 
