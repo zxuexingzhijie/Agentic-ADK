@@ -20,17 +20,21 @@ import com.alibaba.langengine.firecrawl.sdk.FireCrawlClient;
 import com.alibaba.langengine.firecrawl.sdk.FireCrawlException;
 import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.CrawlParamsPreviewRequest;
+import com.alibaba.langengine.firecrawl.sdk.request.ExtractRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.MapRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.SearchRequest;
 import com.alibaba.langengine.firecrawl.sdk.response.BatchScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CrawlParamsPreviewResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.ExtractResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.ExtractStatusResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.GetActiveCrawlsResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.MapResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.SearchResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
@@ -247,6 +251,41 @@ public class FireCrawlClientTest {
 		Assertions.assertNotNull(response);
 		Assertions.assertEquals(true, response.getSuccess());
 		Assertions.assertNotNull(response.getData());
+	}
+
+	@Test
+	public void testExtract() throws FireCrawlException {
+		ExtractRequest request = new ExtractRequest();
+		request.setUrls(Arrays.asList("https://firecrawl.dev"));
+		request.setPrompt("Extract the title and description of the website");
+
+		ExtractResponse response = client.extract(request);
+		Assertions.assertNotNull(response);
+		Assertions.assertTrue(response.getSuccess());
+		Assertions.assertNotNull(response.getId());
+		System.out.println("Extract job ID: " + response.getId());
+	}
+
+	@Test
+	@Disabled("Wait for a long time")
+	public void testGetExtractStatus() throws FireCrawlException, InterruptedException {
+		// First create an extract job
+		ExtractRequest request = new ExtractRequest();
+		request.setUrls(Arrays.asList("https://firecrawl.dev"));
+		request.setPrompt("Extract the title and description of the website");
+
+		ExtractResponse response = client.extract(request);
+		Assertions.assertNotNull(response.getId());
+
+		// Wait a bit for processing
+		Thread.sleep(10000);
+
+		// Check the status
+		ExtractStatusResponse statusResponse = client.getExtractStatus(response.getId());
+		Assertions.assertNotNull(statusResponse);
+		Assertions.assertTrue(statusResponse.getSuccess());
+		Assertions.assertNotNull(statusResponse.getStatus());
+		System.out.println("Extract job status: " + statusResponse.getStatus());
 	}
 
 }

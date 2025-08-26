@@ -19,6 +19,7 @@ package com.alibaba.langengine.firecrawl.sdk;
 import com.alibaba.langengine.firecrawl.sdk.request.BatchScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.CrawlParamsPreviewRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.CrawlRequest;
+import com.alibaba.langengine.firecrawl.sdk.request.ExtractRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.MapRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.ScrapeRequest;
 import com.alibaba.langengine.firecrawl.sdk.request.SearchRequest;
@@ -32,6 +33,8 @@ import com.alibaba.langengine.firecrawl.sdk.response.CrawlParamsPreviewResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CrawlResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.CrawlStatusResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ErrorResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.ExtractResponse;
+import com.alibaba.langengine.firecrawl.sdk.response.ExtractStatusResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.GetActiveCrawlsResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.MapResponse;
 import com.alibaba.langengine.firecrawl.sdk.response.ScrapeResponse;
@@ -445,6 +448,72 @@ public class FireCrawlClient {
 		}
 		catch (IOException e) {
 			throw new FireCrawlException("Error previewing crawl params", e);
+		}
+	}
+
+	/**
+	 * Extract data from URLs
+	 * @param request The extract request parameters
+	 * @return Extract response with job ID
+	 * @throws FireCrawlException if the request fails
+	 */
+	public ExtractResponse extract(ExtractRequest request) throws FireCrawlException {
+		try {
+			String url = FIRE_CRAWL_BASE_URL + "/extract";
+			String json = objectMapper.writeValueAsString(request);
+			RequestBody body = RequestBody.create(json, MediaType.get("application/json"));
+			Request httpRequest = new Request.Builder().url(url)
+				.post(body)
+				.addHeader("Authorization", "Bearer " + apiKey)
+				.build();
+
+			try (Response response = client.newCall(httpRequest).execute()) {
+				if (!response.isSuccessful()) {
+					throw new FireCrawlException("Unexpected response code: " + response);
+				}
+
+				ResponseBody responseBody = response.body();
+				if (responseBody == null) {
+					throw new FireCrawlException("Empty response body");
+				}
+
+				return objectMapper.readValue(responseBody.string(), ExtractResponse.class);
+			}
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Failed to extract data", e);
+		}
+	}
+
+	/**
+	 * Get the status of an extract job
+	 * @param id The ID of the extract job
+	 * @return Extract status response
+	 * @throws FireCrawlException if the request fails
+	 */
+	public ExtractStatusResponse getExtractStatus(String id) throws FireCrawlException {
+		try {
+			String url = FIRE_CRAWL_BASE_URL + "/extract/" + id;
+			Request httpRequest = new Request.Builder().url(url)
+				.get()
+				.addHeader("Authorization", "Bearer " + apiKey)
+				.build();
+
+			try (Response response = client.newCall(httpRequest).execute()) {
+				if (!response.isSuccessful()) {
+					throw new FireCrawlException("Unexpected response code: " + response);
+				}
+
+				ResponseBody responseBody = response.body();
+				if (responseBody == null) {
+					throw new FireCrawlException("Empty response body");
+				}
+
+				return objectMapper.readValue(responseBody.string(), ExtractStatusResponse.class);
+			}
+		}
+		catch (IOException e) {
+			throw new FireCrawlException("Failed to get extract status", e);
 		}
 	}
 
