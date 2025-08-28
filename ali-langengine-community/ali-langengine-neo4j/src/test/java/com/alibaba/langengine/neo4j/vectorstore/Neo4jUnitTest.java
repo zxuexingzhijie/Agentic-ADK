@@ -46,7 +46,7 @@ public class Neo4jUnitTest {
         Neo4jParam.InitParam initParam = param.getInitParam();
         assertNotNull(initParam);
         assertEquals(1536, initParam.getVectorDimensions());
-        assertEquals("cosine", initParam.getSimilarityFunction());
+        assertEquals(Neo4jSimilarityFunction.COSINE, initParam.getSimilarityFunction());
         assertEquals(16, initParam.getHnswM());
         assertEquals(200, initParam.getHnswEfConstruction());
         assertTrue(initParam.isAutoCreateIndex());
@@ -74,7 +74,7 @@ public class Neo4jUnitTest {
         // 自定义初始化参数
         Neo4jParam.InitParam initParam = param.getInitParam();
         initParam.setVectorDimensions(768);
-        initParam.setSimilarityFunction("euclidean");
+        initParam.setSimilarityFunction(Neo4jSimilarityFunction.EUCLIDEAN);
         initParam.setHnswM(32);
         initParam.setHnswEfConstruction(400);
         initParam.setAutoCreateIndex(false);
@@ -90,7 +90,7 @@ public class Neo4jUnitTest {
         assertEquals("custom_metadata", param.getFieldNameMetadata());
         
         assertEquals(768, initParam.getVectorDimensions());
-        assertEquals("euclidean", initParam.getSimilarityFunction());
+        assertEquals(Neo4jSimilarityFunction.EUCLIDEAN, initParam.getSimilarityFunction());
         assertEquals(32, initParam.getHnswM());
         assertEquals(400, initParam.getHnswEfConstruction());
         assertFalse(initParam.isAutoCreateIndex());
@@ -268,11 +268,11 @@ public class Neo4jUnitTest {
         assertEquals(10000, initParam.getBatchSize());
         
         // 测试相似性函数
-        initParam.setSimilarityFunction("euclidean");
-        assertEquals("euclidean", initParam.getSimilarityFunction());
-        
-        initParam.setSimilarityFunction("cosine");
-        assertEquals("cosine", initParam.getSimilarityFunction());
+        initParam.setSimilarityFunction(Neo4jSimilarityFunction.EUCLIDEAN);
+        assertEquals(Neo4jSimilarityFunction.EUCLIDEAN, initParam.getSimilarityFunction());
+
+        initParam.setSimilarityFunction(Neo4jSimilarityFunction.COSINE);
+        assertEquals(Neo4jSimilarityFunction.COSINE, initParam.getSimilarityFunction());
         
         System.out.println("Init parameter edge cases test: SUCCESS");
     }

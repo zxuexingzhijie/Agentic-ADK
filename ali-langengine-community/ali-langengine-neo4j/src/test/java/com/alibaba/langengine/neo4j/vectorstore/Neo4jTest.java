@@ -387,7 +387,7 @@ public class Neo4jTest {
         customParam.setNodeLabel("CustomDocument");
         customParam.setVectorIndexName("custom_vector_index");
         customParam.getInitParam().setVectorDimensions(768);
-        customParam.getInitParam().setSimilarityFunction("euclidean");
+        customParam.getInitParam().setSimilarityFunction(Neo4jSimilarityFunction.EUCLIDEAN);
 
         // 使用默认的本地连接进行测试
         String uri = "bolt://localhost:7687";

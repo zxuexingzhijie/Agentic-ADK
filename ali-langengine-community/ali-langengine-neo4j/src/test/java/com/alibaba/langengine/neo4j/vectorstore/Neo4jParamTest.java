@@ -58,7 +58,7 @@ public class Neo4jParamTest {
         Neo4jParam.InitParam initParam = new Neo4jParam.InitParam();
         
         assertEquals(1536, initParam.getVectorDimensions());
-        assertEquals("cosine", initParam.getSimilarityFunction());
+        assertEquals(Neo4jSimilarityFunction.COSINE, initParam.getSimilarityFunction());
         assertEquals(16, initParam.getHnswM());
         assertEquals(200, initParam.getHnswEfConstruction());
         assertTrue(initParam.isAutoCreateIndex());
@@ -113,7 +113,7 @@ public class Neo4jParamTest {
         
         // 自定义初始化参数
         initParam.setVectorDimensions(768);
-        initParam.setSimilarityFunction("euclidean");
+        initParam.setSimilarityFunction(Neo4jSimilarityFunction.EUCLIDEAN);
         initParam.setHnswM(32);
         initParam.setHnswEfConstruction(400);
         initParam.setAutoCreateIndex(false);
@@ -123,7 +123,7 @@ public class Neo4jParamTest {
         initParam.setMaxConnectionPoolSize(200);
         
         assertEquals(768, initParam.getVectorDimensions());
-        assertEquals("euclidean", initParam.getSimilarityFunction());
+        assertEquals(Neo4jSimilarityFunction.EUCLIDEAN, initParam.getSimilarityFunction());
         assertEquals(32, initParam.getHnswM());
         assertEquals(400, initParam.getHnswEfConstruction());
         assertFalse(initParam.isAutoCreateIndex());
@@ -156,8 +156,12 @@ public class Neo4jParamTest {
         assertEquals(10000, initParam.getBatchSize());
         
         // 测试相似性函数选项
-        String[] validSimilarityFunctions = {"cosine", "euclidean", "dot"};
-        for (String func : validSimilarityFunctions) {
+        Neo4jSimilarityFunction[] validSimilarityFunctions = {
+            Neo4jSimilarityFunction.COSINE,
+            Neo4jSimilarityFunction.EUCLIDEAN,
+            Neo4jSimilarityFunction.DOT
+        };
+        for (Neo4jSimilarityFunction func : validSimilarityFunctions) {
             initParam.setSimilarityFunction(func);
             assertEquals(func, initParam.getSimilarityFunction());
         }
@@ -325,6 +329,44 @@ public class Neo4jParamTest {
         System.out.println("Parameter inheritance and composition test: SUCCESS");
     }
 
+    @Test
+    @Order(11)
+    public void test_similarity_function_enum() {
+        System.out.println("=== Testing Similarity Function Enum ===");
+
+        // 测试枚举值
+        assertEquals("cosine", Neo4jSimilarityFunction.COSINE.getValue());
+        assertEquals("euclidean", Neo4jSimilarityFunction.EUCLIDEAN.getValue());
+        assertEquals("dot", Neo4jSimilarityFunction.DOT.getValue());
+
+        // 测试fromValue方法
+        assertEquals(Neo4jSimilarityFunction.COSINE, Neo4jSimilarityFunction.fromValue("cosine"));
+        assertEquals(Neo4jSimilarityFunction.EUCLIDEAN, Neo4jSimilarityFunction.fromValue("euclidean"));
+        assertEquals(Neo4jSimilarityFunction.DOT, Neo4jSimilarityFunction.fromValue("dot"));
+
+        // 测试大小写不敏感
+        assertEquals(Neo4jSimilarityFunction.COSINE, Neo4jSimilarityFunction.fromValue("COSINE"));
+        assertEquals(Neo4jSimilarityFunction.EUCLIDEAN, Neo4jSimilarityFunction.fromValue("Euclidean"));
+
+        // 测试null值返回默认值
+        assertEquals(Neo4jSimilarityFunction.COSINE, Neo4jSimilarityFunction.fromValue(null));
+
+        // 测试无效值抛出异常
+        try {
+            Neo4jSimilarityFunction.fromValue("invalid");
+            fail("Should throw IllegalArgumentException for invalid similarity function");
+        } catch (IllegalArgumentException e) {
+            assertTrue(e.getMessage().contains("Unsupported similarity function"));
+        }
+
+        // 测试toString方法
+        assertEquals("cosine", Neo4jSimilarityFunction.COSINE.toString());
+        assertEquals("euclidean", Neo4jSimilarityFunction.EUCLIDEAN.toString());
+        assertEquals("dot", Neo4jSimilarityFunction.DOT.toString());
+
+        System.out.println("Similarity function enum test: SUCCESS");
+    }
+
     /**
      * 手动测试方法 - 用于验证参数类的基本功能
      */
@@ -344,6 +386,7 @@ public class Neo4jParamTest {
             test.test_document_list_operations();
             test.test_complex_metadata_handling();
             test.test_parameter_inheritance_and_composition();
+            test.test_similarity_function_enum();
             
             System.out.println("\n=== All Parameter Tests Passed ===");
             

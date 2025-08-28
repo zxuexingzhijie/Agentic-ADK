@@ -96,16 +96,35 @@ public class Neo4jService implements AutoCloseable {
             String nodeLabel = neo4jParam.getNodeLabel();
             String vectorIndexName = neo4jParam.getVectorIndexName();
             String embeddingField = neo4jParam.getFieldNameEmbedding();
-            
+
             Neo4jParam.InitParam initParam = neo4jParam.getInitParam();
-            
+
             // 检查索引是否已存在
             String checkIndexQuery = "SHOW INDEXES YIELD name WHERE name = $indexName RETURN count(*) as count";
             Result result = session.run(checkIndexQuery, Values.parameters("indexName", vectorIndexName));
-            
+
             if (result.single().get("count").asInt() > 0) {
                 log.info("Vector index {} already exists", vectorIndexName);
                 return;
+            }
+
+            // 推断向量维度（如果未正确配置）
+            int vectorDimensions = initParam.getVectorDimensions();
+            if (vectorDimensions <= 0) {
+                log.warn("Invalid vector dimensions: {}, attempting to infer from embedding model", vectorDimensions);
+                try {
+                    List<String> testEmbedding = embedding.embedQuery("test", 1);
+                    if (!testEmbedding.isEmpty() && testEmbedding.get(0).startsWith("[")) {
+                        List<Float> testVector = com.alibaba.fastjson.JSON.parseArray(testEmbedding.get(0), Float.class);
+                        vectorDimensions = testVector.size();
+                        initParam.setVectorDimensions(vectorDimensions);
+                        log.info("Inferred vector dimensions from embedding model: {}", vectorDimensions);
+                    }
+                } catch (Exception e) {
+                    log.warn("Failed to infer vector dimensions from embedding model, using default: 1536", e);
+                    vectorDimensions = 1536;
+                    initParam.setVectorDimensions(vectorDimensions);
+                }
             }
 
             // 创建向量索引
@@ -116,12 +135,13 @@ public class Neo4jService implements AutoCloseable {
                 "`vector.similarity_function`: '%s'" +
                 "}}",
                 vectorIndexName, nodeLabel, embeddingField,
-                initParam.getVectorDimensions(), initParam.getSimilarityFunction()
+                vectorDimensions, initParam.getSimilarityFunction().getValue()
             );
-            
+
             session.run(createIndexQuery);
-            log.info("Created vector index: {}", vectorIndexName);
-            
+            log.info("Created vector index: {} with dimensions: {}, similarity: {}",
+                vectorIndexName, vectorDimensions, initParam.getSimilarityFunction().getValue());
+
         } catch (Exception e) {
             log.error("Failed to create vector index", e);
             throw new RuntimeException("Failed to create vector index", e);

@@ -75,6 +75,15 @@ public class Neo4j extends VectorStore {
 
     /**
      * 构造函数 - 完整参数
+     *
+     * 注意：硬编码的默认值（如密码"password"）仅用于本地开发和测试环境。
+     * 生产环境中必须通过环境变量或配置文件提供正确的连接参数。
+     *
+     * @param uri Neo4j连接URI，如果为空则使用配置文件中的值或默认值
+     * @param username 用户名，如果为空则使用配置文件中的值或默认值
+     * @param password 密码，如果为空则使用配置文件中的值。生产环境中不应使用默认密码
+     * @param database 数据库名称，如果为空则使用配置文件中的值或默认值
+     * @param neo4jParam Neo4j参数配置，如果为空则使用默认配置
      */
     public Neo4j(String uri, String username, String password, String database, Neo4jParam neo4jParam) {
         // 使用配置文件中的默认值
@@ -82,7 +91,7 @@ public class Neo4j extends VectorStore {
         String effectiveUsername = StringUtils.defaultIfEmpty(username, NEO4J_USERNAME);
         String effectivePassword = StringUtils.defaultIfEmpty(password, NEO4J_PASSWORD);
         String effectiveDatabase = StringUtils.defaultIfEmpty(database, NEO4J_DATABASE);
-        
+
         // 设置默认值
         if (StringUtils.isEmpty(effectiveUri)) {
             effectiveUri = "bolt://localhost:7687";
@@ -91,6 +100,9 @@ public class Neo4j extends VectorStore {
             effectiveUsername = "neo4j";
         }
         if (StringUtils.isEmpty(effectivePassword)) {
+            // 在生产环境中，应该通过环境变量或配置文件提供密码
+            log.warn("Using default password for Neo4j connection. This should only be used for local development/testing. " +
+                    "Please set neo4j_password in configuration or environment variables for production use.");
             effectivePassword = "password";
         }
         if (StringUtils.isEmpty(effectiveDatabase)) {
@@ -99,7 +111,7 @@ public class Neo4j extends VectorStore {
 
         this.neo4jParam = neo4jParam != null ? neo4jParam : new Neo4jParam();
         this.neo4jService = new Neo4jService(effectiveUri, effectiveUsername, effectivePassword, effectiveDatabase, this.neo4jParam);
-        
+
         log.info("Neo4j Vector Store initialized with URI: {}, Database: {}", effectiveUri, effectiveDatabase);
     }
 

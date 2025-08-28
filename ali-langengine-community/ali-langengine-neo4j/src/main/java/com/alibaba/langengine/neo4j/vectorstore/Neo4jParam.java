@@ -75,17 +75,19 @@ public class Neo4jParam {
         private int vectorDimensions = 1536;
 
         /**
-         * 相似性度量方式 (cosine, euclidean)
+         * 相似性度量方式
          */
-        private String similarityFunction = "cosine";
+        private Neo4jSimilarityFunction similarityFunction = Neo4jSimilarityFunction.COSINE;
 
         /**
          * HNSW索引参数 - M值（每个节点的最大连接数）
+         * 注意：此参数为Neo4j GDS库预留，原生向量索引暂不支持
          */
         private int hnswM = 16;
 
         /**
          * HNSW索引参数 - efConstruction值（构建时的搜索候选数）
+         * 注意：此参数为Neo4j GDS库预留，原生向量索引暂不支持
          */
         private int hnswEfConstruction = 200;
 

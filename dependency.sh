@@ -1,1 +1,6 @@
-mvn clean dependency:tree > tree.txt
+#!/bin/bash
+set -e
+
+cd "$(dirname "$0")"
+
+mvn dependency:tree
