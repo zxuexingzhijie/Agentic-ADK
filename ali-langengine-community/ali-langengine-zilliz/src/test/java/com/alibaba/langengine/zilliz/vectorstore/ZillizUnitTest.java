@@ -50,7 +50,7 @@ public class ZillizUnitTest {
         assertEquals(8192, initParam.getFieldPageContentMaxLength());
         assertEquals(1536, initParam.getFieldEmbeddingsDimension());
         assertEquals(2, initParam.getShardsNum());
-        assertEquals("Bounded", initParam.getConsistencyLevel());
+        assertEquals(io.milvus.common.clientenum.ConsistencyLevelEnum.BOUNDED, initParam.getConsistencyLevel());
     }
 
     @Test

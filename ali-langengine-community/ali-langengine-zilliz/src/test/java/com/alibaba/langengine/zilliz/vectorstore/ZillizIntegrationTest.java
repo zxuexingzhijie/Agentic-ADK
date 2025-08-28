@@ -23,6 +23,8 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ZillizIntegrationTest {
 
@@ -50,6 +52,15 @@ public class ZillizIntegrationTest {
             
             // Perform similarity search
             List<Document> results = zilliz.similaritySearch("AI and machine learning", 3);
+            
+            // More specific assertions
+            assertNotNull(results);
+            assertTrue(results.size() <= 3);
+            for (Document doc : results) {
+                assertNotNull(doc.getPageContent());
+                assertNotNull(doc.getScore());
+                assertTrue(doc.getScore() >= 0);
+            }
             
             System.out.println("Search results:");
             for (Document doc : results) {

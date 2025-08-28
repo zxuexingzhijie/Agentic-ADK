@@ -45,7 +45,7 @@ public class ZillizParamTest {
         assertEquals(2, initParam.getShardsNum());
         assertEquals(IndexType.AUTOINDEX, initParam.getIndexEmbeddingsIndexType());
         assertEquals(MetricType.COSINE, initParam.getIndexEmbeddingsMetricType());
-        assertEquals("Bounded", initParam.getConsistencyLevel());
+        assertEquals(io.milvus.common.clientenum.ConsistencyLevelEnum.BOUNDED, initParam.getConsistencyLevel());
         assertNotNull(initParam.getIndexEmbeddingsExtraParam());
     }
 
@@ -69,12 +69,12 @@ public class ZillizParamTest {
         initParam.setFieldEmbeddingsDimension(768);
         initParam.setFieldPageContentMaxLength(4096);
         initParam.setShardsNum(4);
-        initParam.setConsistencyLevel("Strong");
+        initParam.setConsistencyLevel(io.milvus.common.clientenum.ConsistencyLevelEnum.STRONG);
         
         assertEquals(768, initParam.getFieldEmbeddingsDimension());
         assertEquals(4096, initParam.getFieldPageContentMaxLength());
         assertEquals(4, initParam.getShardsNum());
-        assertEquals("Strong", initParam.getConsistencyLevel());
+        assertEquals(io.milvus.common.clientenum.ConsistencyLevelEnum.STRONG, initParam.getConsistencyLevel());
     }
 
     @Test

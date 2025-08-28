@@ -38,10 +38,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 @Slf4j
 public class ZillizService {
+
+    private static final int DEFAULT_VARCHAR_MAX_LENGTH = 512;
 
     private final MilvusServiceClient milvusClient;
     private final String collectionName;
@@ -99,7 +102,7 @@ public class ZillizService {
         fields.add(FieldType.newBuilder()
                 .withName(zillizParam.getFieldNameUniqueId())
                 .withDataType(DataType.VarChar)
-                .withMaxLength(512)
+                .withMaxLength(DEFAULT_VARCHAR_MAX_LENGTH)
                 .withPrimaryKey(true)
                 .withAutoID(false)
                 .build());
@@ -123,7 +126,7 @@ public class ZillizService {
                 .withDescription("Zilliz Cloud collection for LangEngine")
                 .withShardsNum(zillizParam.getInitParam().getShardsNum())
                 .withFieldTypes(fields)
-                .withConsistencyLevel(ConsistencyLevelEnum.valueOf(zillizParam.getInitParam().getConsistencyLevel()))
+                .withConsistencyLevel(zillizParam.getInitParam().getConsistencyLevel())
                 .build();
 
         R<RpcStatus> response = milvusClient.createCollection(param);
@@ -171,7 +174,7 @@ public class ZillizService {
         for (Document document : documents) {
             String id = StringUtils.isNotEmpty(document.getUniqueId()) ? 
                     document.getUniqueId() : 
-                    String.valueOf(System.currentTimeMillis() + Math.random());
+                    UUID.randomUUID().toString();
             
             ids.add(id);
             

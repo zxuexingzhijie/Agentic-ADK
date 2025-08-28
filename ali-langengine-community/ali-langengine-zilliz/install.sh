@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Zilliz Cloud install script
 echo "Installing Zilliz Cloud module..."

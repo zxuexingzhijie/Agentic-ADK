@@ -18,6 +18,7 @@ package com.alibaba.langengine.zilliz.vectorstore;
 import com.alibaba.fastjson.JSON;
 import io.milvus.param.IndexType;
 import io.milvus.param.MetricType;
+import io.milvus.common.clientenum.ConsistencyLevelEnum;
 import lombok.Data;
 
 import java.util.Map;
@@ -92,7 +93,7 @@ public class ZillizParam {
         /**
          * Consistency level for Zilliz Cloud
          */
-        private String consistencyLevel = "Bounded";
+        private ConsistencyLevelEnum consistencyLevel = ConsistencyLevelEnum.BOUNDED;
 
     }
 
