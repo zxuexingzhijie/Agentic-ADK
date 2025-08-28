@@ -23,16 +23,7 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import java.util.List;
 
-/**
- * Zilliz integration test - requires actual Zilliz Cloud credentials
- * 
- * To run this test, set the following environment variables:
- * - ZILLIZ_CLUSTER_ENDPOINT: Your Zilliz Cloud cluster endpoint
- * - ZILLIZ_API_KEY: Your Zilliz Cloud API key
- * - ZILLIZ_DATABASE_NAME: Your database name (optional, defaults to "default")
- *
- * @author xiaoxuan.lp
- */
+
 public class ZillizIntegrationTest {
 
     @Test

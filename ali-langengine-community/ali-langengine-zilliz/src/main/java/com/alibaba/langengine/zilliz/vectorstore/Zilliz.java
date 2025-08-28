@@ -29,11 +29,7 @@ import java.util.List;
 
 import static com.alibaba.langengine.zilliz.ZillizConfiguration.*;
 
-/**
- * Zilliz Cloud vector store implementation
- *
- * @author xiaoxuan.lp
- */
+
 @Slf4j
 @Data
 @EqualsAndHashCode(callSuper = false)

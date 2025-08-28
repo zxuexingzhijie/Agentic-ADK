@@ -39,11 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Zilliz Cloud service implementation
- *
- * @author xiaoxuan.lp
- */
+
 @Slf4j
 public class ZillizService {
 

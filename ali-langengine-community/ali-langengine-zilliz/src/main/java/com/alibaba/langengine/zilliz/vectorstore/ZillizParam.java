@@ -22,11 +22,7 @@ import lombok.Data;
 
 import java.util.Map;
 
-/**
- * Zilliz Cloud parameters
- *
- * @author xiaoxuan.lp
- */
+
 @Data
 public class ZillizParam {
 

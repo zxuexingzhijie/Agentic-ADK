@@ -17,11 +17,7 @@ package com.alibaba.langengine.zilliz;
 
 import com.alibaba.langengine.core.util.WorkPropertiesUtils;
 
-/**
- * Zilliz Cloud configuration
- *
- * @author xiaoxuan.lp
- */
+
 public class ZillizConfiguration {
 
     /**

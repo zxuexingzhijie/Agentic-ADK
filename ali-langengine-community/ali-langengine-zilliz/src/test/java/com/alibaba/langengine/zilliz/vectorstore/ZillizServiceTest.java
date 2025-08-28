@@ -27,11 +27,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * ZillizService test
- *
- * @author xiaoxuan.lp
- */
+
 public class ZillizServiceTest {
 
     private ZillizService zillizService;

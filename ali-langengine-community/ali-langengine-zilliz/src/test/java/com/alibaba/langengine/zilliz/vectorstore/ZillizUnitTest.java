@@ -19,11 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests that don't require configuration
- *
- * @author xiaoxuan.lp
- */
+
 public class ZillizUnitTest {
 
     @Test
