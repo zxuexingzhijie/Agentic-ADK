@@ -154,7 +154,7 @@ public class GoogleClient {
             // 执行HTTP请求
             Request httpRequest = new Request.Builder()
                     .url(searchUrl)
-                    .userAgent(userAgent)
+                    .header("User-Agent", userAgent)
                     .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
                     .header("Accept-Language", language + "," + language + "-" + country + ";q=0.9,en;q=0.8")
                     .header("Accept-Encoding", "gzip, deflate, br")
