@@ -122,6 +122,7 @@
 		<module>ali-langengine-community/ali-langengine-stackoverflow</module>
 		<module>ali-langengine-community/ali-langengine-baidu-translate</module>
 		<module>ali-langengine-community/ali-langengine-googletranslate</module>
+		<module>ali-langengine-community/ali-langengine-zilliz</module>
 		<module>ali-langengine-community/ali-langengine-ollama</module>
 		<module>ali-langengine-community/ali-langengine-tusharestock</module>
 		<module>ali-langengine-community/ali-langengine-metaso</module>
