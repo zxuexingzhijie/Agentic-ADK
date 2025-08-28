@@ -1,1 +1,6 @@
-mvn clean package -Dmaven.test.skip
+#!/bin/bash
+set -e
+
+cd "$(dirname "$0")"
+
+mvn clean package -DskipTests
