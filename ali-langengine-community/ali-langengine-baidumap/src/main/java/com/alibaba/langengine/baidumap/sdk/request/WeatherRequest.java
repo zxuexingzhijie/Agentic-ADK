@@ -23,12 +23,6 @@ public class WeatherRequest {
     private String location;
 
     /**
-     * Developer key, can be obtained from API console
-     */
-    @JsonProperty("ak")
-    private String ak;
-
-    /**
      * Request data type. Available types: now/fc/index/alert/fc_hour/all, controls return content
      */
     @JsonProperty("data_type")
@@ -62,14 +56,6 @@ public class WeatherRequest {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getAk() {
-        return ak;
-    }
-
-    public void setAk(String ak) {
-        this.ak = ak;
     }
 
     public String getDataType() {

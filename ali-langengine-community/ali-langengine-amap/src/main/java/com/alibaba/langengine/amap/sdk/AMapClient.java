@@ -16,6 +16,8 @@
 
 package com.alibaba.langengine.amap.sdk;
 
+import com.alibaba.langengine.amap.sdk.request.PlaceSearchRequest;
+import com.alibaba.langengine.amap.sdk.response.PlaceSearchResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

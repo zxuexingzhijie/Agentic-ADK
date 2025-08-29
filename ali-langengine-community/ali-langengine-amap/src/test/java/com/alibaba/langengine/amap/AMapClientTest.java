@@ -17,7 +17,7 @@
 package com.alibaba.langengine.amap;
 
 import com.alibaba.langengine.amap.sdk.AMapClient;
-import com.alibaba.langengine.amap.sdk.PlaceSearchResponse;
+import com.alibaba.langengine.amap.sdk.response.PlaceSearchResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
