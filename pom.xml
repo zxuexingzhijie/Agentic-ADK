@@ -133,6 +133,8 @@
 		<module>ali-langengine-community/ali-langengine-weibo</module>
 		<module>ali-langengine-community/ali-langengine-twitter</module>
 		<module>ali-langengine-community/ali-langengine-instagram</module>
+		<module>ali-langengine-community/ali-langengine-googledrive</module>
+		<module>ali-langengine-community/ali-langengine-onedrive</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
