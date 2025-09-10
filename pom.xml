@@ -58,14 +58,14 @@
 		<module>ali-agentic-adk-core</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use</module>
 		<module>ali-agentic-adk-extension/ali-agentic-adk-computer-use-example</module>
-		<!-- <module>ali-agentic-adk-extension/ali-agentic-example</module> -->
+<!-- <module>ali-agentic-adk-extension/ali-agentic-example</module> -->
 
 		<module>ali-langengine-infrastructure/ali-langengine-docloader</module>
 		<module>ali-langengine-infrastructure/ali-langengine-tool</module>
 
-		<!--		<module>ali-langengine-infrastructure/ali-langengine-mcp</module>-->
-		<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
-		<!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
+<!--		<module>ali-langengine-infrastructure/ali-langengine-mcp</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-opensearch</module>-->
+<!--		<module>ali-langengine-community/ali-langengine-tair</module>-->
 
 		<module>ali-langengine-infrastructure/ali-langengine-deepsearch</module>
 		<module>ali-langengine-infrastructure/ali-langengine-gpt</module>
@@ -87,8 +87,9 @@
 		<module>ali-langengine-community/ali-langengine-milvus</module>
 		<module>ali-langengine-community/ali-langengine-marqo</module>
 		<module>ali-langengine-community/ali-langengine-chroma</module>
+		<module>ali-langengine-community/ali-langengine-scann</module>
 		<module>ali-langengine-community/ali-langengine-clickhouse</module>
-        <module>ali-langengine-community/ali-langengine-firecrawl</module>
+    <module>ali-langengine-community/ali-langengine-firecrawl</module>
 		<module>ali-langengine-community/ali-langengine-djl</module>
 		<module>ali-langengine-community/ali-langengine-huggingface</module>
 		<module>ali-langengine-community/ali-langengine-sqlite</module>
@@ -127,6 +128,7 @@
 		<module>ali-langengine-community/ali-langengine-tusharestock</module>
 		<module>ali-langengine-community/ali-langengine-metaso</module>
 		<module>ali-langengine-community/ali-langengine-neo4j</module>
+		<module>ali-langengine-community/ali-langengine-annoy</module>
 		<module>ali-langengine-community/ali-langengine-googlesearch</module>
 		<module>ali-langengine-community/ali-langengine-feishu</module>
 		<module>ali-langengine-community/ali-langengine-linkedin</module>
@@ -136,6 +138,23 @@
 		<module>ali-langengine-community/ali-langengine-googledrive</module>
 		<module>ali-langengine-community/ali-langengine-onedrive</module>
 	</modules>
+		<module>ali-langengine-community/ali-langengine-notion</module>
+		<module>ali-langengine-community/ali-langengine-wenxin</module>
+		<module>ali-langengine-community/ali-langengine-douyin</module>
+		<module>ali-langengine-community/ali-langengine-zhihu</module>
+		<module>ali-langengine-community/ali-langengine-kagi</module>
+    	<module>ali-langengine-community/ali-langengine-sqlexecutor</module>
+		<module>ali-langengine-community/ali-langengine-perplexity</module>
+		<module>ali-langengine-community/ali-langengine-jieyue</module>
+		<module>ali-langengine-community/ali-langengine-trello</module>
+		<module>ali-langengine-community/ali-langengine-influxdb</module>
+		<module>ali-langengine-community/ali-langengine-qrcode</module>
+    	<module>ali-langengine-community/ali-langengine-siliconflow</module>
+    	<module>ali-langengine-community/ali-langengine-timescaledb</module>
+        <module>ali-langengine-community/ali-langengine-pyexecutor</module>
+        <module>ali-langengine-community/ali-langengine-cxxexecutor</module>
+        <module>ali-langengine-community/ali-langengine-tianyancha</module>
+    </modules>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
